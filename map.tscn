@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://deoccjtjmgq3c"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5kn88"]
+load_path = "res://.godot/imported/housefarm_tilset.png-3ee05f8f51e16a908b3bd3204b64f284.ctex"
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e6lj2"]
+texture = SubResource("CompressedTexture2D_5kn88")
+0:0/0 = 0
+1:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+10:0/0 = 0
+11:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+9:2/0 = 0
+11:2/0 = 0
+9:3/0 = 0
+11:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+3:7/0 = 0
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+9:7/0 = 0
+10:7/0 = 0
+3:8/0 = 0
+4:8/0 = 0
+5:8/0 = 0
+6:8/0 = 0
+7:8/0 = 0
+9:8/0 = 0
+10:8/0 = 0
+9:9/0 = 0
+10:9/0 = 0
+9:10/0 = 0
+10:10/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_mrg7q"]
+sources/0 = SubResource("TileSetAtlasSource_e6lj2")
+
+[node name="Node2D" type="Node2D" unique_id=1090733728]
+visible = false
+
+[node name="TileMap" type="TileMap" parent="." unique_id=1341891951]
+tile_set = SubResource("TileSet_mrg7q")
+format = 2
