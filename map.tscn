@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://deoccjtjmgq3c"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_5kn88"]
-load_path = "res://.godot/imported/housefarm_tilset.png-3ee05f8f51e16a908b3bd3204b64f284.ctex"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e6lj2"]
 texture = SubResource("CompressedTexture2D_5kn88")
