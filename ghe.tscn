@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c68ufapsbe57v"]
+
+[ext_resource type="Script" uid="uid://cxbrlte36nql3" path="res://item.gd" id="1_jtifv"]
+[ext_resource type="Texture2D" uid="uid://dq2w6sd3s0vdm" path="res://Content T1/Tilesheet/Furniture_tilet.png" id="2_1qp5l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4f1wb"]
+size = Vector2(46.5, 61.5)
+
+[node name="item" type="Area2D" unique_id=80876404]
+script = ExtResource("1_jtifv")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1244455060]
+position = Vector2(54, 64)
+texture = ExtResource("2_1qp5l")
+region_enabled = true
+region_rect = Rect2(0, 224, 48, 64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1838206823]
+position = Vector2(53.75, 63.25)
+shape = SubResource("RectangleShape2D_4f1wb")
