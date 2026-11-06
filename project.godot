@@ -11,13 +11,16 @@ config_version=5
 [application]
 
 config/name="Game pixel"
-run/main_scene="uid://dpgpe2viw51nm"
+run/main_scene="uid://couwdjdsc2a3n"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SceneManager="*uid://1iuxve4m5g6u"
+
 [display]
 
-window/size/mode=3
 window/stretch/mode="canvas_items"
 
 [input]
@@ -45,6 +48,11 @@ move_down={
 roll={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+attack={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(109, 13),"global_position":Vector2(118, 61),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":true,"script":null)
 ]
 }
 

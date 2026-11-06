@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://dqvqpj0f670rj" path="res://Content T1/New/Dunger4.png" id="1_pdluw"]
 [ext_resource type="Texture2D" uid="uid://druqpp35e5rs4" path="res://Content T1/New/Dunger3.png" id="2_o85au"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://player.tscn" id="3_sf521"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://portal.tscn" id="4_uarc6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sf521"]
 texture = ExtResource("1_pdluw")
@@ -1920,3 +1922,11 @@ tile_set = SubResource("TileSet_1sur3")
 [node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=1827657695]
 tile_map_data = PackedByteArray("AAAQAAsAAAANAA8AAAAQAAwAAAANABAAAAAQAA0AAAANABEAAAAoAAsAAAANAA8AAAAoAAwAAAANABAAAAAoAA0AAAANABEAAAAKAB0AAAAMAA8AAAAKAB4AAAAMABAAAAAKAB8AAAAMABEAAAAsAB0AAAAMAA8AAAAsAB4AAAAMABAAAAAsAB8AAAAMABEAAAA=")
 tile_set = SubResource("TileSet_ubadq")
+
+[node name="Player" parent="." unique_id=2035780365 instance=ExtResource("3_sf521")]
+position = Vector2(236, 248)
+
+[node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("4_uarc6")]
+position = Vector2(234, 222)
+next_scene_path = "uid://cdepwknworn1s"
+target_spawn_position = Vector2(770, 933)

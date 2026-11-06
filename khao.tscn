@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://dv8a4are5amhj"]
+
+[ext_resource type="Script" uid="uid://t0puoicvf30u" path="res://smile.gd" id="1_15lmd"]
+[ext_resource type="Texture2D" uid="uid://c42xk1lk3bqaj" path="res://Content T1/Character/Monter/bird.png" id="2_bjgdl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yi5eo"]
+custom_solver_bias = 0.111
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pd3fw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2h8cm"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(0, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1ed2"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(16, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x44r8"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(32, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bi3ch"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(48, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pq6fp"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(64, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hnwrh"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(80, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kvj6"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(96, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xofb"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(112, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iknjm"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(128, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0e5q"]
+atlas = ExtResource("2_bjgdl")
+region = Rect2(144, 0, 16, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0tuxf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2h8cm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d1ed2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x44r8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bi3ch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pq6fp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hnwrh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3kvj6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3xofb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iknjm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0e5q")
+}],
+"loop": 1,
+"name": &"walk",
+"speed": 6.0
+}]
+
+[node name="bird1" type="Node2D" unique_id=949115859]
+
+[node name="smile" type="CharacterBody2D" parent="." unique_id=1078921627]
+script = ExtResource("1_15lmd")
+
+[node name="Hitbox" type="CollisionShape2D" parent="smile" unique_id=512496650]
+visible = false
+shape = SubResource("RectangleShape2D_yi5eo")
+
+[node name="Area2D" type="Area2D" parent="smile" unique_id=1757928524]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="smile/Area2D" unique_id=605760413]
+position = Vector2(0, 2)
+shape = SubResource("CircleShape2D_pd3fw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="smile" unique_id=2018627346]
+position = Vector2(1, -14)
+scale = Vector2(1, 0.8333333)
+sprite_frames = SubResource("SpriteFrames_0tuxf")
+animation = &"walk"

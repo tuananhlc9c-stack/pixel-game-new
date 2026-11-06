@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://cuvho1j070xll" path="res://Content T1/New/Dunger2.png" id="1_jdihl"]
 [ext_resource type="Texture2D" uid="uid://c7vduw3so5m5t" path="res://Content T1/New/Floor.png" id="2_suhsl"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://portal.tscn" id="3_qc1v0"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://player.tscn" id="4_4e27l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qc1v0"]
 texture = ExtResource("1_jdihl")
@@ -851,3 +853,11 @@ tile_set = SubResource("TileSet_1sur3")
 [node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=244763991]
 tile_map_data = PackedByteArray("AAASAAYAAAAFAAoAAAASAAcAAAAFAAsAAAASAAgAAAAFAAwAAAATAAUAAAAGAAkAAAATAAYAAAAGAAoAAAATAAcAAAAGAAsAAAATAAgAAAAGAAwAAAAUAAUAAAAHAAkAAAAUAAYAAAAHAAoAAAAUAAcAAAAHAAsAAAAUAAgAAAAHAAwAAAAVAAUAAAAIAAkAAAAVAAYAAAAIAAoAAAAVAAcAAAAIAAsAAAAVAAgAAAAIAAwAAAAuABIAAAAFAAoAAAAuABMAAAAFAAsAAAAuABQAAAAIAAoAAAAvABEAAAAGAAkAAAAvABIAAAAGAAoAAAAvABMAAAAGAAsAAAAvABQAAAAGAAwAAAAwABEAAAAHAAkAAAAwABIAAAAHAAoAAAAwABMAAAAHAAsAAAAwABQAAAAHAAwAAAAxABEAAAAIAAkAAAAxABIAAAAIAAoAAAAxABMAAAAIAAsAAAAxABQAAAAIAAwAAAArABQAAAAFAAoAAAArABUAAAAFAAsAAAArABYAAAAFAAwAAAAsABMAAAAGAAkAAAAsABQAAAAGAAoAAAAsABUAAAAGAAsAAAAsABYAAAAGAAwAAAAtABMAAAAHAAkAAAAtABQAAAAHAAoAAAAtABUAAAAHAAsAAAAtABYAAAAHAAwAAAAuABUAAAAIAAsAAAAuABYAAAAIAAwAAAASABQAAAAFAAoAAAASABUAAAAFAAsAAAASABYAAAAFAAwAAAATABMAAAAGAAkAAAATABQAAAAGAAoAAAATABUAAAAGAAsAAAATABYAAAAGAAwAAAAUABMAAAAHAAkAAAAUABQAAAAHAAoAAAAUABUAAAAHAAsAAAAUABYAAAAHAAwAAAAVABMAAAAIAAkAAAAVABQAAAAIAAoAAAAVABUAAAAIAAsAAAAVABYAAAAIAAwAAAA=")
 tile_set = SubResource("TileSet_ubadq")
+
+[node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("3_qc1v0")]
+position = Vector2(691, 124)
+next_scene_path = "uid://c4s77yagjg46k"
+target_spawn_position = Vector2(772, 473)
+
+[node name="Player" parent="." unique_id=2035780365 instance=ExtResource("4_4e27l")]
+position = Vector2(694, 146)

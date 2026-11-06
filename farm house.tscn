@@ -14,6 +14,8 @@
 [ext_resource type="Texture2D" uid="uid://dvr8hnqyecwne" path="res://Content T1/Mapss/titleset 2/House_tilset.png" id="10_ru2ru"]
 [ext_resource type="Texture2D" uid="uid://61r4qmaq611s" path="res://Content T1/New/greenhouse.png" id="10_ulp6j"]
 [ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="11_rwrpn"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://player.tscn" id="15_3y0tq"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://portal.tscn" id="16_4hij6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nr825"]
 texture = ExtResource("1_gjp8d")
@@ -3116,3 +3118,13 @@ polygon = PackedVector2Array(929, 244, 1086, 243, 1085, 398, 931, 397)
 
 [node name="CollisionPolygon2D7" type="CollisionPolygon2D" parent="wall" unique_id=2034607340]
 polygon = PackedVector2Array(0, 434, 108, 434, 109, 622, 94, 623, 92, 719, 1, 721)
+
+[node name="Player" parent="wall" unique_id=2035780365 instance=ExtResource("15_3y0tq")]
+position = Vector2(53, 403)
+rotation = -0.037224006
+
+[node name="Portal" parent="wall" unique_id=1142273392 instance=ExtResource("16_4hij6")]
+position = Vector2(11.000002, 398.00003)
+rotation = 1.5945234
+next_scene_path = "uid://bee5tdiyupuf5"
+target_spawn_position = Vector2(880, 350)
