@@ -10,10 +10,11 @@ script = ExtResource("1_l1ay4")
 
 [node name="QuickBar" type="GridContainer" parent="." unique_id=996246795]
 layout_mode = 0
-offset_left = 414.0
-offset_top = 452.0
-offset_right = 580.0
-offset_bottom = 468.0
+offset_left = 352.0
+offset_top = 472.0
+offset_right = 521.0
+offset_bottom = 488.0
+scale = Vector2(2, 2)
 theme_override_constants/h_separation = 0
 columns = 10
 
@@ -66,10 +67,12 @@ offset_bottom = 10.0
 
 [node name="baggrid" type="GridContainer" parent="bagwindow" unique_id=1348444146]
 layout_mode = 0
-offset_left = 412.0
-offset_top = 309.0
-offset_right = 611.0
-offset_bottom = 385.0
+offset_left = 353.0
+offset_top = 209.0
+offset_right = 527.5
+offset_bottom = 379.0
+scale = Vector2(2, 2)
+offset_transform_scale = Vector2(2, 2)
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = -1
 columns = 10
