@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Game pixel"
-run/main_scene="uid://dumlx6wwc85n1"
+run/main_scene="res://scenes/maps/farm house.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-SceneManager="*uid://1iuxve4m5g6u"
+SceneManager="*res://scripts/autoload/SceneManager.gd"
 
 [display]
 
@@ -52,7 +52,7 @@ roll={
 }
 attack={
 "deadzone": 0.5,
-"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(109, 13),"global_position":Vector2(118, 61),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":true,"script":null)
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(109, 13),"global_position":Vector2(118, 61),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
 
