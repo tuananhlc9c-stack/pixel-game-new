@@ -3974,7 +3974,7 @@ tile_map_data = PackedByteArray("AAAzAA0AAAAJAAoAAAAzAA4AAAAJAAsAAAAzAA8AAAAJAAw
 tile_set = SubResource("TileSet_ubadq")
 
 [node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("4_m4obr")]
-position = Vector2(548, 437)
+position = Vector2(553, 441)
 next_scene_path = "uid://ctog71q3jotnh"
 target_spawn_position = Vector2(427, 49)
 

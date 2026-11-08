@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://portal.tscn" id="21_61q2r"]
 [ext_resource type="PackedScene" uid="uid://lgdctiop71bc" path="res://slime.tscn" id="22_eqnv4"]
 [ext_resource type="PackedScene" uid="uid://cxt6jk8ml6yko" path="res://smile1.tscn" id="23_r122c"]
+[ext_resource type="PackedScene" uid="uid://w4lr1igu8wgl" path="res://animall/cat.tscn" id="24_p3v1f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r1oie"]
 texture = ExtResource("1_jag28")
@@ -7335,3 +7336,6 @@ position = Vector2(341, 77)
 
 [node name="Smile12" parent="." unique_id=809437003 instance=ExtResource("23_r122c")]
 position = Vector2(861, 454)
+
+[node name="Dog" parent="." unique_id=374045498 instance=ExtResource("24_p3v1f")]
+position = Vector2(625, 239)

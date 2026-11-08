@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://bu0jmya07cyny"]
+
+[ext_resource type="Script" uid="uid://ea0b5ajw5yry" path="res://animall/dog.gd" id="1_piiv2"]
+[ext_resource type="Texture2D" uid="uid://c1ujhraqmpdyk" path="res://Content T1/Animal/dog1.png" id="2_sak2o"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_piiv2"]
+radius = 4.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sak2o"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5yk60"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00y42"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(96, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gwdcb"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrn16"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yga6l"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yo03u"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j70ib"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xurpo"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1ryb"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6wm3d"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvs6n"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ji8pr"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkihb"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(96, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhmax"]
+atlas = ExtResource("2_sak2o")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3jf1n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sak2o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yk60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yk60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yk60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5yk60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00y42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00y42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00y42")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00y42")
+}],
+"loop": 1,
+"name": &"stand",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gwdcb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nrn16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yga6l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yo03u")
+}],
+"loop": 1,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j70ib")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xurpo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1ryb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6wm3d")
+}],
+"loop": 1,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cvs6n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ji8pr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tkihb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhmax")
+}],
+"loop": 1,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[node name="Dog" type="CharacterBody2D" unique_id=1752769528]
+script = ExtResource("1_piiv2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1614229982]
+shape = SubResource("CapsuleShape2D_piiv2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=459831494]
+position = Vector2(1, 8)
+sprite_frames = SubResource("SpriteFrames_3jf1n")
+animation = &"walk_right"

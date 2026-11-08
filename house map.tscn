@@ -4591,6 +4591,7 @@ size = Vector2(27, 37)
 size = Vector2(18, 33)
 
 [node name="HouseMap" type="Node2D" unique_id=641124572]
+position = Vector2(-6, 0)
 metadata/_edit_vertical_guides_ = [-975.0]
 
 [node name="TileMap" type="TileMap" parent="." unique_id=125982549]
