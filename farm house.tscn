@@ -3125,7 +3125,7 @@ polygon = PackedVector2Array(929, 244, 1086, 243, 1085, 398, 931, 397)
 polygon = PackedVector2Array(0, 434, 108, 434, 109, 622, 94, 623, 92, 719, 1, 721)
 
 [node name="Player" parent="wall" unique_id=2035780365 instance=ExtResource("15_3y0tq")]
-position = Vector2(222, 397)
+position = Vector2(680.99994, 145)
 rotation = -0.037224006
 
 [node name="Portal" parent="wall" unique_id=1142273392 instance=ExtResource("16_4hij6")]
@@ -3133,6 +3133,11 @@ position = Vector2(11.000002, 398.00003)
 rotation = 1.5945234
 next_scene_path = "uid://bee5tdiyupuf5"
 target_spawn_position = Vector2(880, 350)
+
+[node name="Portal2" parent="wall" unique_id=24905364 instance=ExtResource("16_4hij6")]
+position = Vector2(680, 119)
+next_scene_path = "uid://bdpjwsvv8g8fr"
+target_spawn_position = Vector2(108, 549)
 
 [node name="DogRoot" parent="." unique_id=1718734943 instance=ExtResource("17_4hij6")]
 position = Vector2(297, 392)

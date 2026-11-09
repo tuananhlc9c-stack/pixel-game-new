@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://bdpjwsvv8g8fr"]
 
 [ext_resource type="Texture2D" uid="uid://dnfgiwj0pdol0" path="res://demo/housefarm_tilset.png" id="1_enbkh"]
+[ext_resource type="Script" uid="uid://bpmhf4fl7g72m" path="res://house_map.gd" id="1_kg2ft"]
 [ext_resource type="Texture2D" uid="uid://byhthvuo507ck" path="res://Content T1/Loose/Cursors.png" id="1_pvoib"]
 [ext_resource type="Texture2D" uid="uid://vm00x1mwwmx8" path="res://demo/Ladder_tilset.png" id="2_qvxik"]
 [ext_resource type="Script" uid="uid://cxbrlte36nql3" path="res://item.gd" id="3_todca"]
 [ext_resource type="Texture2D" uid="uid://dq2w6sd3s0vdm" path="res://Content T1/Tilesheet/Furniture_tilet.png" id="4_72m2w"]
 [ext_resource type="Texture2D" uid="uid://dfk6luh8ffn61" path="res://Content T1/Loose/Cursors 2.png" id="4_ejdf6"]
 [ext_resource type="PackedScene" uid="uid://cq4x87qarh3tw" path="res://Tham.tscn" id="5_ejdf6"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://portal.tscn" id="8_jqu3j"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://player.tscn" id="9_kg2ft"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8omx4"]
 texture = ExtResource("1_pvoib")
@@ -4587,11 +4590,15 @@ sources/3 = SubResource("TileSetAtlasSource_jqu3j")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ejdf6"]
 size = Vector2(27, 37)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_plr6t"]
+atlas = ExtResource("4_72m2w")
+region = Rect2(0.512558, 0.539649, 15.971466, 31.950272)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mrg7q"]
 size = Vector2(18, 33)
 
 [node name="HouseMap" type="Node2D" unique_id=641124572]
-position = Vector2(-6, 0)
+script = ExtResource("1_kg2ft")
 metadata/_edit_vertical_guides_ = [-975.0]
 
 [node name="TileMap" type="TileMap" parent="." unique_id=125982549]
@@ -4619,6 +4626,7 @@ shape = SubResource("RectangleShape2D_ejdf6")
 [node name="Chair1" type="Area2D" parent="TileMap" unique_id=2097201286]
 position = Vector2(-157, 203)
 script = ExtResource("3_todca")
+item_icon = SubResource("AtlasTexture_plr6t")
 
 [node name="Sprite2D" type="Sprite2D" parent="TileMap/Chair1" unique_id=71482011]
 position = Vector2(0, 1)
@@ -4658,5 +4666,10 @@ region_filter_clip_enabled = true
 position = Vector2(-33, 0)
 shape = SubResource("RectangleShape2D_mrg7q")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1444330897]
-position = Vector2(118, 370)
+[node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("8_jqu3j")]
+position = Vector2(115, 591)
+next_scene_path = "uid://couwdjdsc2a3n"
+target_spawn_position = Vector2(681, 145)
+
+[node name="Player" parent="." unique_id=2035780365 instance=ExtResource("9_kg2ft")]
+position = Vector2(108, 549)
