@@ -6,6 +6,12 @@ extends CharacterBody2D
 @export var max_health: int = 100
 @export var attack_damage: int = 25
 @export var attack_knockback: float = 140.0
+@export_group("Special Attack (Right Click)")
+@export var special_attack_damage: int = 60
+@export var special_attack_knockback: float = 240.0
+@export var special_attack_cooldown: float = 3.0
+@export var special_attack_scale: float = 1.45
+@export var special_lunge_speed: float = 180.0
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var col_shape: CollisionShape2D = $CollisionShape2D
@@ -18,10 +24,24 @@ extends CharacterBody2D
 var health_component: HealthComponent
 var hp_bar_fill: ColorRect
 var hp_label: Label
+var special_cd_bar_fill: ColorRect
+var special_cd_label: Label
 
 var last_direction: String = "down"
 var is_rolling: bool = false
 var is_attacking: bool = false
+var is_special_attacking: bool = false
+var special_cooldown_timer: float = 0.0
+var current_attack_damage: int = 25
+var current_attack_knockback: float = 140.0
+var special_wave_progress: float = -1.0
+var special_wave_angle: float = 0.0
+var swing_combo_dir: int = 1
+var combo_reset_timer: float = 0.0
+var is_recording_trail: bool = false
+var trail_is_special: bool = false
+var slash_trail: Array[Dictionary] = []
+var swing_tween: Tween = null
 var knockback_velocity: Vector2 = Vector2.ZERO
 var hit_targets: Array[Node] = []
 var initial_spawn_position: Vector2 = Vector2.ZERO
@@ -46,12 +66,14 @@ func _ready() -> void:
 		weapon_pivot.hide()
 
 	if hitbox:
+		hitbox.position = Vector2(18, 0)
 		if not hitbox.body_entered.is_connected(_on_weapon_hitbox_body_entered):
 			hitbox.body_entered.connect(_on_weapon_hitbox_body_entered)
 		if not hitbox.area_entered.is_connected(_on_weapon_hitbox_area_entered):
 			hitbox.area_entered.connect(_on_weapon_hitbox_area_entered)
 		for child in hitbox.get_children():
 			if child is CollisionShape2D:
+				child.position = Vector2.ZERO
 				child.disabled = true
 
 	if slash_effect:
@@ -108,21 +130,71 @@ func _setup_health_system() -> void:
 	hp_label.add_theme_font_size_override("font_size", 12)
 	hud.add_child(hp_label)
 
+	# Thanh hiển thị hồi chiêu Chém Đặc Biệt (Chuột Phải) ngay dưới thanh máu
+	var cd_bg := ColorRect.new()
+	cd_bg.color = Color(0.12, 0.12, 0.15, 0.85)
+	cd_bg.position = Vector2(16, 38)
+	cd_bg.size = Vector2(144, 14)
+	hud.add_child(cd_bg)
+
+	special_cd_bar_fill = ColorRect.new()
+	special_cd_bar_fill.color = Color(0.95, 0.72, 0.18, 1.0)
+	special_cd_bar_fill.position = Vector2(18, 40)
+	special_cd_bar_fill.size = Vector2(140, 10)
+	hud.add_child(special_cd_bar_fill)
+
+	special_cd_label = Label.new()
+	special_cd_label.position = Vector2(22, 36)
+	special_cd_label.add_theme_font_size_override("font_size", 10)
+	hud.add_child(special_cd_label)
+
 	_on_health_changed(health_component.current_health, health_component.max_health)
+	_update_special_cooldown_ui()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack"):
 		if not is_attacking and not is_rolling:
-			start_weapon_swing()
+			start_weapon_swing(false)
+	elif event.is_action_pressed("special_attack") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT):
+		if not is_attacking and not is_rolling:
+			if special_cooldown_timer <= 0.0:
+				start_weapon_swing(true)
+			else:
+				_flash_cooldown_warning()
 
 func _physics_process(delta: float) -> void:
+	if special_cooldown_timer > 0.0:
+		special_cooldown_timer = maxf(0.0, special_cooldown_timer - delta)
+		_update_special_cooldown_ui()
+
+	if combo_reset_timer > 0.0:
+		combo_reset_timer = maxf(0.0, combo_reset_timer - delta)
+		if combo_reset_timer <= 0.0:
+			swing_combo_dir = 1
+
+	# Cập nhật vệt kiếm động mượt mà theo từng khung hình
+	_update_slash_trail(delta)
+
+	if special_wave_progress >= 0.0:
+		special_wave_progress += delta * 4.2
+		if special_wave_progress > 1.0:
+			special_wave_progress = -1.0
+		queue_redraw()
+
+	# Quét va chạm liên tục trong lúc vung kiếm để đòn chém nhanh không bỏ sót mục tiêu
+	if is_attacking and hitbox:
+		for body in hitbox.get_overlapping_bodies():
+			_apply_weapon_hit(body)
+		for area in hitbox.get_overlapping_areas():
+			_on_weapon_hitbox_area_entered(area)
+
 	if knockback_velocity.length() > 5.0:
 		velocity = knockback_velocity
 		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, 600.0 * delta)
 		move_and_slide()
 		return
 
-	if is_rolling or is_attacking:
+	if is_rolling:
 		move_and_slide()
 		return
 
@@ -135,6 +207,16 @@ func _physics_process(delta: float) -> void:
 		input_y = Input.get_axis("ui_up", "ui_down")
 
 	var direction := Vector2(input_x, input_y).normalized()
+
+	# Khi đang chém: cho phép di chuyển mượt hoặc trượt theo quán tính thay vì khựng cứng
+	if is_attacking:
+		if is_special_attacking:
+			velocity = velocity.move_toward(direction * (speed * 0.45), 520.0 * delta)
+		else:
+			var target_move := direction * (speed * 0.65)
+			velocity = velocity.move_toward(target_move, 650.0 * delta)
+		move_and_slide()
+		return
 
 	if Input.is_action_just_pressed("roll") or Input.is_action_just_pressed("ui_accept"):
 		start_roll(direction)
@@ -178,28 +260,54 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-# Cơ chế chém mượt mà quét vòng cung theo hướng chuột
-func start_weapon_swing() -> void:
+# Cơ chế chém 3 giai đoạn mượt mà (Lấy đà -> Vung chém tốc độ cao -> Thu kiếm) + Đảo chiều Combo
+func start_weapon_swing(is_special: bool = false) -> void:
 	if not weapon_pivot:
 		return
 
+	if swing_tween and swing_tween.is_valid():
+		swing_tween.kill()
+
 	is_attacking = true
-	velocity = Vector2.ZERO
+	is_special_attacking = is_special
 	hit_targets.clear()
 
-	# 1. Hiển thị kiếm và các node con
+	var swing_dir: float = float(swing_combo_dir)
+	if not is_special:
+		swing_combo_dir *= -1
+		combo_reset_timer = 0.75
+	else:
+		swing_dir = 1.0
+
+	# Thiết lập sát thương, lực đẩy lùi và hồi chiêu
+	if is_special:
+		current_attack_damage = special_attack_damage
+		current_attack_knockback = special_attack_knockback
+		special_cooldown_timer = special_attack_cooldown
+		_update_special_cooldown_ui()
+	else:
+		current_attack_damage = attack_damage
+		current_attack_knockback = attack_knockback
+
+	# 1. Hiển thị kiếm (ẩn tấm ảnh vệt chém tĩnh 1-frame để dùng vệt kiếm bán nguyệt động 60fps mượt hơn)
 	weapon_pivot.show()
-	if has_node("WeaponPivot/WeaponSprite"):
-		$WeaponPivot/WeaponSprite.show()
+	weapon_pivot.modulate.a = 1.0
+	if slash_effect:
+		slash_effect.hide()
+
+	var weapon_sprite: Sprite2D = $WeaponPivot/WeaponSprite if has_node("WeaponPivot/WeaponSprite") else null
+	if weapon_sprite:
+		weapon_sprite.show()
+		weapon_sprite.scale = Vector2(1.014, 0.97)
 
 	# 2. Lấy góc hướng về phía chuột
 	var local_mouse := get_local_mouse_position()
 	if local_mouse.length() < 2.0:
 		local_mouse = Vector2.RIGHT
 
+	var mouse_dir := local_mouse.normalized()
 	var mouse_angle := local_mouse.angle()
 	weapon_pivot.position = Vector2.ZERO
-	weapon_pivot.rotation = mouse_angle
 
 	# Xoay mặt nhân vật theo hướng chuột
 	if abs(local_mouse.x) > abs(local_mouse.y):
@@ -217,39 +325,110 @@ func start_weapon_swing() -> void:
 			anim.flip_h = false
 			last_direction = "up"
 
-	# Bật hiệu ứng vệt chém (nếu có)
-	if slash_effect:
-		slash_effect.show()
-		slash_effect.frame = 0
-		if slash_effect.sprite_frames and slash_effect.sprite_frames.has_animation("slash"):
-			slash_effect.play("slash")
+	# Tính toán góc lấy đà, góc bắt đầu và góc kết thúc đối xứng quanh con trỏ chuột
+	var half_arc := deg_to_rad(125.0 if is_special else 68.0)
+	var windup_start := mouse_angle - (half_arc - deg_to_rad(22.0)) * swing_dir
+	var slash_start := mouse_angle - half_arc * swing_dir
+	var slash_end := mouse_angle + half_arc * swing_dir
+	var follow_end := slash_end + deg_to_rad(16.0) * swing_dir
+	var base_scale := special_attack_scale if is_special else 1.0
 
-	# Bật hitbox gây sát thương
+	weapon_pivot.rotation = windup_start
+	weapon_pivot.scale = Vector2.ONE * (base_scale * 0.88)
+
+	if is_special:
+		velocity = mouse_dir * special_lunge_speed
+		special_wave_angle = mouse_angle
+		special_wave_progress = 0.0
+		if weapon_sprite:
+			weapon_sprite.modulate = Color(2.3, 1.4, 0.35, 1.0)
+		if anim:
+			anim.modulate = Color(1.6, 1.35, 0.65, 1.0)
+	else:
+		# Nhích nhẹ về phía trước theo hướng chém để tạo cảm giác có lực
+		velocity = velocity * 0.55 + mouse_dir * 48.0
+		if weapon_sprite:
+			weapon_sprite.modulate = Color(1.25, 1.25, 1.35, 1.0)
+
+	# 3. Giai đoạn 1: Lấy đà nhanh (Wind-up) + Nén nhẹ người
+	var windup_time := 0.055 if is_special else 0.035
+	var slash_time := 0.19 if is_special else 0.13
+	var follow_time := 0.075 if is_special else 0.055
+
+	swing_tween = create_tween()
+	swing_tween.set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "rotation", slash_start, windup_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2.ONE * base_scale, windup_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	if anim:
+		swing_tween.tween_property(anim, "scale", Vector2(1.12, 0.9), windup_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		swing_tween.tween_property(anim, "rotation", deg_to_rad(-5.0 * swing_dir), windup_time)
+
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 4. Giai đoạn 2: Vung kiếm tốc độ cao (Main Slash) + Bật Hitbox + Bật Vệt Kiếm Động
+	slash_trail.clear()
+	is_recording_trail = true
+	trail_is_special = is_special
+
 	if hitbox:
 		hitbox.show()
 		for child in hitbox.get_children():
 			if child is CollisionShape2D:
 				child.disabled = false
 
-	# 3. Dùng Tween vung quét 120 độ mượt mà từ hướng chuột
-	var target_angle := mouse_angle + deg_to_rad(120)
-	var tween := create_tween()
-	tween.tween_property(weapon_pivot, "rotation", target_angle, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	swing_tween = create_tween()
+	swing_tween.tween_property(weapon_pivot, "rotation", slash_end, slash_time).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 
-	await tween.finished
+	# Phóng nhẹ kích thước kiếm ở đỉnh vòng vung tạo độ vươn mượt mà
+	var scale_tween := create_tween()
+	scale_tween.tween_property(weapon_pivot, "scale", Vector2.ONE * (base_scale * 1.16), slash_time * 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	scale_tween.tween_property(weapon_pivot, "scale", Vector2.ONE * base_scale, slash_time * 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
-	# 4. Kết thúc đòn chém: ẩn vũ khí và tắt hitbox
+	if anim:
+		var body_tween := create_tween().set_parallel(true)
+		body_tween.tween_property(anim, "scale", Vector2(0.94, 1.07), slash_time * 0.6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		body_tween.tween_property(anim, "rotation", deg_to_rad(6.0 * swing_dir), slash_time * 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 5. Giai đoạn 3: Thu kiếm theo quán tính & mờ dần (Follow-through)
+	is_recording_trail = false
 	if hitbox:
 		hitbox.hide()
 		for child in hitbox.get_children():
 			if child is CollisionShape2D:
 				child.disabled = true
 
-	if slash_effect:
-		slash_effect.hide()
-
-	weapon_pivot.hide()
+	# Mở khóa di chuyển và cho phép nối đòn sớm ngay khi bước vào giai đoạn thu kiếm
+	is_special_attacking = false
 	is_attacking = false
+
+	swing_tween = create_tween()
+	swing_tween.set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "rotation", follow_end, follow_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2.ONE * (base_scale * 0.85), follow_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	swing_tween.tween_property(weapon_pivot, "modulate:a", 0.0, follow_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	if anim:
+		swing_tween.tween_property(anim, "scale", Vector2.ONE, follow_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		swing_tween.tween_property(anim, "rotation", 0.0, follow_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if is_special:
+			swing_tween.tween_property(anim, "modulate", Color.WHITE, follow_time)
+
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	if not is_attacking:
+		if weapon_sprite:
+			weapon_sprite.modulate = Color.WHITE
+			weapon_sprite.scale = Vector2(1.014, 0.97)
+		weapon_pivot.modulate.a = 1.0
+		weapon_pivot.scale = Vector2.ONE
+		weapon_pivot.hide()
 
 func _on_weapon_hitbox_body_entered(body: Node) -> void:
 	_apply_weapon_hit(body)
@@ -265,7 +444,7 @@ func _apply_weapon_hit(target: Node) -> void:
 		return
 	if target.has_method("take_damage"):
 		hit_targets.append(target)
-		target.take_damage(attack_damage, global_position, attack_knockback)
+		target.take_damage(current_attack_damage, global_position, current_attack_knockback)
 
 func start_roll(dir: Vector2) -> void:
 	is_rolling = true
@@ -325,3 +504,116 @@ func _on_player_died() -> void:
 	global_position = initial_spawn_position
 	knockback_velocity = Vector2.ZERO
 	velocity = Vector2.ZERO
+	special_cooldown_timer = 0.0
+	_update_special_cooldown_ui()
+
+func _update_special_cooldown_ui() -> void:
+	if not special_cd_bar_fill or not special_cd_label:
+		return
+
+	if special_cooldown_timer <= 0.0:
+		special_cd_bar_fill.size.x = 140.0
+		special_cd_bar_fill.color = Color(0.95, 0.72, 0.18, 1.0)
+		special_cd_label.text = "Chuột Phải: SẴN SÀNG"
+	else:
+		var ratio := 1.0 - clampf(special_cooldown_timer / maxf(special_attack_cooldown, 0.01), 0.0, 1.0)
+		special_cd_bar_fill.size.x = 140.0 * ratio
+		special_cd_bar_fill.color = Color(0.45, 0.45, 0.55, 0.9)
+		special_cd_label.text = "Hồi chiêu: %.1fs" % special_cooldown_timer
+
+func _flash_cooldown_warning() -> void:
+	if not special_cd_label:
+		return
+	special_cd_label.modulate = Color(1.0, 0.35, 0.35, 1.0)
+	var tween := create_tween()
+	tween.tween_property(special_cd_label, "modulate", Color.WHITE, 0.25)
+
+func _update_slash_trail(delta: float) -> void:
+	var max_life := 0.14 if trail_is_special else 0.095
+	var changed := false
+
+	# Giảm thời gian sống của các điểm trên vệt kiếm cũ
+	for i in range(slash_trail.size() - 1, -1, -1):
+		slash_trail[i]["age"] += delta
+		if slash_trail[i]["age"] >= max_life:
+			slash_trail.remove_at(i)
+		changed = true
+
+	# Ghi nhận góc kiếm hiện tại và nội suy thêm các điểm trung gian để đường cong mượt tuyệt đối
+	if is_recording_trail and weapon_pivot:
+		var cur_angle := weapon_pivot.rotation
+		var cur_scale := weapon_pivot.scale.x
+		if slash_trail.size() > 0:
+			var prev_angle: float = slash_trail[slash_trail.size() - 1]["angle"]
+			var prev_scale: float = slash_trail[slash_trail.size() - 1]["scale"]
+			var diff := cur_angle - prev_angle
+			var steps := clampi(int(abs(diff) / deg_to_rad(6.0)), 1, 8)
+			for s in range(1, steps + 1):
+				var t := float(s) / float(steps)
+				slash_trail.append({
+					"angle": lerpf(prev_angle, cur_angle, t),
+					"scale": lerpf(prev_scale, cur_scale, t),
+					"age": delta * (1.0 - t)
+				})
+		else:
+			slash_trail.append({
+				"angle": cur_angle,
+				"scale": cur_scale,
+				"age": 0.0
+			})
+		changed = true
+
+	if changed:
+		queue_redraw()
+
+func _draw() -> void:
+	# 1. Vẽ vệt kiếm bán nguyệt động (Dynamic Crescent Slash Ribbon) mượt theo lưỡi kiếm
+	if slash_trail.size() >= 2:
+		var max_life := 0.14 if trail_is_special else 0.095
+		var count := slash_trail.size()
+		for i in range(count - 1):
+			var p0: Dictionary = slash_trail[i]
+			var p1: Dictionary = slash_trail[i + 1]
+			var t0 := float(i) / float(count - 1)
+			var t1 := float(i + 1) / float(count - 1)
+
+			var life0 := clampf(1.0 - (float(p0["age"]) / max_life), 0.0, 1.0)
+			var life1 := clampf(1.0 - (float(p1["age"]) / max_life), 0.0, 1.0)
+
+			# Độ dày vệt kiếm thon nhọn ở đuôi và phình to ở đầu lưỡi kiếm
+			var profile0 := sin(t0 * PI * 0.82) * life0
+			var profile1 := sin(t1 * PI * 0.82) * life1
+
+			var outer_r0 := 25.0 * float(p0["scale"])
+			var outer_r1 := 25.0 * float(p1["scale"])
+			var thickness0 := (13.5 if trail_is_special else 9.0) * profile0 * float(p0["scale"])
+			var thickness1 := (13.5 if trail_is_special else 9.0) * profile1 * float(p1["scale"])
+
+			var dir0 := Vector2.RIGHT.rotated(float(p0["angle"]))
+			var dir1 := Vector2.RIGHT.rotated(float(p1["angle"]))
+
+			var out0 := dir0 * outer_r0
+			var out1 := dir1 * outer_r1
+			var in0 := dir0 * maxf(4.0, outer_r0 - thickness0)
+			var in1 := dir1 * maxf(4.0, outer_r1 - thickness1)
+
+			var alpha := (life0 + life1) * 0.5 * t1
+			var glow_col := Color(1.0, 0.42, 0.12, alpha * 0.65) if trail_is_special else Color(0.55, 0.88, 1.0, alpha * 0.48)
+			var core_col := Color(1.0, 0.94, 0.45, alpha * 0.95) if trail_is_special else Color(1.0, 1.0, 1.0, alpha * 0.9)
+
+			# Lớp hào quang bên ngoài
+			draw_colored_polygon(PackedVector2Array([out0, out1, in1, in0]), glow_col)
+
+			# Lõi sáng sắc nét ở rìa lưỡi kiếm
+			var core_in0 := dir0 * maxf(4.0, outer_r0 - thickness0 * 0.48)
+			var core_in1 := dir1 * maxf(4.0, outer_r1 - thickness1 * 0.48)
+			draw_colored_polygon(PackedVector2Array([out0, out1, core_in1, core_in0]), core_col)
+
+	# 2. Vẽ vòng cung sóng kiếm lan tỏa khi tung đòn Chém Đặc Biệt (Chuột Phải)
+	if special_wave_progress >= 0.0:
+		var radius := lerpf(18.0, 48.0, special_wave_progress)
+		var alpha := 1.0 - special_wave_progress
+		var start_ang := special_wave_angle - deg_to_rad(80)
+		var end_ang := special_wave_angle + deg_to_rad(80)
+		draw_arc(Vector2.ZERO, radius, start_ang, end_ang, 32, Color(1.0, 0.82, 0.25, alpha * 0.9), 4.0)
+		draw_arc(Vector2.ZERO, radius - 4.5, start_ang, end_ang, 32, Color(1.0, 0.35, 0.15, alpha * 0.65), 2.5)
