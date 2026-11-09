@@ -1,6 +1,5 @@
 extends CharacterBody2D
-# Enemy lấy cảm hứng từ Larva / Big Larva (The Clay Caves - Core Keeper)
-# Cơ chế: Bò tuần tra -> Phát hiện Player -> Gồng báo hiệu (Telegraph) -> Lao húc tốc độ cao (Lunge)
+
 
 enum State { PATROL, CHASE, WINDUP, LUNGE, RECOVER }
 

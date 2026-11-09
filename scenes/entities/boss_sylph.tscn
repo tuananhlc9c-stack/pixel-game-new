@@ -1,0 +1,103 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/entities/boss_sylph.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Content T1/Character/Monter/Boss/Boss2.png" id="2_tex"]
+[ext_resource type="Script" uid="uid://dsu166c5725dc" path="res://scripts/components/health_component.gd" id="3_health"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_0"]
+atlas = ExtResource("2_tex")
+region = Rect2(8, 7, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_1"]
+atlas = ExtResource("2_tex")
+region = Rect2(104, 7, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_2"]
+atlas = ExtResource("2_tex")
+region = Rect2(200, 7, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle_3"]
+atlas = ExtResource("2_tex")
+region = Rect2(296, 7, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_0"]
+atlas = ExtResource("2_tex")
+region = Rect2(6, 120, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_1"]
+atlas = ExtResource("2_tex")
+region = Rect2(98, 120, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_2"]
+atlas = ExtResource("2_tex")
+region = Rect2(188, 120, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cast_3"]
+atlas = ExtResource("2_tex")
+region = Rect2(284, 123, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sylph"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cast_3")
+}],
+"loop": true,
+"name": &"cast",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle_3")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.5
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hitbox"]
+radius = 26.0
+
+[node name="BossSylph" type="CharacterBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -12)
+scale = Vector2(0.85, 0.85)
+sprite_frames = SubResource("SpriteFrames_sylph")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_health")
+max_health = 650
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_hitbox")

@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="3_a7gtn"]
 [ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="4_m4obr"]
 [ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="5_inypx"]
+[ext_resource type="PackedScene" path="res://scenes/entities/boss_sylph.tscn" id="6_sylph"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a7gtn"]
 texture = ExtResource("1_go7ir")
@@ -3980,3 +3981,6 @@ target_spawn_position = Vector2(427, 49)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("5_inypx")]
 position = Vector2(546, 408)
+
+[node name="BossSylph" parent="." unique_id=2002338795 instance=ExtResource("6_sylph")]
+position = Vector2(550, 98)

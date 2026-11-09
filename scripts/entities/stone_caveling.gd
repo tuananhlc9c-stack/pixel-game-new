@@ -1,10 +1,4 @@
 extends CharacterBody2D
-## Stone Caveling Brute (lấy cảm hứng từ Caveling Brute / Stone Golem trong Core Keeper)
-## Cơ chế:
-## - DORMANT: Ngụy trang thành tảng đá nằm im trên mặt đất.
-## - EMERGE: Khi Player lại gần (<= wake_range) hoặc bị đánh trúng, trồi dậy khỏi mặt đất.
-## - CHASE: Đuổi theo Player với tốc độ chậm nhưng giáp trâu.
-## - SLAM_WINDUP -> SLAM_IMPACT: Đập mạnh xuống đất tạo sóng chấn động AoE gây sát thương lớn & đẩy lùi.
 
 @export_group("Stats")
 @export var move_speed: float = 38.0
