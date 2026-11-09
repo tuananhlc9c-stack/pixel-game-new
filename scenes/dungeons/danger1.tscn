@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://c7vduw3so5m5t" path="res://Content T1/New/Floor.png" id="2_suhsl"]
 [ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="3_qc1v0"]
 [ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="4_4e27l"]
+[ext_resource type="PackedScene" path="res://scenes/entities/boss_glurch.tscn" id="5_glurch"]
+[ext_resource type="PackedScene" path="res://scenes/entities/larva_bug.tscn" id="6_larva"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qc1v0"]
 texture = ExtResource("1_jdihl")
@@ -861,3 +863,12 @@ target_spawn_position = Vector2(772, 473)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("4_4e27l")]
 position = Vector2(694, 146)
+
+[node name="BossGlurch" parent="." instance=ExtResource("5_glurch")]
+position = Vector2(460, 235)
+
+[node name="LarvaBug1" parent="." instance=ExtResource("6_larva")]
+position = Vector2(560, 195)
+
+[node name="LarvaBug2" parent="." instance=ExtResource("6_larva")]
+position = Vector2(540, 285)

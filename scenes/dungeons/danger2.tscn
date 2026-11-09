@@ -4,6 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://cybnblv0jb0fu" path="res://Content T1/New/house8.png" id="2_7pijw"]
 [ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="3_pxrm3"]
 [ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="4_l4emt"]
+[ext_resource type="PackedScene" path="res://scenes/entities/caveling_shaman.tscn" id="5_shaman"]
+[ext_resource type="PackedScene" path="res://scenes/entities/stone_caveling.tscn" id="6_stone"]
+[ext_resource type="PackedScene" path="res://scenes/entities/larva_bug.tscn" id="7_larva"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pxrm3"]
 texture = ExtResource("1_fmj2e")
@@ -1877,3 +1880,24 @@ position = Vector2(633, 228)
 position = Vector2(768, 961)
 next_scene_path = "res://scenes/dungeons/danger3.tscn"
 target_spawn_position = Vector2(236, 248)
+
+[node name="CavelingShaman1" parent="." instance=ExtResource("5_shaman")]
+position = Vector2(580, 360)
+
+[node name="CavelingShaman2" parent="." instance=ExtResource("5_shaman")]
+position = Vector2(660, 560)
+
+[node name="CavelingShaman3" parent="." instance=ExtResource("5_shaman")]
+position = Vector2(720, 780)
+
+[node name="StoneCaveling1" parent="." instance=ExtResource("6_stone")]
+position = Vector2(620, 460)
+
+[node name="StoneCaveling2" parent="." instance=ExtResource("6_stone")]
+position = Vector2(710, 680)
+
+[node name="LarvaBug1" parent="." instance=ExtResource("7_larva")]
+position = Vector2(550, 420)
+
+[node name="LarvaBug2" parent="." instance=ExtResource("7_larva")]
+position = Vector2(680, 840)

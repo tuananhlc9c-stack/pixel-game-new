@@ -5,6 +5,8 @@
 [ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="3_a7gtn"]
 [ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="4_m4obr"]
 [ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="5_inypx"]
+[ext_resource type="PackedScene" path="res://scenes/entities/larva_bug.tscn" id="6_larva"]
+[ext_resource type="PackedScene" path="res://scenes/entities/stone_caveling.tscn" id="7_stone"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a7gtn"]
 texture = ExtResource("1_go7ir")
@@ -3980,3 +3982,15 @@ target_spawn_position = Vector2(427, 49)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("5_inypx")]
 position = Vector2(546, 408)
+
+[node name="LarvaBug1" parent="." instance=ExtResource("6_larva")]
+position = Vector2(450, 330)
+
+[node name="LarvaBug2" parent="." instance=ExtResource("6_larva")]
+position = Vector2(390, 285)
+
+[node name="LarvaBug3" parent="." instance=ExtResource("6_larva")]
+position = Vector2(510, 290)
+
+[node name="StoneCaveling1" parent="." instance=ExtResource("7_stone")]
+position = Vector2(445, 255)
