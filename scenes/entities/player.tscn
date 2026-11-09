@@ -341,12 +341,6 @@ texture = ExtResource("3_hqtel")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1766824287]
 libraries/ = SubResource("AnimationLibrary_sweqy")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Player" unique_id=1322241360]
-offset = Vector2(200, 200)
-transform = Transform2D(1, 0, 0, 1, 200, 200)
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1322241360]
 
-[node name="Invetory" parent="Player/CanvasLayer" unique_id=1049096046 instance=ExtResource("5_sweqy")]
-offset_left = -102.0
-offset_top = -112.0
-offset_right = -102.0
-offset_bottom = -112.0
+[node name="Invetory" parent="CanvasLayer" unique_id=1049096046 instance=ExtResource("5_sweqy")]

@@ -3,754 +3,1288 @@
 [ext_resource type="Script" uid="uid://ijnoqfy1s6io" path="res://menu/invetory.gd" id="1_l1ay4"]
 [ext_resource type="Texture2D" uid="uid://d01fmst12x0fr" path="res://Content T1/New/tool/menu1.png" id="2_g5ikq"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quickbar_bg"]
+bg_color = Color(0.2, 0.12, 0.07, 0.94)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.76, 0.52, 0.27, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 10.0
+expand_margin_top = 8.0
+expand_margin_right = 10.0
+expand_margin_bottom = 8.0
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bag_window"]
+bg_color = Color(0.22, 0.13, 0.08, 0.96)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.82, 0.58, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.55)
+shadow_size = 12
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inner_well"]
+bg_color = Color(0.14, 0.08, 0.05, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.28, 0.15, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [node name="Invetory" type="Control" unique_id=1049096046]
+texture_filter = 1
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_l1ay4")
 
+[node name="QuickBarBg" type="Panel" parent="." unique_id=1900100101]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -227.0
+offset_top = -62.0
+offset_right = 227.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_quickbar_bg")
+
 [node name="QuickBar" type="GridContainer" parent="." unique_id=996246795]
-layout_mode = 0
-offset_left = 352.0
-offset_top = 472.0
-offset_right = 521.0
-offset_bottom = 488.0
-scale = Vector2(2, 2)
-theme_override_constants/h_separation = 0
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -227.0
+offset_top = -62.0
+offset_right = 227.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/h_separation = 6
 columns = 10
 
 [node name="TextureRect" type="TextureRect" parent="QuickBar" unique_id=1755153994]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
 expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect" unique_id=2028452344]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
-
-[node name="TextureRect10" type="TextureRect" parent="QuickBar" unique_id=1535143008]
-custom_minimum_size = Vector2(16, 16)
-layout_mode = 2
-texture = ExtResource("2_g5ikq")
-expand_mode = 1
-
-[node name="Icon" type="TextureRect" parent="QuickBar/TextureRect10" unique_id=336995110]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
-mouse_filter = 2
-expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect2" type="TextureRect" parent="QuickBar" unique_id=285659296]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
 expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect2" unique_id=1077588943]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect3" type="TextureRect" parent="QuickBar" unique_id=1123154811]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
 expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect3" unique_id=1946654315]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect4" type="TextureRect" parent="QuickBar" unique_id=449318963]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
 expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect4" unique_id=1341316870]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect5" type="TextureRect" parent="QuickBar" unique_id=1261196685]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect5" unique_id=959393719]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect6" type="TextureRect" parent="QuickBar" unique_id=1384575199]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect6" unique_id=1808878486]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect7" type="TextureRect" parent="QuickBar" unique_id=1526966689]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect7" unique_id=1081374935]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect8" type="TextureRect" parent="QuickBar" unique_id=446900202]
-custom_minimum_size = Vector2(16, 6)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect8" unique_id=1965772999]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect9" type="TextureRect" parent="QuickBar" unique_id=659402000]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="QuickBar/TextureRect9" unique_id=1692749455]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect10" type="TextureRect" parent="QuickBar" unique_id=1535143008]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Icon" type="TextureRect" parent="QuickBar/TextureRect10" unique_id=336995110]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="bagwindow" type="Panel" parent="." unique_id=945766990]
-layout_mode = 0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = 7.0
-offset_bottom = 10.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -248.0
+offset_top = -152.0
+offset_right = 248.0
+offset_bottom = 112.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bag_window")
+
+[node name="TitleLabel" type="Label" parent="bagwindow" unique_id=1900100102]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 10.0
+offset_right = -48.0
+offset_bottom = 34.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.92, 0.72, 1)
+theme_override_colors/font_shadow_color = Color(0.1, 0.05, 0.02, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Inventory"
+vertical_alignment = 1
+
+[node name="CloseBtn" type="Button" parent="bagwindow" unique_id=1900100103]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -36.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 32.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.85, 0.65, 1)
+theme_override_colors/font_hover_color = Color(1, 0.4, 0.35, 1)
+theme_override_font_sizes/font_size = 12
+text = "X"
+flat = true
+
+[node name="InnerWell" type="Panel" parent="bagwindow" unique_id=1900100104]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 38.0
+offset_right = -14.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_inner_well")
+
+[node name="HintLabel" type="Label" parent="bagwindow" unique_id=1900100105]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -26.0
+offset_right = -14.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.85, 0.74, 0.56, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "[E] Open/Close  "
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="baggrid" type="GridContainer" parent="bagwindow" unique_id=1348444146]
-layout_mode = 0
-offset_left = 356.0
-offset_top = 212.0
-offset_right = 530.5
-offset_bottom = 331.0
-scale = Vector2(2, 2)
-offset_transform_scale = Vector2(2, 2)
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = -1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -227.0
+offset_top = -85.0
+offset_right = 227.0
+offset_bottom = 93.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
 columns = 10
 
 [node name="TextureRect" type="TextureRect" parent="bagwindow/baggrid" unique_id=2077902502]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
-expand_mode = 3
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect" unique_id=854842245]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect2" type="TextureRect" parent="bagwindow/baggrid" unique_id=727883933]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect2" unique_id=1498715919]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect3" type="TextureRect" parent="bagwindow/baggrid" unique_id=1612701515]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect3" unique_id=1444780687]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect4" type="TextureRect" parent="bagwindow/baggrid" unique_id=2116268917]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect4" unique_id=79531958]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect5" type="TextureRect" parent="bagwindow/baggrid" unique_id=2017207424]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect5" unique_id=1443330747]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect6" type="TextureRect" parent="bagwindow/baggrid" unique_id=1713935068]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect6" unique_id=1101789111]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect7" type="TextureRect" parent="bagwindow/baggrid" unique_id=357948602]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect7" unique_id=1438450672]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect8" type="TextureRect" parent="bagwindow/baggrid" unique_id=1138047002]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect8" unique_id=1397127113]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect9" type="TextureRect" parent="bagwindow/baggrid" unique_id=273418476]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect9" unique_id=1974247238]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect10" type="TextureRect" parent="bagwindow/baggrid" unique_id=628075199]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect10" unique_id=1871553170]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect11" type="TextureRect" parent="bagwindow/baggrid" unique_id=967527098]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect11" unique_id=1306204346]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect12" type="TextureRect" parent="bagwindow/baggrid" unique_id=1508621283]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect12" unique_id=587916175]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect13" type="TextureRect" parent="bagwindow/baggrid" unique_id=2025730127]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect13" unique_id=1901907393]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect14" type="TextureRect" parent="bagwindow/baggrid" unique_id=849346687]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect14" unique_id=159534975]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect15" type="TextureRect" parent="bagwindow/baggrid" unique_id=1147045453]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect15" unique_id=1703886283]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect16" type="TextureRect" parent="bagwindow/baggrid" unique_id=1361391043]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect16" unique_id=1374115007]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect17" type="TextureRect" parent="bagwindow/baggrid" unique_id=1713790907]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect17" unique_id=1110218745]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect18" type="TextureRect" parent="bagwindow/baggrid" unique_id=301534766]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect18" unique_id=652115951]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect19" type="TextureRect" parent="bagwindow/baggrid" unique_id=585272257]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect19" unique_id=1163979641]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect20" type="TextureRect" parent="bagwindow/baggrid" unique_id=1693910232]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect20" unique_id=811009696]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect21" type="TextureRect" parent="bagwindow/baggrid" unique_id=1837241494]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect21" unique_id=1211773920]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect22" type="TextureRect" parent="bagwindow/baggrid" unique_id=667748955]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect22" unique_id=432499367]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect23" type="TextureRect" parent="bagwindow/baggrid" unique_id=1548660867]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect23" unique_id=1798792909]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect24" type="TextureRect" parent="bagwindow/baggrid" unique_id=1892882347]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect24" unique_id=691701551]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect25" type="TextureRect" parent="bagwindow/baggrid" unique_id=1416073847]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect25" unique_id=901439410]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect26" type="TextureRect" parent="bagwindow/baggrid" unique_id=144235662]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect26" unique_id=991155855]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect27" type="TextureRect" parent="bagwindow/baggrid" unique_id=188714270]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect27" unique_id=31279542]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect28" type="TextureRect" parent="bagwindow/baggrid" unique_id=83197862]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect28" unique_id=32833175]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect29" type="TextureRect" parent="bagwindow/baggrid" unique_id=2079701812]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect29" unique_id=2096365197]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect30" type="TextureRect" parent="bagwindow/baggrid" unique_id=1947952272]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect30" unique_id=1470190510]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect31" type="TextureRect" parent="bagwindow/baggrid" unique_id=1833530798]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect31" unique_id=998276368]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect32" type="TextureRect" parent="bagwindow/baggrid" unique_id=1249941976]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect32" unique_id=658594099]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect33" type="TextureRect" parent="bagwindow/baggrid" unique_id=1409691317]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect33" unique_id=1412084698]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect34" type="TextureRect" parent="bagwindow/baggrid" unique_id=1778457169]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect34" unique_id=2006238110]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect35" type="TextureRect" parent="bagwindow/baggrid" unique_id=755816909]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect35" unique_id=980761297]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect36" type="TextureRect" parent="bagwindow/baggrid" unique_id=299051786]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect36" unique_id=389618190]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect37" type="TextureRect" parent="bagwindow/baggrid" unique_id=763953803]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect37" unique_id=1959134601]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect38" type="TextureRect" parent="bagwindow/baggrid" unique_id=1285174339]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect38" unique_id=481438132]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect39" type="TextureRect" parent="bagwindow/baggrid" unique_id=2005547209]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect39" unique_id=647646263]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
 
 [node name="TextureRect40" type="TextureRect" parent="bagwindow/baggrid" unique_id=1220437476]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 texture = ExtResource("2_g5ikq")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Icon" type="TextureRect" parent="bagwindow/baggrid/TextureRect40" unique_id=1655249750]
-custom_minimum_size = Vector2(14, 14)
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 15.0
-offset_bottom = 15.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
+stretch_mode = 5
