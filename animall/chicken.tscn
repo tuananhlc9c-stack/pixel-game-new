@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://cchk1gocgs5aa"]
+
+[ext_resource type="Script" uid="uid://dbc5shwe27a54" path="res://animall/goat.gd" id="1_goat"]
+[ext_resource type="Texture2D" uid="uid://tnauciv57jm7" path="res://Content T1/Animal/Chicken.png" id="2_chk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk0"]
+atlas = ExtResource("2_chk")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk1"]
+atlas = ExtResource("2_chk")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk2"]
+atlas = ExtResource("2_chk")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk3"]
+atlas = ExtResource("2_chk")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk4"]
+atlas = ExtResource("2_chk")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk5"]
+atlas = ExtResource("2_chk")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk6"]
+atlas = ExtResource("2_chk")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk7"]
+atlas = ExtResource("2_chk")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk8"]
+atlas = ExtResource("2_chk")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk9"]
+atlas = ExtResource("2_chk")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk10"]
+atlas = ExtResource("2_chk")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chk11"]
+atlas = ExtResource("2_chk")
+region = Rect2(48, 32, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_chk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk3")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk7")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chk11")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_chk"]
+radius = 4.0
+height = 8.0
+
+[node name="Chicken" type="CharacterBody2D"]
+script = ExtResource("1_goat")
+speed = 45.0
+wander_radius = 28.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_chk")
+animation = &"walk_down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape2D_chk")

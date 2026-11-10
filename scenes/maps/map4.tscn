@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dqjuql84h3npx" path="res://Content T1/Mapss/titleset/Ladder_tilset.png" id="6_vw1a3"]
 [ext_resource type="Texture2D" uid="uid://ctekhv08b5npg" path="res://Content T1/Mapss/titleset/Water pink_tilet.png" id="7_v488w"]
 [ext_resource type="Texture2D" uid="uid://mb6ujrs4e0uh" path="res://Content T1/Mapss/titleset/Water green_tilet.png" id="8_gob7r"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="9_gob7r"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="9_gob7r"]
 [ext_resource type="Texture2D" uid="uid://dsd1sowg0u3uv" path="res://Content T1/Mapss/FishingDerbyTiles.png" id="9_r7m3j"]
 [ext_resource type="Texture2D" uid="uid://4bx178hepn57" path="res://Content T1/Tilesheet/Craftables.png" id="10_5bvqt"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="10_r7m3j"]
@@ -23,12 +23,13 @@
 [ext_resource type="Texture2D" uid="uid://byhthvuo507ck" path="res://Content T1/Loose/Cursors.png" id="15_0dyqg"]
 [ext_resource type="Texture2D" uid="uid://dq2w6sd3s0vdm" path="res://Content T1/Tilesheet/Furniture_tilet.png" id="16_ls1ak"]
 [ext_resource type="Texture2D" uid="uid://bgjhnm4aj1scg" path="res://Content T1/Tilesheet/Objects_2.png" id="17_v3pd0"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="22_vw1a3"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="25_5bvqt"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="26_6uo2c"]
-[ext_resource type="PackedScene" path="res://scenes/entities/slime.tscn" id="27_4p86k"]
-[ext_resource type="PackedScene" path="res://scenes/entities/smile1.tscn" id="28_377j4"]
-[ext_resource type="PackedScene" path="res://scenes/entities/khao1.tscn" id="29_377j4"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="22_vw1a3"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="25_5bvqt"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="26_6uo2c"]
+[ext_resource type="PackedScene" uid="uid://lgdctiop71bc" path="res://scenes/entities/slime.tscn" id="27_4p86k"]
+[ext_resource type="PackedScene" uid="uid://cxt6jk8ml6yko" path="res://scenes/entities/smile1.tscn" id="28_377j4"]
+[ext_resource type="PackedScene" uid="uid://bjvbt65gogf7p" path="res://scenes/entities/khao1.tscn" id="29_377j4"]
+[ext_resource type="PackedScene" uid="uid://dxgs027sbmv7d" path="res://scenes/entities/fish_merchant_npc.tscn" id="30_fishnpc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_glwgy"]
 texture = ExtResource("1_u5uvw")
@@ -17324,3 +17325,6 @@ position = Vector2(960, 163)
 
 [node name="Khao1" parent="." unique_id=1898179269 instance=ExtResource("29_377j4")]
 position = Vector2(526, 365)
+
+[node name="FishMerchantNPC" parent="." unique_id=1898179271 instance=ExtResource("30_fishnpc")]
+position = Vector2(360, 148)

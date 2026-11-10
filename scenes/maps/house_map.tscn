@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://bvl5kusbaxc84"]
+[gd_scene format=3 uid="uid://rn6jp4a3psun"]
 
 [ext_resource type="Texture2D" uid="uid://byhthvuo507ck" path="res://Content T1/Loose/Cursors.png" id="1_6o6o2"]
 [ext_resource type="Texture2D" uid="uid://dnfgiwj0pdol0" path="res://demo/housefarm_tilset.png" id="2_1vjiw"]
 [ext_resource type="Texture2D" uid="uid://vm00x1mwwmx8" path="res://demo/Ladder_tilset.png" id="3_n62ff"]
 [ext_resource type="Texture2D" uid="uid://dfk6luh8ffn61" path="res://Content T1/Loose/Cursors 2.png" id="4_ve1dg"]
-[ext_resource type="PackedScene" path="res://scenes/objects/Tham.tscn" id="5_ivrbd"]
+[ext_resource type="PackedScene" uid="uid://cq4x87qarh3tw" path="res://scenes/objects/Tham.tscn" id="5_ivrbd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8omx4"]
 texture = ExtResource("1_6o6o2")

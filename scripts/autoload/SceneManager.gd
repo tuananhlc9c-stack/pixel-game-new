@@ -13,6 +13,21 @@ var saved_inventory_data: Array = []
 var saved_selected_slot: int = 0
 var has_received_starter_items: bool = false
 
+# Lưu số Vàng (Gold) hiện tại của người chơi xuyên suốt các map
+var saved_gold: int = 0
+signal gold_changed(new_gold: int)
+
+# Lưu trạng thái đồ nội thất đã đặt trong House Map xuyên suốt các lần ra vào nhà
+var has_saved_house_furniture: bool = false
+var saved_house_furniture: Array[Dictionary] = []
+
+func add_gold(amount: int) -> void:
+	saved_gold = max(0, saved_gold + amount)
+	gold_changed.emit(saved_gold)
+
+func get_gold() -> int:
+	return saved_gold
+
 # Bảng ánh xạ UID sang đường dẫn Scene mới sau khi tái cấu trúc thư mục
 const SCENE_UID_MAP: Dictionary = {
 	"uid://couwdjdsc2a3n": "res://scenes/maps/farm house.tscn",

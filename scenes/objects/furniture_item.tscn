@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cjp7sg728jfrm"]
+
+[ext_resource type="Script" uid="uid://d1s024l8k1v2" path="res://scripts/objects/item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://dq2w6sd3s0vdm" path="res://Content T1/Tilesheet/Furniture_tilet.png" id="2_furntex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_furn"]
+size = Vector2(16, 32)
+
+[node name="FurnitureItem" type="Area2D"]
+z_index = 1
+y_sort_enabled = true
+script = ExtResource("1_item")
+item_id = "furn_oak_chair"
+item_name = "Oak Chair"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_furntex")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_furn")

@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://cpiganocgs5aa"]
+
+[ext_resource type="Script" uid="uid://dbc5shwe27a54" path="res://animall/goat.gd" id="1_goat"]
+[ext_resource type="Texture2D" uid="uid://dduvfjxfv355i" path="res://Content T1/Animal/Pig.png" id="2_pig"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig0"]
+atlas = ExtResource("2_pig")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig1"]
+atlas = ExtResource("2_pig")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig2"]
+atlas = ExtResource("2_pig")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig3"]
+atlas = ExtResource("2_pig")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig4"]
+atlas = ExtResource("2_pig")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig5"]
+atlas = ExtResource("2_pig")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig6"]
+atlas = ExtResource("2_pig")
+region = Rect2(64, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig7"]
+atlas = ExtResource("2_pig")
+region = Rect2(96, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig8"]
+atlas = ExtResource("2_pig")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig9"]
+atlas = ExtResource("2_pig")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig10"]
+atlas = ExtResource("2_pig")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pig11"]
+atlas = ExtResource("2_pig")
+region = Rect2(96, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pig"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig3")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig7")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pig11")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pig"]
+radius = 5.0
+height = 12.0
+
+[node name="Pig" type="CharacterBody2D"]
+script = ExtResource("1_goat")
+speed = 50.0
+wander_radius = 30.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_pig")
+animation = &"walk_down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8)
+shape = SubResource("CapsuleShape2D_pig")

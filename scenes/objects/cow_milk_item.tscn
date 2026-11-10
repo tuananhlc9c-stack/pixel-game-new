@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://ccow1gocgs5aa"]
+
+[ext_resource type="Script" path="res://scripts/objects/item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://xcw6g354f0ig" path="res://Content T1/Loose/Fish-food.png" id="2_food"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cowmilk"]
+size = Vector2(16, 16)
+
+[node name="CowMilkItem" type="Area2D"]
+script = ExtResource("1_item")
+item_id = "cow_milk"
+item_name = "Cow Milk"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_food")
+region_enabled = true
+region_rect = Rect2(32, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_cowmilk")

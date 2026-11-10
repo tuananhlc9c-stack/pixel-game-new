@@ -175,8 +175,32 @@ func _setup_health_system() -> void:
 	_on_health_changed(health_component.current_health, health_component.max_health)
 	_update_special_cooldown_ui()
 
+func _is_mouse_over_placed_furniture() -> bool:
+	var world_mouse := get_global_mouse_position()
+	for node in get_tree().get_nodes_in_group("furniture_item"):
+		if is_instance_valid(node):
+			if node.get("is_dragging") == true:
+				return true
+			if node.has_method("is_point_over_item") and node.is_point_over_item(world_mouse):
+				return true
+	return false
+
 func _unhandled_input(event: InputEvent) -> void:
+	for shop_ui in get_tree().get_nodes_in_group("merchant_shop_ui"):
+		if shop_ui is Control and shop_ui.is_visible_in_tree():
+			return
+
+	# Nếu chuột đang trỏ vào đồ nội thất trên sàn (để kéo di chuyển hoặc chuột phải cất vào túi), không vung kiếm
+	if _is_mouse_over_placed_furniture():
+		return
+
 	if event.is_action_pressed("attack"):
+		var inv = get_tree().get_first_node_in_group("inventory")
+		if inv and inv.has_method("is_holding_furniture") and inv.is_holding_furniture():
+			if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+				if inv.place_selected_furniture_at_mouse():
+					get_viewport().set_input_as_handled()
+					return
 		if _is_holding_fishing_rod():
 			_handle_fishing_action()
 			return

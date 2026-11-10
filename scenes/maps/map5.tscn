@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cql0tc5aoo7fb" path="res://Content T1/Tilesheet/cau.png" id="6_7qrby"]
 [ext_resource type="Texture2D" uid="uid://qnqiasyio6yg" path="res://Content T1/Mapss/titleset/Wall3_tilset.png" id="7_78rxf"]
 [ext_resource type="Texture2D" uid="uid://mb6ujrs4e0uh" path="res://Content T1/Mapss/titleset/Water green_tilet.png" id="8_5jwup"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="9_kidl0"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="9_kidl0"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="10_as0al"]
 [ext_resource type="Texture2D" uid="uid://2opy8il0iujs" path="res://Content T1/Building/Stone Cabin.png" id="10_mfx5u"]
 [ext_resource type="Texture2D" uid="uid://dfy4tqf8nqs8b" path="res://Content T1/Tilesheet/cau1.png" id="11_p2yu5"]
@@ -30,12 +30,19 @@
 [ext_resource type="Texture2D" uid="uid://bx1p0u4ca5kq6" path="res://Content T1/New/House6.png" id="23_tw8ia"]
 [ext_resource type="Texture2D" uid="uid://61r4qmaq611s" path="res://Content T1/New/greenhouse.png" id="24_ni0i1"]
 [ext_resource type="Texture2D" uid="uid://bshrh4f6ehb4j" path="res://Content T1/New/house1.png" id="26_ualt0"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="28_mfx5u"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="32_tw8ia"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="33_ni0i1"]
-[ext_resource type="PackedScene" path="res://scenes/entities/smile1.tscn" id="34_ni0i1"]
-[ext_resource type="PackedScene" path="res://scenes/entities/frog.tscn" id="35_ualt0"]
-[ext_resource type="PackedScene" path="res://scenes/entities/khao.tscn" id="36_mug5y"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="28_mfx5u"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="32_tw8ia"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="33_ni0i1"]
+[ext_resource type="PackedScene" uid="uid://cxt6jk8ml6yko" path="res://scenes/entities/smile1.tscn" id="34_ni0i1"]
+[ext_resource type="PackedScene" uid="uid://dwwbrjkql7ip0" path="res://scenes/entities/frog.tscn" id="35_ualt0"]
+[ext_resource type="PackedScene" uid="uid://dv8a4are5amhj" path="res://scenes/entities/khao.tscn" id="36_mug5y"]
+[ext_resource type="PackedScene" uid="uid://cm3rchantnpc5" path="res://scenes/entities/merchant_npc.tscn" id="37_eggmilknpc"]
+[ext_resource type="PackedScene" uid="uid://dtownnpcevelyn" path="res://scenes/entities/town_npc_evelyn.tscn" id="38_tnevelyn"]
+[ext_resource type="PackedScene" uid="uid://dtownnpclewis" path="res://scenes/entities/town_npc_lewis.tscn" id="39_tnlewis"]
+[ext_resource type="PackedScene" uid="uid://dtownnpcmalle" path="res://scenes/entities/town_npc_malle.tscn" id="40_tnmalle"]
+[ext_resource type="PackedScene" uid="uid://dtownnpccair" path="res://scenes/entities/town_npc_cair.tscn" id="41_tncair"]
+[ext_resource type="PackedScene" uid="uid://dtownnpcgeo" path="res://scenes/entities/town_npc_geo.tscn" id="42_tngeo"]
+[ext_resource type="PackedScene" uid="uid://dfurnmerchantnpc" path="res://scenes/entities/furniture_merchant_npc.tscn" id="43_furnnpc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jtbkh"]
 texture = ExtResource("1_i0ehx")
@@ -14600,7 +14607,7 @@ next_scene_path = "res://scenes/maps/map3.tscn"
 target_spawn_position = Vector2(1100, 570)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("33_ni0i1")]
-position = Vector2(885, 847)
+position = Vector2(645, 838)
 
 [node name="Portal2" parent="." unique_id=7581960 instance=ExtResource("32_tw8ia")]
 position = Vector2(115.999985, 564.99994)
@@ -14620,7 +14627,7 @@ next_scene_path = "res://scenes/maps/map7.tscn"
 target_spawn_position = Vector2(32, 297)
 
 [node name="Portal5" parent="." unique_id=537711956 instance=ExtResource("32_tw8ia")]
-position = Vector2(919.99994, 846.99994)
+position = Vector2(937, 842.00006)
 rotation = -1.5665929
 next_scene_path = "res://scenes/maps/map7.tscn"
 target_spawn_position = Vector2(106, 980)
@@ -14638,7 +14645,7 @@ position = Vector2(821, 972)
 position = Vector2(677, 334)
 
 [node name="Frog2" parent="." unique_id=1392863214 instance=ExtResource("35_ualt0")]
-position = Vector2(354, 272)
+position = Vector2(304, 279)
 
 [node name="Frog3" parent="." unique_id=540304718 instance=ExtResource("35_ualt0")]
 position = Vector2(444, 487)
@@ -14651,3 +14658,29 @@ position = Vector2(264, -21)
 
 [node name="bird2" parent="." unique_id=1944099635 instance=ExtResource("36_mug5y")]
 position = Vector2(248, 174)
+
+[node name="EggMilkMerchantNPC" parent="." unique_id=1898179270 instance=ExtResource("37_eggmilknpc")]
+position = Vector2(323, 516)
+
+[node name="TownNPCEvelyn" parent="." unique_id=1898179281 instance=ExtResource("38_tnevelyn")]
+position = Vector2(280, 320)
+patrol_offsets = PackedVector2Array(-90, 0, 90, 0)
+
+[node name="TownNPCLewis" parent="." unique_id=1898179282 instance=ExtResource("39_tnlewis")]
+position = Vector2(520, 565)
+patrol_offsets = PackedVector2Array(-110, 0, 140, 0)
+
+[node name="TownNPCMalle" parent="." unique_id=1898179283 instance=ExtResource("40_tnmalle")]
+position = Vector2(650, 334)
+patrol_offsets = PackedVector2Array(-80, 0, 80, 0)
+
+[node name="TownNPCCair" parent="." unique_id=1898179284 instance=ExtResource("41_tncair")]
+position = Vector2(740, 835)
+patrol_offsets = PackedVector2Array(-90, 0, 110, 0)
+
+[node name="TownNPCGeo" parent="." unique_id=1898179285 instance=ExtResource("42_tngeo")]
+position = Vector2(585, 690)
+patrol_offsets = PackedVector2Array(0, -100, 0, 110)
+
+[node name="FurnitureMerchantNPC" parent="." unique_id=1898179290 instance=ExtResource("43_furnnpc")]
+position = Vector2(736, 528)

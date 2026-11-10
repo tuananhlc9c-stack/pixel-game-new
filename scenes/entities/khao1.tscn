@@ -4,8 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://dmxy3s24vfhr3" path="res://Content T1/Character/NANI_Beach.png" id="2_5d7hi"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mrg7q"]
+radius = 6.0
+height = 18.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1sur3"]
+radius = 36.0
+height = 72.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4begh"]
 atlas = ExtResource("2_5d7hi")
