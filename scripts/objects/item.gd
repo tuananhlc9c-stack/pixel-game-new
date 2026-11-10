@@ -3,6 +3,8 @@ extends Area2D
 # Kích thước ô lưới sàn
 @export var tile_size: int = 16
 @export var item_icon: Texture2D
+@export var item_id: String = ""
+@export var item_name: String = ""
 
 # THÊM DÒNG NÀY: Để gắn file scene .tscn của chiếc ghế vào
 @export var item_scene: PackedScene
@@ -69,8 +71,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 					copy_node.free()
 			
 			var icon = item_icon if item_icon else sprite.texture
-			if inv.add_item(icon, scene_to_save):
-				print("Đã đóng gói và cất ghế thành công!")
+			if inv.add_item(icon, scene_to_save, item_id, item_name):
+				print("Đã đóng gói và cất đồ thành công!")
 				queue_free()
 		return
 

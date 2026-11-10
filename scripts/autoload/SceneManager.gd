@@ -8,6 +8,11 @@ var is_changing_scene: bool = false
 # Lưu máu của Player khi chuyển cảnh (-1 nghĩa là dùng max_health mặc định)
 var saved_player_health: int = -1
 
+# Lưu dữ liệu Balo (Inventory) xuyên suốt các map
+var saved_inventory_data: Array = []
+var saved_selected_slot: int = 0
+var has_received_starter_items: bool = false
+
 # Bảng ánh xạ UID sang đường dẫn Scene mới sau khi tái cấu trúc thư mục
 const SCENE_UID_MAP: Dictionary = {
 	"uid://couwdjdsc2a3n": "res://scenes/maps/farm house.tscn",

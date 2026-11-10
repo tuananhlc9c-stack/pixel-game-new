@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://d0kdkc5xru0kk" path="res://demo/titleset/Tress2_tilet.png" id="4_80fcc"]
 [ext_resource type="Texture2D" uid="uid://bj6wn4xas2l73" path="res://demo/titleset/cot_tilet.png" id="4_p552o"]
 [ext_resource type="Texture2D" uid="uid://bml8f3728a12g" path="res://demo/titleset/bridge_tilet.png" id="5_p552o"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="5_rwrpn"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="5_rwrpn"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="6_yrk7s"]
 [ext_resource type="Texture2D" uid="uid://scu7ha4r0ttp" path="res://Content T1/Tilesheet/debris.png" id="7_e6kri"]
 [ext_resource type="Texture2D" uid="uid://dih18x1pqauqd" path="res://demo/titleset/House_tilset.png" id="7_nr825"]
@@ -14,13 +14,15 @@
 [ext_resource type="Texture2D" uid="uid://dvr8hnqyecwne" path="res://Content T1/Mapss/titleset 2/House_tilset.png" id="10_ru2ru"]
 [ext_resource type="Texture2D" uid="uid://61r4qmaq611s" path="res://Content T1/New/greenhouse.png" id="10_ulp6j"]
 [ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="11_rwrpn"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="15_3y0tq"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="16_4hij6"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="15_3y0tq"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="16_4hij6"]
 [ext_resource type="PackedScene" uid="uid://w4lr1igu8wgl" path="res://animall/cat.tscn" id="17_4hij6"]
 [ext_resource type="PackedScene" uid="uid://b58pxi71rg46j" path="res://animall/cat1.tscn" id="18_42e4p"]
 [ext_resource type="PackedScene" uid="uid://crbrkf00w4s6a" path="res://animall/goat.tscn" id="19_im4rw"]
 [ext_resource type="PackedScene" uid="uid://b3gamxwcsi4lx" path="res://animall/goat1.tscn" id="20_ptb18"]
 [ext_resource type="PackedScene" uid="uid://bu0jmya07cyny" path="res://animall/dog.tscn" id="21_ty4fu"]
+[ext_resource type="PackedScene" uid="uid://0phiuh3epq5u" path="res://scenes/objects/fishing_rod_item.tscn" id="22_rod"]
+[ext_resource type="PackedScene" uid="uid://bnelwrhegs5aa" path="res://scenes/objects/fish_item.tscn" id="23_fish"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nr825"]
 texture = ExtResource("1_gjp8d")
@@ -3155,3 +3157,9 @@ position = Vector2(16, 23)
 
 [node name="Dog2" parent="." unique_id=1752769528 instance=ExtResource("21_ty4fu")]
 position = Vector2(692, 181)
+
+[node name="FishingRodItem" parent="." unique_id=1890001001 instance=ExtResource("22_rod")]
+position = Vector2(888, 520)
+
+[node name="FishItem" parent="." unique_id=1890001002 instance=ExtResource("23_fish")]
+position = Vector2(872, 520)

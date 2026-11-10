@@ -126,9 +126,43 @@ func _ready() -> void:
 		slot.mouse_entered.connect(_on_slot_mouse_entered.bind(slot))
 		slot.mouse_exited.connect(_on_slot_mouse_exited.bind(slot))
 
-	# Chọn sẵn ô số 1 khi bắt đầu
-	if all_slots.size() > 0:
-		select_slot_by_index(0)
+	# Khôi phục dữ liệu balo nếu đã lưu hoặc cấp sẵn Cần Câu Cá lúc mới vào game
+	if SceneManager and SceneManager.saved_inventory_data.size() == all_slots.size():
+		inventory_data = SceneManager.saved_inventory_data.duplicate(true)
+		for i in range(all_slots.size()):
+			update_slot_display(i)
+		select_slot_by_index(clampi(SceneManager.saved_selected_slot, 0, all_slots.size() - 1))
+	else:
+		if all_slots.size() > 0:
+			select_slot_by_index(0)
+		if not SceneManager or not SceneManager.has_received_starter_items:
+			if SceneManager:
+				SceneManager.has_received_starter_items = true
+			_give_starter_fishing_rod()
+		_sync_to_scene_manager()
+
+func _give_starter_fishing_rod() -> void:
+	var tools_tex := load("res://Content T1/Tilesheet/Tools1_tilet.png") as Texture2D
+	var rod_scene := load("res://scenes/objects/fishing_rod_item.tscn") as PackedScene
+	if tools_tex:
+		var rod_icon := AtlasTexture.new()
+		rod_icon.atlas = tools_tex
+		rod_icon.region = Rect2(0, 144, 16, 16)
+		add_item(rod_icon, rod_scene, "fishing_rod", "Fishing Rod")
+
+func _sync_to_scene_manager() -> void:
+	if SceneManager:
+		SceneManager.saved_inventory_data = inventory_data.duplicate(true)
+		SceneManager.saved_selected_slot = selected_slot_index
+
+func get_selected_item_data() -> Variant:
+	if selected_slot_index >= 0 and selected_slot_index < inventory_data.size():
+		return inventory_data[selected_slot_index]
+	return null
+
+func is_holding_fishing_rod() -> bool:
+	var data = get_selected_item_data()
+	return data != null and data.get("id", "") == "fishing_rod"
 
 func _on_close_btn_pressed() -> void:
 	toggle_bag_window(false)
@@ -293,6 +327,20 @@ func place_dragged_item_to_world(slot_idx: int) -> void:
 	var snap_y = floor(world_mouse_pos.y / 16.0) * 16.0 + 8.0
 	new_item.global_position = Vector2(snap_x, snap_y)
 
+	# Giữ nguyên icon, id và tên của món đồ (đặc biệt là các loại cá khác nhau) khi đặt ra sàn
+	if data.get("icon") != null:
+		new_item.item_icon = data["icon"]
+		var spr := new_item.get_node_or_null("Sprite2D") as Sprite2D
+		if spr and data["icon"] is AtlasTexture:
+			var atlas_tex := data["icon"] as AtlasTexture
+			spr.texture = atlas_tex.atlas
+			spr.region_enabled = true
+			spr.region_rect = atlas_tex.region
+	if "item_id" in new_item and data.get("id", "") != "":
+		new_item.item_id = data["id"]
+	if "item_name" in new_item and data.get("name", "") != "":
+		new_item.item_name = data["name"]
+
 	print(">>> ĐÃ KÉO THẢ ĐỒ RA SÀN TẠI: ", new_item.global_position)
 
 	# Xóa món đồ khỏi ô sau khi đặt
@@ -301,6 +349,7 @@ func place_dragged_item_to_world(slot_idx: int) -> void:
 	if selected_slot_index == slot_idx:
 		current_place_scene = null
 		item_changed.emit(null)
+	_sync_to_scene_manager()
 
 # Click chuột trái đơn thuần chỉ để sáng ô chọn (không tự đặt đồ gây lỗi nữa)
 func _gui_input(event: InputEvent) -> void:
@@ -317,12 +366,14 @@ func _get_slot_icon_node(slot: Node) -> TextureRect:
 		target_icon = slot.get_node_or_null("icon") as TextureRect
 	return target_icon
 
-func add_item(icon: Texture2D, scene_to_place: PackedScene = null) -> bool:
+func add_item(icon: Texture2D, scene_to_place: PackedScene = null, item_id: String = "", item_name: String = "") -> bool:
 	for i in range(inventory_data.size()):
 		if inventory_data[i] == null:
 			inventory_data[i] = {
 				"scene": scene_to_place,
-				"icon": icon
+				"icon": icon,
+				"id": item_id,
+				"name": item_name
 			}
 			update_slot_display(i)
 			# Hiệu ứng nảy nhẹ khi nhặt đồ vào ô
@@ -334,6 +385,7 @@ func add_item(icon: Texture2D, scene_to_place: PackedScene = null) -> bool:
 			if i == selected_slot_index:
 				current_place_scene = scene_to_place
 				item_changed.emit(icon)
+			_sync_to_scene_manager()
 			return true
 	return false
 
@@ -349,11 +401,13 @@ func update_slot_display(idx: int) -> void:
 			target_icon.texture = data["icon"]
 		else:
 			slot.texture = data["icon"]
+		slot.tooltip_text = data.get("name", "")
 	else:
 		if target_icon:
 			target_icon.texture = null
 		else:
 			slot.texture = null
+		slot.tooltip_text = ""
 
 func swap_slots(from_idx: int, to_idx: int) -> void:
 	var temp = inventory_data[from_idx]
@@ -363,6 +417,7 @@ func swap_slots(from_idx: int, to_idx: int) -> void:
 	update_slot_display(from_idx)
 	update_slot_display(to_idx)
 	select_slot_by_index(to_idx)
+	_sync_to_scene_manager()
 
 func select_slot_by_index(idx: int) -> void:
 	if idx < 0 or idx >= all_slots.size():
@@ -389,3 +444,4 @@ func select_slot_by_index(idx: int) -> void:
 	else:
 		current_place_scene = null
 		item_changed.emit(null)
+	_sync_to_scene_manager()

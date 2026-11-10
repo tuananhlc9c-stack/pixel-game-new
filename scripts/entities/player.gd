@@ -46,6 +46,29 @@ var knockback_velocity: Vector2 = Vector2.ZERO
 var hit_targets: Array[Node] = []
 var initial_spawn_position: Vector2 = Vector2.ZERO
 
+# Hệ thống Câu Cá (Fishing System)
+enum FishingState { NONE, CASTING, WAITING, BITE, CAUGHT }
+var fishing_state: FishingState = FishingState.NONE
+var fishing_timer: float = 0.0
+var fishing_time_elapsed: float = 0.0
+var bobber_target_local: Vector2 = Vector2.ZERO
+var bobber_current_local: Vector2 = Vector2.ZERO
+var rod_tip_local: Vector2 = Vector2.ZERO
+var held_rod_sprite: Sprite2D = null
+var fishing_status_label: Label = null
+var caught_fish_sprite: Sprite2D = null
+
+const FISH_POOL: Array[Dictionary] = [
+	{"id": "fish_carp", "name": "Carp", "region": Rect2(0, 48, 16, 16)},
+	{"id": "fish_perch", "name": "Perch", "region": Rect2(16, 48, 16, 16)},
+	{"id": "fish_salmon", "name": "Red Salmon", "region": Rect2(32, 48, 16, 16)},
+	{"id": "fish_gold", "name": "Goldfish", "region": Rect2(48, 48, 16, 16)},
+	{"id": "fish_tuna", "name": "Tuna", "region": Rect2(80, 48, 16, 16)},
+	{"id": "fish_crab", "name": "Red Crab", "region": Rect2(144, 48, 16, 16)},
+	{"id": "fish_shrimp", "name": "Silver Shrimp", "region": Rect2(160, 48, 16, 16)},
+	{"id": "fish_octopus", "name": "Octopus", "region": Rect2(176, 48, 16, 16)}
+]
+
 func _ready() -> void:
 	add_to_group("player")
 
@@ -81,6 +104,7 @@ func _ready() -> void:
 
 	# 3. Khởi tạo Hệ thống Máu (HealthComponent) và HUD
 	_setup_health_system()
+	_setup_fishing_visuals()
 
 	# 4. Đặt vị trí spawn khi chuyển cảnh
 	if SceneManager and SceneManager.use_spawn_position:
@@ -153,9 +177,18 @@ func _setup_health_system() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack"):
+		if _is_holding_fishing_rod():
+			_handle_fishing_action()
+			return
+		elif fishing_state != FishingState.NONE:
+			_cancel_fishing()
+			return
 		if not is_attacking and not is_rolling:
 			start_weapon_swing(false)
 	elif event.is_action_pressed("special_attack") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT):
+		if fishing_state != FishingState.NONE:
+			_cancel_fishing("Canceled")
+			return
 		if not is_attacking and not is_rolling:
 			if special_cooldown_timer <= 0.0:
 				start_weapon_swing(true)
@@ -174,6 +207,7 @@ func _physics_process(delta: float) -> void:
 
 	# Cập nhật vệt kiếm động mượt mà theo từng khung hình
 	_update_slash_trail(delta)
+	_update_fishing(delta)
 
 	if special_wave_progress >= 0.0:
 		special_wave_progress += delta * 4.2
@@ -207,6 +241,16 @@ func _physics_process(delta: float) -> void:
 		input_y = Input.get_axis("ui_up", "ui_down")
 
 	var direction := Vector2(input_x, input_y).normalized()
+
+	# Nếu đang thả câu mà di chuyển hoặc lộn nhào thì tự động thu dây câu
+	if fishing_state != FishingState.NONE:
+		if direction != Vector2.ZERO or Input.is_action_just_pressed("roll") or Input.is_action_just_pressed("ui_accept"):
+			if fishing_state != FishingState.CAUGHT:
+				_cancel_fishing()
+		else:
+			velocity = Vector2.ZERO
+			move_and_slide()
+			return
 
 	# Khi đang chém: cho phép di chuyển mượt hoặc trượt theo quán tính thay vì khựng cứng
 	if is_attacking:
@@ -475,6 +519,8 @@ func start_roll(dir: Vector2) -> void:
 func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_force: float = 140.0) -> void:
 	if is_rolling or not health_component or health_component.is_invincible:
 		return
+	if fishing_state != FishingState.NONE:
+		_cancel_fishing()
 
 	if source_pos != Vector2.ZERO:
 		var dir := (global_position - source_pos).normalized()
@@ -617,3 +663,287 @@ func _draw() -> void:
 		var end_ang := special_wave_angle + deg_to_rad(80)
 		draw_arc(Vector2.ZERO, radius, start_ang, end_ang, 32, Color(1.0, 0.82, 0.25, alpha * 0.9), 4.0)
 		draw_arc(Vector2.ZERO, radius - 4.5, start_ang, end_ang, 32, Color(1.0, 0.35, 0.15, alpha * 0.65), 2.5)
+
+	# 3. Vẽ dây câu và phao câu cá
+	if fishing_state in [FishingState.CASTING, FishingState.WAITING, FishingState.BITE]:
+		_draw_fishing_line_and_bobber()
+
+# ----------------- HỆ THỐNG CÂU CÁ ĐƠN GIẢN -----------------
+func _setup_fishing_visuals() -> void:
+	var tools_tex := load("res://Content T1/Tilesheet/Tools1_tilet.png") as Texture2D
+	held_rod_sprite = Sprite2D.new()
+	held_rod_sprite.name = "HeldRodSprite"
+	held_rod_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if tools_tex:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = tools_tex
+		atlas.region = Rect2(0, 144, 16, 16)
+		held_rod_sprite.texture = atlas
+	held_rod_sprite.z_index = 6
+	held_rod_sprite.visible = false
+	add_child(held_rod_sprite)
+
+	caught_fish_sprite = Sprite2D.new()
+	caught_fish_sprite.name = "CaughtFishSprite"
+	caught_fish_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	caught_fish_sprite.position = Vector2(0, -24)
+	caught_fish_sprite.z_index = 15
+	caught_fish_sprite.visible = false
+	add_child(caught_fish_sprite)
+
+	fishing_status_label = Label.new()
+	fishing_status_label.name = "FishingStatusLabel"
+	fishing_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	fishing_status_label.position = Vector2(-90, -38)
+	fishing_status_label.size = Vector2(180, 24)
+	fishing_status_label.z_index = 20
+	fishing_status_label.add_theme_font_size_override("font_size", 10)
+	fishing_status_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.75, 1.0))
+	fishing_status_label.add_theme_color_override("font_outline_color", Color(0.1, 0.08, 0.05, 1.0))
+	fishing_status_label.add_theme_constant_override("outline_size", 3)
+	fishing_status_label.visible = false
+	add_child(fishing_status_label)
+
+func _is_holding_fishing_rod() -> bool:
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if inv and inv.has_method("is_holding_fishing_rod"):
+		return inv.is_holding_fishing_rod()
+	return false
+
+func _handle_fishing_action() -> void:
+	if is_attacking or is_rolling:
+		return
+
+	if fishing_state == FishingState.NONE:
+		_try_cast_fishing_rod()
+	elif fishing_state == FishingState.BITE:
+		_catch_fish_success()
+	elif fishing_state in [FishingState.CASTING, FishingState.WAITING]:
+		_cancel_fishing("Too early!")
+
+func _try_cast_fishing_rod() -> void:
+	var local_mouse := get_local_mouse_position()
+	if local_mouse.length() < 4.0:
+		local_mouse = Vector2.DOWN * 48.0
+
+	# Xoay hướng nhân vật về phía quăng câu
+	if abs(local_mouse.x) > abs(local_mouse.y):
+		if local_mouse.x < 0:
+			anim.flip_h = true
+			last_direction = "left"
+		else:
+			anim.flip_h = false
+			last_direction = "right"
+		anim.play("stand")
+	else:
+		anim.flip_h = false
+		if local_mouse.y > 0:
+			last_direction = "down"
+			anim.play("stand")
+		else:
+			last_direction = "up"
+			anim.play("stand1")
+
+	var water_world_pos := _find_water_target(local_mouse)
+	if water_world_pos == Vector2.INF:
+		_show_fishing_message("Stand near water to fish!", Color(1.0, 0.55, 0.45, 1.0), 1.4)
+		return
+
+	velocity = Vector2.ZERO
+	fishing_state = FishingState.CASTING
+	fishing_timer = 0.22
+	fishing_time_elapsed = 0.0
+
+	bobber_target_local = to_local(water_world_pos)
+	_update_rod_pose(bobber_target_local)
+	bobber_current_local = rod_tip_local
+
+	_show_fishing_message("Casting...", Color(0.75, 0.92, 1.0, 1.0))
+	queue_redraw()
+
+func _update_rod_pose(target_local: Vector2) -> void:
+	if not held_rod_sprite:
+		return
+	held_rod_sprite.visible = true
+	var dir := target_local.normalized()
+	held_rod_sprite.position = dir * 9.0 + Vector2(0, -2)
+	held_rod_sprite.flip_h = (dir.x < 0)
+	held_rod_sprite.rotation = dir.angle() * 0.35 if dir.x >= 0 else (PI - dir.angle()) * -0.35
+	rod_tip_local = held_rod_sprite.position + dir * 8.0 + Vector2(0, -4)
+
+func _find_water_target(local_mouse: Vector2) -> Vector2:
+	var dir := local_mouse.normalized()
+	var click_dist := clampf(local_mouse.length(), 28.0, 110.0)
+	var preferred_world := global_position + dir * click_dist
+	if _is_water_at_world_pos(preferred_world):
+		return preferred_world
+
+	# Tìm các điểm dọc theo hướng chuột trỏ tới (từ gần ra xa)
+	var distances: Array[float] = [32.0, 48.0, 64.0, 80.0, 96.0, 112.0]
+	for d: float in distances:
+		var test_pos: Vector2 = global_position + dir * d
+		if _is_water_at_world_pos(test_pos):
+			return test_pos
+
+	# Quét góc lân cận nếu người chơi bấm hơi lệch mép nước
+	var angles: Array[float] = [-25.0, 25.0, -50.0, 50.0]
+	var near_distances: Array[float] = [40.0, 64.0, 88.0]
+	for angle_deg: float in angles:
+		var rot_dir: Vector2 = dir.rotated(deg_to_rad(angle_deg))
+		for d: float in near_distances:
+			var test_pos: Vector2 = global_position + rot_dir * d
+			if _is_water_at_world_pos(test_pos):
+				return test_pos
+
+	return Vector2.INF
+
+func _is_water_at_world_pos(world_pos: Vector2) -> bool:
+	var scene_root := get_tree().current_scene
+	if not scene_root:
+		return false
+
+	# 1. Kiểm tra lớp nước có shader water_caustics (ví dụ: TileMapLayer/TileMapLayer trong farm house.tscn)
+	var water_overlay := scene_root.get_node_or_null("TileMapLayer/TileMapLayer") as TileMapLayer
+	if water_overlay:
+		var cell := water_overlay.local_to_map(water_overlay.to_local(world_pos))
+		if water_overlay.get_cell_source_id(cell) != -1:
+			return true
+
+	# 2. Kiểm tra TileMapLayer gốc có dùng source_id == 2 (Water green_tilet.png) không
+	var base_layer := scene_root.get_node_or_null("TileMapLayer") as TileMapLayer
+	if base_layer:
+		var cell := base_layer.local_to_map(base_layer.to_local(world_pos))
+		if base_layer.get_cell_source_id(cell) == 2:
+			return true
+
+	return false
+
+func _update_fishing(delta: float) -> void:
+	if fishing_state == FishingState.NONE:
+		if held_rod_sprite:
+			held_rod_sprite.visible = _is_holding_fishing_rod() and not is_attacking and not is_rolling
+			if held_rod_sprite.visible:
+				var side := -1.0 if anim.flip_h else 1.0
+				held_rod_sprite.position = Vector2(7.0 * side, 0.0)
+				held_rod_sprite.flip_h = anim.flip_h
+				held_rod_sprite.rotation = 0.0
+		return
+
+	if not _is_holding_fishing_rod() and fishing_state != FishingState.CAUGHT:
+		_cancel_fishing()
+		return
+
+	fishing_time_elapsed += delta
+	fishing_timer -= delta
+
+	match fishing_state:
+		FishingState.CASTING:
+			var t := 1.0 - clampf(fishing_timer / 0.22, 0.0, 1.0)
+			bobber_current_local = rod_tip_local.lerp(bobber_target_local, t) + Vector2(0, -sin(t * PI) * 14.0)
+			if fishing_timer <= 0.0:
+				bobber_current_local = bobber_target_local
+				fishing_state = FishingState.WAITING
+				fishing_timer = randf_range(1.5, 3.0)
+				_show_fishing_message("Fishing...", Color(0.85, 0.95, 1.0, 1.0))
+			queue_redraw()
+
+		FishingState.WAITING:
+			bobber_current_local = bobber_target_local + Vector2(0, sin(fishing_time_elapsed * 4.5) * 1.5)
+			if fishing_timer <= 0.0:
+				fishing_state = FishingState.BITE
+				fishing_timer = 1.35
+				_show_fishing_message("! BITE ! (Left Click)", Color(1.0, 0.9, 0.2, 1.0))
+			queue_redraw()
+
+		FishingState.BITE:
+			bobber_current_local = bobber_target_local + Vector2(randf_range(-1.5, 1.5), sin(fishing_time_elapsed * 26.0) * 3.5 + 2.0)
+			if fishing_timer <= 0.0:
+				_cancel_fishing("Fish got away...")
+			queue_redraw()
+
+		FishingState.CAUGHT:
+			if fishing_timer <= 0.0:
+				fishing_state = FishingState.NONE
+				if caught_fish_sprite:
+					caught_fish_sprite.visible = false
+				if fishing_status_label:
+					fishing_status_label.visible = false
+				queue_redraw()
+
+func _catch_fish_success() -> void:
+	var fish_info: Dictionary = FISH_POOL[randi() % FISH_POOL.size()]
+	var fish_tex_sheet := load("res://Content T1/Loose/Fish-food.png") as Texture2D
+	var fish_scene := load("res://scenes/objects/fish_item.tscn") as PackedScene
+
+	var fish_icon := AtlasTexture.new()
+	fish_icon.atlas = fish_tex_sheet
+	fish_icon.region = fish_info["region"]
+
+	var inv = get_tree().get_first_node_in_group("inventory")
+	var added := false
+	if inv and inv.has_method("add_item"):
+		added = inv.add_item(fish_icon, fish_scene, fish_info["id"], fish_info["name"])
+
+	if added:
+		_show_fishing_message("Caught: %s!" % fish_info["name"], Color(0.45, 1.0, 0.55, 1.0), 1.6)
+	else:
+		_show_fishing_message("Inventory Full!", Color(1.0, 0.45, 0.4, 1.0), 1.6)
+
+	if caught_fish_sprite:
+		caught_fish_sprite.texture = fish_icon
+		caught_fish_sprite.visible = true
+		caught_fish_sprite.position = bobber_target_local
+		caught_fish_sprite.scale = Vector2(0.5, 0.5)
+		var tween := create_tween().set_parallel(true)
+		tween.tween_property(caught_fish_sprite, "position", Vector2(0, -24), 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(caught_fish_sprite, "scale", Vector2(1.15, 1.15), 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+	fishing_state = FishingState.CAUGHT
+	fishing_timer = 1.2
+	queue_redraw()
+
+func _cancel_fishing(msg: String = "") -> void:
+	fishing_state = FishingState.NONE
+	if caught_fish_sprite:
+		caught_fish_sprite.visible = false
+	if msg != "":
+		_show_fishing_message(msg, Color(1.0, 0.65, 0.45, 1.0), 1.1)
+	else:
+		if fishing_status_label:
+			fishing_status_label.visible = false
+	queue_redraw()
+
+func _show_fishing_message(text: String, color: Color = Color.WHITE, auto_hide_delay: float = 0.0) -> void:
+	if not fishing_status_label:
+		return
+	fishing_status_label.text = text
+	fishing_status_label.add_theme_color_override("font_color", color)
+	fishing_status_label.visible = true
+	if auto_hide_delay > 0.0:
+		var current_text := text
+		get_tree().create_timer(auto_hide_delay).timeout.connect(func():
+			if is_instance_valid(fishing_status_label) and fishing_status_label.text == current_text and fishing_state == FishingState.NONE:
+				fishing_status_label.visible = false
+		)
+
+func _draw_fishing_line_and_bobber() -> void:
+	# Vẽ đường dây câu hơi võng tự nhiên
+	var segments := 12
+	var prev_pt := rod_tip_local
+	var sag_amount := 6.0 if fishing_state != FishingState.BITE else 1.5
+	for i in range(1, segments + 1):
+		var t := float(i) / float(segments)
+		var pt := rod_tip_local.lerp(bobber_current_local, t)
+		pt.y += sin(t * PI) * sag_amount
+		draw_line(prev_pt, pt, Color(0.92, 0.95, 1.0, 0.85), 1.2)
+		prev_pt = pt
+
+	# Vẽ vòng gợn nước quanh phao
+	var ripple_r := 4.5 + sin(fishing_time_elapsed * 6.0) * 1.5
+	if fishing_state == FishingState.BITE:
+		ripple_r = 6.5 + fmod(fishing_time_elapsed * 18.0, 5.0)
+	draw_arc(bobber_current_local + Vector2(0, 2), ripple_r, 0.0, TAU, 16, Color(0.85, 0.96, 1.0, 0.55), 1.0)
+
+	# Vẽ phao câu đỏ - trắng
+	draw_circle(bobber_current_local + Vector2(0, 1), 3.2, Color(0.9, 0.2, 0.2, 1.0))
+	draw_circle(bobber_current_local + Vector2(0, -1), 2.4, Color(0.98, 0.98, 0.98, 1.0))
