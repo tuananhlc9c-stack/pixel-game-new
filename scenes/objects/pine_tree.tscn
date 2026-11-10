@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cpinetree1goc"]
+
+[ext_resource type="Script" path="res://scripts/objects/pine_tree.gd" id="1_tree"]
+[ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="2_til2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trunk"]
+size = Vector2(18, 12)
+
+[node name="PineTree" type="StaticBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_tree")
+
+[node name="TreeSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_til2")
+offset = Vector2(0, -34)
+region_enabled = true
+region_rect = Rect2(288, 208, 48, 80)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_trunk")

@@ -38,6 +38,7 @@
 [ext_resource type="PackedScene" uid="uid://cstonepickaxe" path="res://scenes/objects/stone_pickaxe_item.tscn" id="37_spick"]
 [ext_resource type="PackedScene" uid="uid://cstoneaxe1goc" path="res://scenes/objects/stone_axe_item.tscn" id="38_saxe"]
 [ext_resource type="PackedScene" uid="uid://cironpickaxe1" path="res://scenes/objects/iron_pickaxe_item.tscn" id="39_ipick"]
+[ext_resource type="PackedScene" uid="uid://cironaxe1gocg" path="res://scenes/objects/iron_axe_item.tscn" id="40_iaxe"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nr825"]
 texture = ExtResource("1_gjp8d")
@@ -3297,3 +3298,6 @@ position = Vector2(664, 184)
 
 [node name="IronPickaxeItem" parent="." unique_id=1890001045 instance=ExtResource("39_ipick")]
 position = Vector2(680, 184)
+
+[node name="IronAxeItem" parent="." unique_id=1890001046 instance=ExtResource("40_iaxe")]
+position = Vector2(696, 184)

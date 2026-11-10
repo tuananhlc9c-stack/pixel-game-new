@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cminerock1goc"]
+
+[ext_resource type="Script" path="res://scripts/objects/mineable_rock.gd" id="1_rock"]
+[ext_resource type="Texture2D" uid="uid://dre513hwil5p3" path="res://Content T1/New/til3.png" id="2_til3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rock"]
+size = Vector2(24, 14)
+
+[node name="MineableRock" type="StaticBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_rock")
+
+[node name="RockSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_til3")
+offset = Vector2(0, -10)
+region_enabled = true
+region_rect = Rect2(192, 352, 32, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_rock")

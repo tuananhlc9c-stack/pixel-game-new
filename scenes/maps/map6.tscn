@@ -6,15 +6,16 @@
 [ext_resource type="Texture2D" uid="uid://bhfh60ba5o77w" path="res://Content T1/Building/Junimo Hut.png" id="4_8uemt"]
 [ext_resource type="Texture2D" uid="uid://2bpni21eq71y" path="res://Content T1/New/House3.png" id="5_pc1r7"]
 [ext_resource type="Texture2D" uid="uid://cybnblv0jb0fu" path="res://Content T1/New/house8.png" id="6_xn70g"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="7_beonj"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="7_beonj"]
 [ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="7_i2gcl"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="7_xn70g"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="7_xn70g"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="8_8uemt"]
 [ext_resource type="Texture2D" uid="uid://bqq4lmqgmwfdr" path="res://Content T1/Mapss/titleset/Tilset tree.png" id="9_qp0o3"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="12_7ghix"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="13_3solb"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="12_7ghix"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="13_3solb"]
 [ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="14_branch"]
 [ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="15_stone"]
+[ext_resource type="PackedScene" uid="uid://cpinetree1goc" path="res://scenes/objects/pine_tree.tscn" id="16_pinetree"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jw0yc"]
 texture = ExtResource("1_xn70g")
@@ -5991,22 +5992,46 @@ next_scene_path = "res://scenes/maps/map5.tscn"
 target_spawn_position = Vector2(586, 1017)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("13_3solb")]
-position = Vector2(730, 52)
+position = Vector2(735, 55)
 
 [node name="BranchItem1" parent="." unique_id=1890006001 instance=ExtResource("14_branch")]
-position = Vector2(568, 216)
+position = Vector2(589, 149)
 
 [node name="BranchItem2" parent="." unique_id=1890006002 instance=ExtResource("14_branch")]
-position = Vector2(680, 296)
+position = Vector2(562, 552)
 
 [node name="BranchItem3" parent="." unique_id=1890006003 instance=ExtResource("14_branch")]
-position = Vector2(488, 360)
+position = Vector2(641, 533)
 
 [node name="StoneItem1" parent="." unique_id=1890006004 instance=ExtResource("15_stone")]
-position = Vector2(632, 184)
+position = Vector2(661, 129)
 
 [node name="StoneItem2" parent="." unique_id=1890006005 instance=ExtResource("15_stone")]
-position = Vector2(536, 312)
+position = Vector2(726, 544)
 
 [node name="StoneItem3" parent="." unique_id=1890006006 instance=ExtResource("15_stone")]
-position = Vector2(616, 408)
+position = Vector2(568, 507)
+
+[node name="PineTree1" parent="." unique_id=1890006010 instance=ExtResource("16_pinetree")]
+position = Vector2(390, 129)
+
+[node name="PineTree2" parent="." unique_id=1890006011 instance=ExtResource("16_pinetree")]
+position = Vector2(313, 131)
+
+[node name="PineTree3" parent="." unique_id=1890006012 instance=ExtResource("16_pinetree")]
+position = Vector2(461, 126)
+
+[node name="PineTree4" parent="." unique_id=1890006013 instance=ExtResource("16_pinetree")]
+position = Vector2(312, 204)
+
+[node name="PineTree5" parent="." unique_id=1890006014 instance=ExtResource("16_pinetree")]
+position = Vector2(465, 199)
+
+[node name="PineTree6" parent="." unique_id=1890006015 instance=ExtResource("16_pinetree")]
+position = Vector2(393, 198)
+
+[node name="PineTree7" parent="." unique_id=1890006016 instance=ExtResource("16_pinetree")]
+position = Vector2(539, 124)
+
+[node name="PineTree8" parent="." unique_id=1890006017 instance=ExtResource("16_pinetree")]
+position = Vector2(526, 198)

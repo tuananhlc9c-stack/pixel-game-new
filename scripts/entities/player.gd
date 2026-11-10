@@ -100,6 +100,14 @@ const TOOL_CONFIG: Dictionary = {
 		"special_damage": 92,
 		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
 		"core_col": Color(0.92, 0.98, 1.0, 1.0)
+	},
+	"iron_axe": {
+		"name": "Iron Axe",
+		"icon_region": Rect2(192, 80, 16, 16),
+		"damage": 48,
+		"special_damage": 96,
+		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
+		"core_col": Color(0.92, 0.98, 1.0, 1.0)
 	}
 }
 
@@ -580,6 +588,10 @@ func _apply_weapon_hit(target: Node) -> void:
 		return
 	if target in hit_targets:
 		return
+	if target.has_method("hit_by_tool"):
+		hit_targets.append(target)
+		target.hit_by_tool(active_swing_tool_id, global_position)
+		return
 	if target.has_method("take_damage"):
 		hit_targets.append(target)
 		target.take_damage(current_attack_damage, global_position, current_attack_knockback)
@@ -811,13 +823,28 @@ func _get_equipped_tool_id() -> String:
 	return ""
 
 func _try_harvest_resources_with_tool(tool_id: String, swing_dir_vec: Vector2) -> void:
-	var inv = get_tree().get_first_node_in_group("inventory")
-	if not inv or not inv.has_method("add_item"):
-		return
-
 	var strike_pos := global_position + swing_dir_vec * 20.0
 	var is_axe := "axe" in tool_id and not ("pickaxe" in tool_id)
 	var is_pickaxe := "pickaxe" in tool_id
+
+	# Kiểm tra chặt cây thông (choppable_tree) trong tầm vung rìu/công cụ
+	for tree in get_tree().get_nodes_in_group("choppable_tree"):
+		if not is_instance_valid(tree) or tree in hit_targets:
+			continue
+		if tree.get("is_chopped") == true:
+			continue
+		var tree_pos := (tree as Node2D).global_position
+		if tree_pos.distance_to(strike_pos) <= 34.0 or tree_pos.distance_to(global_position) <= 38.0:
+			var to_tree := (tree_pos - global_position).normalized()
+			if swing_dir_vec.dot(to_tree) >= -0.25 or tree_pos.distance_to(global_position) <= 24.0:
+				if tree.has_method("hit_by_tool"):
+					hit_targets.append(tree)
+					tree.hit_by_tool(tool_id, global_position)
+					break
+
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if not inv or not inv.has_method("add_item"):
+		return
 
 	for node in get_tree().get_nodes_in_group("world_pickup_item"):
 		if not is_instance_valid(node) or node.is_queued_for_deletion():

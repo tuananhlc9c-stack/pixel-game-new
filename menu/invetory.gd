@@ -231,6 +231,12 @@ func _give_starter_tools() -> void:
 			"name": "Iron Pickaxe",
 			"region": Rect2(192, 16, 16, 16),
 			"scene": "res://scenes/objects/iron_pickaxe_item.tscn"
+		},
+		{
+			"id": "iron_axe",
+			"name": "Iron Axe",
+			"region": Rect2(192, 80, 16, 16),
+			"scene": "res://scenes/objects/iron_axe_item.tscn"
 		}
 	]
 	for t in starter_tools:
@@ -266,7 +272,7 @@ func get_selected_tool_id() -> String:
 	if typeof(data) != TYPE_DICTIONARY or data == null:
 		return ""
 	var id_str: String = str(data.get("id", ""))
-	if id_str in ["wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe"]:
+	if id_str in ["wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe", "iron_axe"]:
 		return id_str
 	return ""
 
@@ -767,7 +773,7 @@ func get_item_price(data: Variant) -> int:
 	if typeof(data) != TYPE_DICTIONARY or data == null:
 		return 0
 	var item_id: String = str(data.get("id", ""))
-	if item_id in ["fishing_rod", "wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe"]:
+	if item_id in ["fishing_rod", "wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe", "iron_axe"]:
 		return 0
 	if ITEM_PRICES.has(item_id):
 		return int(ITEM_PRICES[item_id])

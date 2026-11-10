@@ -22,6 +22,9 @@ signal gold_changed(new_gold: int)
 var has_saved_house_furniture: bool = false
 var saved_house_furniture: Array[Dictionary] = []
 
+# Lưu thời điểm hồi phục (respawn timestamp) của các cây đã bị chặt xuyên suốt các map
+var chopped_trees_respawn_time: Dictionary = {}
+
 func add_gold(amount: int) -> void:
 	saved_gold = max(0, saved_gold + amount)
 	gold_changed.emit(saved_gold)
