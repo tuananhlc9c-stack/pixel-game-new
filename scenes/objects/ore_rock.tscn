@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://corerock1goc5"]
+
+[ext_resource type="Script" path="res://scripts/objects/ore_rock.gd" id="1_orerock"]
+[ext_resource type="Texture2D" uid="uid://cv0sj07cbpe8r" path="res://Content T1/New/farm233.png" id="2_farm233"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ore"]
+size = Vector2(24, 14)
+
+[node name="OreRock" type="StaticBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_orerock")
+
+[node name="RockSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_farm233")
+offset = Vector2(0, -6)
+region_enabled = true
+region_rect = Rect2(0, 16, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_ore")

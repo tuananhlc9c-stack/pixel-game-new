@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dfk6luh8ffn61" path="res://Content T1/Loose/Cursors 2.png" id="4_ejdf6"]
 [ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="8_jqu3j"]
 [ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="9_kg2ft"]
+[ext_resource type="PackedScene" uid="uid://bspma65r1xj57" path="res://scenes/objects/storage_chest.tscn" id="10_chest"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8omx4"]
 texture = ExtResource("1_pvoib")
@@ -4625,3 +4626,6 @@ target_spawn_position = Vector2(681, 145)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("9_kg2ft")]
 position = Vector2(105, 551)
+
+[node name="StorageChest" parent="." unique_id=1950000001 instance=ExtResource("10_chest")]
+position = Vector2(214, 588)

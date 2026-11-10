@@ -336,6 +336,8 @@ func _on_health_changed(current: int, max_hp: int) -> void:
 		tween.tween_property(anim, "modulate", base_col, 0.15)
 
 func _on_died() -> void:
+	if SceneManager and SceneManager.has_method("add_player_exp"):
+		SceneManager.add_player_exp(135)
 	set_physics_process(false)
 	flame_zones.clear()
 	if boss_hud:

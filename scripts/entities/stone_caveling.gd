@@ -197,6 +197,8 @@ func _on_health_changed(_current: int, _max: int) -> void:
 		tween.tween_property(anim, "modulate", Color.WHITE, 0.15)
 
 func _on_died() -> void:
+	if SceneManager and SceneManager.has_method("add_player_exp"):
+		SceneManager.add_player_exp(18)
 	set_physics_process(false)
 	queue_redraw()
 	var tween := create_tween()

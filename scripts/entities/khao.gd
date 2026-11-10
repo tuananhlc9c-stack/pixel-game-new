@@ -33,6 +33,7 @@ const EGG_MILK_CATALOG: Array[Dictionary] = [
 		"display_name": "Egg",
 		"price": 15,
 		"scene_path": "res://scenes/objects/egg_item.tscn",
+		"atlas_path": "res://Content T1/Loose/Fish-food.png",
 		"region": Rect2(80, 0, 16, 16)
 	},
 	{
@@ -41,6 +42,7 @@ const EGG_MILK_CATALOG: Array[Dictionary] = [
 		"display_name": "Cow Milk",
 		"price": 30,
 		"scene_path": "res://scenes/objects/cow_milk_item.tscn",
+		"atlas_path": "res://Content T1/Loose/Fish-food.png",
 		"region": Rect2(32, 0, 16, 16)
 	},
 	{
@@ -49,6 +51,7 @@ const EGG_MILK_CATALOG: Array[Dictionary] = [
 		"display_name": "Goat Milk",
 		"price": 40,
 		"scene_path": "res://scenes/objects/goat_milk_item.tscn",
+		"atlas_path": "res://Content T1/Loose/Fish-food.png",
 		"region": Rect2(16, 0, 16, 16)
 	},
 	{
@@ -57,7 +60,98 @@ const EGG_MILK_CATALOG: Array[Dictionary] = [
 		"display_name": "Pork",
 		"price": 50,
 		"scene_path": "res://scenes/objects/pork_item.tscn",
+		"atlas_path": "res://Content T1/Loose/Fish-food.png",
 		"region": Rect2(48, 0, 16, 16)
+	},
+	{
+		"id": "crop_parsnip",
+		"name": "Parsnip",
+		"display_name": "Parsnip",
+		"price": 35,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(64, 0, 16, 32)
+	},
+	{
+		"id": "crop_green_bean",
+		"name": "Green Bean",
+		"display_name": "Green Bean",
+		"price": 40,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(64, 32, 16, 32)
+	},
+	{
+		"id": "crop_cauliflower",
+		"name": "Cauliflower",
+		"display_name": "Cauliflower",
+		"price": 85,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 64, 16, 32)
+	},
+	{
+		"id": "crop_potato",
+		"name": "Potato",
+		"display_name": "Potato",
+		"price": 50,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 96, 16, 32)
+	},
+	{
+		"id": "crop_garlic",
+		"name": "Garlic",
+		"display_name": "Garlic",
+		"price": 45,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(64, 128, 16, 32)
+	},
+	{
+		"id": "crop_kale",
+		"name": "Kale",
+		"display_name": "Kale",
+		"price": 60,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(64, 160, 16, 32)
+	},
+	{
+		"id": "crop_rhubarb",
+		"name": "Rhubarb",
+		"display_name": "Rhubarb",
+		"price": 110,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 192, 16, 32)
+	},
+	{
+		"id": "crop_melon",
+		"name": "Melon",
+		"display_name": "Melon",
+		"price": 140,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 224, 16, 32)
+	},
+	{
+		"id": "crop_tomato",
+		"name": "Tomato",
+		"display_name": "Tomato",
+		"price": 65,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 256, 16, 32)
+	},
+	{
+		"id": "crop_blueberry",
+		"name": "Blueberry",
+		"display_name": "Blueberry",
+		"price": 80,
+		"scene_path": "res://scenes/objects/crop_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/crops.png",
+		"region": Rect2(80, 288, 16, 32)
 	}
 ]
 
@@ -254,6 +348,24 @@ const FURNITURE_CATALOG: Array[Dictionary] = [
 		"scene_path": "res://scenes/objects/furniture_item.tscn",
 		"atlas_path": "res://Content T1/Tilesheet/Furniture_tilet.png",
 		"region": Rect2(0, 224, 48, 64)
+	},
+	{
+		"id": "storage_chest",
+		"name": "Storage Chest (40 Slots)",
+		"display_name": "Storage Chest (40 Slots)",
+		"price": 850,
+		"scene_path": "res://scenes/objects/storage_chest.tscn",
+		"atlas_path": "res://Content T1/Loose/Cursors 2.png",
+		"region": Rect2(256, 75, 32, 30)
+	},
+	{
+		"id": "fishing_rod",
+		"name": "Fishing Rod",
+		"display_name": "Fishing Rod",
+		"price": 250,
+		"scene_path": "res://scenes/objects/fishing_rod_item.tscn",
+		"atlas_path": "res://Content T1/Tilesheet/Tools1_tilet.png",
+		"region": Rect2(0, 144, 16, 16)
 	}
 ]
 
@@ -384,7 +496,7 @@ func _is_player_close(max_dist: float = 75.0) -> bool:
 func _get_overhead_default_text() -> String:
 	match shop_type:
 		"egg_milk":
-			return "Farm Shop (Egg, Milk & Pork)"
+			return "Farm Products & Produce Shop"
 		"fish":
 			return "Fish Shop"
 		"furniture":
@@ -406,7 +518,7 @@ func _get_overhead_nearby_text() -> String:
 func _get_shop_title_text() -> String:
 	match shop_type:
 		"egg_milk":
-			return "FARM SHOP (EGG, MILK & PORK)"
+			return "FARM PRODUCTS & CROPS SHOP"
 		"fish":
 			return "FISH & SEAFOOD SHOP"
 		"furniture":
@@ -417,20 +529,25 @@ func _get_shop_title_text() -> String:
 func _get_price_guide_text() -> String:
 	match shop_type:
 		"egg_milk":
-			return "Prices: Egg 15G | Cow Milk 30G | Goat Milk 40G | Pork 50G (Buy & Sell)"
+			return "Prices: Egg 15G | Milk 30-40G | Pork 50G | Crops 35-140G (Buy & Sell)"
 		"fish":
 			return "Prices: Carp 20G | Perch 25G | Shrimp 30G | Crab 35G | Salmon 45G | Goldfish 60G | Tuna 75G | Octopus 90G"
 		"furniture":
-			return "Prices: Chairs 80-110G | Lamp 130G | Tables/Bench 150-180G | Dresser/Rug/Shelf 200-250G | TV & Beds 280-360G"
+			return "Prices: Chairs 80-110G | Lamp 130G | Tables/Bench 150-180G | Dresser/Rug/Shelf 200-250G | Beds 320-360G | Chest 850G | Rod 250G"
 		_:
-			return "Prices: Egg 15G | Cow Milk 30G | Goat Milk 40G | Pork 50G | Fish 20G~90G | Furniture 80G~360G"
+			return "Prices: Egg 15G | Milk 30-40G | Pork 50G | Crops 35-140G | Fish 20-90G | Furniture 80-360G | Chest 850G | Rod 250G"
 
 func _is_item_matching_shop(item_data: Variant) -> bool:
 	if typeof(item_data) != TYPE_DICTIONARY or item_data == null:
 		return false
 	var id_str: String = str(item_data.get("id", "")).to_lower()
 	var name_str: String = str(item_data.get("name", "")).to_lower()
-	if id_str == "fishing_rod":
+	if id_str == "fishing_rod" or id_str in ["copper_ore", "iron_ore", "gold_ore", "amethyst_gem"] or "ore" in id_str or "ore" in name_str or "amethyst" in name_str:
+		return false
+	# Không cho phép bán quần áo, mũ, giáp
+	if id_str.begins_with("hat_") or id_str.begins_with("shirt_") or id_str.begins_with("pants_"):
+		return false
+	if "hat" in name_str or "shirt" in name_str or "pants" in name_str or "mũ" in name_str or "áo" in name_str or "quần" in name_str:
 		return false
 
 	var is_fish_item: bool = (
@@ -447,17 +564,40 @@ func _is_item_matching_shop(item_data: Variant) -> bool:
 	)
 	var is_egg_milk_item: bool = (
 		id_str in ["egg", "cow_milk", "goat_milk", "pork"]
+		or id_str.begins_with("crop_")
+		or "crop" in id_str
 		or "egg" in name_str
 		or "trứng" in name_str
 		or "milk" in name_str
 		or "sữa" in name_str
 		or "pork" in name_str
 		or "meat" in name_str
+		or "parsnip" in name_str
+		or "bean" in name_str
+		or "cauliflower" in name_str
+		or "potato" in name_str
+		or "garlic" in name_str
+		or "kale" in name_str
+		or "rhubarb" in name_str
+		or "melon" in name_str
+		or "tomato" in name_str
+		or "blueberry" in name_str
 	)
 	var icon_tex = item_data.get("icon")
+	var is_furniture_atlas: bool = false
+	if icon_tex != null and icon_tex is AtlasTexture:
+		var atlas_res = icon_tex.atlas
+		if atlas_res != null and "resource_path" in atlas_res:
+			var path_str: String = str(atlas_res.resource_path)
+			if path_str.find("Furniture_tilet") != -1 or path_str.find("Cursors 2.png") != -1:
+				is_furniture_atlas = true
+
 	var is_furniture_item: bool = (
 		id_str.begins_with("furn_")
-		or (icon_tex is AtlasTexture and icon_tex.atlas and "Furniture_tilet" in icon_tex.atlas.resource_path)
+		or id_str == "storage_chest"
+		or "chest" in name_str
+		or "rương" in name_str
+		or is_furniture_atlas
 		or "chair" in name_str
 		or "table" in name_str
 		or "bench" in name_str
@@ -962,6 +1102,17 @@ func _get_english_item_name(item_data: Dictionary) -> String:
 		"furn_retro_tv": return "Retro TV"
 		"furn_royal_bed": return "Royal Single Bed"
 		"furn_blue_bed": return "Blue Double Bed"
+		"storage_chest": return "Storage Chest (40 Slots)"
+		"crop_parsnip": return "Parsnip"
+		"crop_green_bean": return "Green Bean"
+		"crop_cauliflower": return "Cauliflower"
+		"crop_potato": return "Potato"
+		"crop_garlic": return "Garlic"
+		"crop_kale": return "Kale"
+		"crop_rhubarb": return "Rhubarb"
+		"crop_melon": return "Melon"
+		"crop_tomato": return "Tomato"
+		"crop_blueberry": return "Blueberry"
 	return raw_name if raw_name != "" else "Item"
 
 func _on_sell_slot_pressed(slot_idx: int) -> void:

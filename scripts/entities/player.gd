@@ -4,6 +4,9 @@ extends CharacterBody2D
 @export var roll_speed: float = 260.0
 @export var roll_duration: float = 0.25
 @export var max_health: int = 100
+@export var max_mana: float = 100.0
+@export var mana_regen_rate: float = 12.0 # Tự hồi 12 mana / giây
+@export var roll_mana_cost: float = 20.0 # Mỗi lần lăn tốn 20 mana
 @export var attack_damage: int = 25
 @export var attack_knockback: float = 140.0
 @export_group("Special Attack (Right Click)")
@@ -24,8 +27,18 @@ extends CharacterBody2D
 var health_component: HealthComponent
 var hp_bar_fill: ColorRect
 var hp_label: Label
+var mana_bar_fill: ColorRect
+var mana_label: Label
+var exp_bar_fill: ColorRect
+var exp_label: Label
+var level_badge_label: Label
 var special_cd_bar_fill: ColorRect
 var special_cd_label: Label
+var level_up_hud_label: Label = null
+var current_mana: float = 100.0
+var level: int = 1
+var current_exp: int = 0
+var max_exp: int = 100
 
 var last_direction: String = "down"
 var is_rolling: bool = false
@@ -66,6 +79,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 16, 16, 16),
 		"damage": 22,
 		"special_damage": 50,
+		"swing_speed_mult": 1.0,
 		"glow_col": Color(0.95, 0.62, 0.22, 1.0),
 		"core_col": Color(1.0, 0.92, 0.65, 1.0)
 	},
@@ -74,6 +88,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 80, 16, 16),
 		"damage": 26,
 		"special_damage": 56,
+		"swing_speed_mult": 1.0,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0),
 		"core_col": Color(1.0, 0.88, 0.55, 1.0)
 	},
@@ -82,6 +97,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 48, 16, 16),
 		"damage": 32,
 		"special_damage": 68,
+		"swing_speed_mult": 1.22,
 		"glow_col": Color(0.75, 0.72, 0.62, 1.0),
 		"core_col": Color(0.96, 0.94, 0.88, 1.0)
 	},
@@ -90,6 +106,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 112, 16, 16),
 		"damage": 36,
 		"special_damage": 75,
+		"swing_speed_mult": 1.22,
 		"glow_col": Color(0.72, 0.68, 0.58, 1.0),
 		"core_col": Color(0.95, 0.92, 0.84, 1.0)
 	},
@@ -98,6 +115,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(192, 16, 16, 16),
 		"damage": 45,
 		"special_damage": 92,
+		"swing_speed_mult": 1.48,
 		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
 		"core_col": Color(0.92, 0.98, 1.0, 1.0)
 	},
@@ -106,8 +124,139 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(192, 80, 16, 16),
 		"damage": 48,
 		"special_damage": 96,
+		"swing_speed_mult": 1.48,
 		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
 		"core_col": Color(0.92, 0.98, 1.0, 1.0)
+	},
+	# Kiếm Thường / Đại Kiếm (Sword) - Chém mạnh & nhanh: Gỗ < Sắt < Đồng < Vàng < Tím
+	"wood_sword": {
+		"name": "Wooden Sword", "type": "sword", "icon_region": Rect2(48, 112, 16, 16),
+		"damage": 20, "special_damage": 45, "swing_speed_mult": 1.05,
+		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+	},
+	"iron_sword": {
+		"name": "Iron Sword", "type": "sword", "icon_region": Rect2(64, 112, 16, 16),
+		"damage": 30, "special_damage": 65, "swing_speed_mult": 1.2,
+		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+	},
+	"copper_sword": {
+		"name": "Copper Sword", "type": "sword", "icon_region": Rect2(80, 112, 16, 16),
+		"damage": 42, "special_damage": 88, "swing_speed_mult": 1.3,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+	},
+	"gold_sword": {
+		"name": "Gold Sword", "type": "sword", "icon_region": Rect2(96, 112, 16, 16),
+		"damage": 60, "special_damage": 125, "swing_speed_mult": 1.4,
+		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+	},
+	"amethyst_sword": {
+		"name": "Amethyst Sword", "type": "sword", "icon_region": Rect2(112, 112, 16, 16),
+		"damage": 88, "special_damage": 175, "swing_speed_mult": 1.55,
+		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+	},
+	# Kiếm Quắm (Scythe) - chém quét rộng, sát thương tăng dần: Gỗ < Sắt < Đồng < Vàng < Tím
+	"wood_scythe": {
+		"name": "Wooden Scythe", "type": "scythe", "icon_region": Rect2(48, 80, 16, 16),
+		"damage": 18, "special_damage": 40, "swing_speed_mult": 1.0,
+		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+	},
+	"iron_scythe": {
+		"name": "Iron Scythe", "type": "scythe", "icon_region": Rect2(64, 80, 16, 16),
+		"damage": 28, "special_damage": 60, "swing_speed_mult": 1.15,
+		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+	},
+	"copper_scythe": {
+		"name": "Copper Scythe", "type": "scythe", "icon_region": Rect2(80, 80, 16, 16),
+		"damage": 38, "special_damage": 82, "swing_speed_mult": 1.25,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+	},
+	"gold_scythe": {
+		"name": "Gold Scythe", "type": "scythe", "icon_region": Rect2(96, 80, 16, 16),
+		"damage": 55, "special_damage": 115, "swing_speed_mult": 1.35,
+		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+	},
+	"amethyst_scythe": {
+		"name": "Amethyst Scythe", "type": "scythe", "icon_region": Rect2(112, 80, 16, 16),
+		"damage": 80, "special_damage": 165, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+	},
+	# Giáo (Spear) - đâm thẳng xuyên mục tiêu: Gỗ < Sắt < Đồng < Vàng < Tím
+	"wood_spear": {
+		"name": "Wooden Spear", "type": "spear", "icon_region": Rect2(48, 32, 16, 16),
+		"damage": 20, "special_damage": 44, "swing_speed_mult": 1.0,
+		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+	},
+	"iron_spear": {
+		"name": "Iron Spear", "type": "spear", "icon_region": Rect2(64, 32, 16, 16),
+		"damage": 30, "special_damage": 66, "swing_speed_mult": 1.15,
+		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+	},
+	"copper_spear": {
+		"name": "Copper Spear", "type": "spear", "icon_region": Rect2(80, 32, 16, 16),
+		"damage": 42, "special_damage": 90, "swing_speed_mult": 1.25,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+	},
+	"gold_spear": {
+		"name": "Gold Spear", "type": "spear", "icon_region": Rect2(96, 32, 16, 16),
+		"damage": 60, "special_damage": 128, "swing_speed_mult": 1.35,
+		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+	},
+	"amethyst_spear": {
+		"name": "Amethyst Spear", "type": "spear", "icon_region": Rect2(112, 32, 16, 16),
+		"damage": 88, "special_damage": 180, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+	},
+	# Cung tên (Bow) - bắn tên tầm xa: Gỗ < Sắt < Đồng < Vàng < Tím
+	"wood_bow": {
+		"name": "Wooden Bow", "type": "bow", "icon_region": Rect2(48, 64, 16, 16),
+		"damage": 18, "special_damage": 38, "swing_speed_mult": 1.0,
+		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+	},
+	"iron_bow": {
+		"name": "Iron Bow", "type": "bow", "icon_region": Rect2(64, 64, 16, 16),
+		"damage": 26, "special_damage": 58, "swing_speed_mult": 1.15,
+		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+	},
+	"copper_bow": {
+		"name": "Copper Bow", "type": "bow", "icon_region": Rect2(80, 64, 16, 16),
+		"damage": 36, "special_damage": 78, "swing_speed_mult": 1.25,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+	},
+	"gold_bow": {
+		"name": "Gold Bow", "type": "bow", "icon_region": Rect2(96, 64, 16, 16),
+		"damage": 52, "special_damage": 110, "swing_speed_mult": 1.35,
+		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+	},
+	"amethyst_bow": {
+		"name": "Amethyst Bow", "type": "bow", "icon_region": Rect2(112, 64, 16, 16),
+		"damage": 78, "special_damage": 160, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+	},
+	# Kiếm Cong / Trượng Kiếm: Đều chuyển thành dạng Kiếm Chém (type: "sword")
+	"wood_staff": {
+		"name": "Wooden Staff", "type": "sword", "icon_region": Rect2(48, 96, 16, 16),
+		"damage": 22, "special_damage": 48, "swing_speed_mult": 1.0,
+		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+	},
+	"iron_staff": {
+		"name": "Iron Staff", "type": "sword", "icon_region": Rect2(64, 96, 16, 16),
+		"damage": 32, "special_damage": 70, "swing_speed_mult": 1.15,
+		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+	},
+	"copper_staff": {
+		"name": "Copper Staff", "type": "sword", "icon_region": Rect2(80, 96, 16, 16),
+		"damage": 45, "special_damage": 96, "swing_speed_mult": 1.25,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+	},
+	"gold_staff": {
+		"name": "Gold Staff", "type": "sword", "icon_region": Rect2(96, 96, 16, 16),
+		"damage": 65, "special_damage": 138, "swing_speed_mult": 1.35,
+		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+	},
+	"amethyst_staff": {
+		"name": "Amethyst Staff", "type": "sword", "icon_region": Rect2(112, 96, 16, 16),
+		"damage": 95, "special_damage": 195, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	}
 }
 
@@ -167,6 +316,19 @@ func _ready() -> void:
 	initial_spawn_position = global_position
 
 func _setup_health_system() -> void:
+	# Cập nhật Level và Máu/Mana tối đa theo cấp độ (Mỗi cấp tăng 50 HP và 50 Mana)
+	if SceneManager:
+		level = clampi(SceneManager.saved_player_level, 1, 18)
+		current_exp = SceneManager.saved_player_exp
+	else:
+		level = 1
+		current_exp = 0
+	max_exp = SceneManager.get_exp_required_for_level(level) if SceneManager else 100
+
+	# Base: Level 1 = 100 HP, 100 Mana. Mỗi cấp tăng thêm +50
+	max_health = 100 + (level - 1) * 50
+	max_mana = 100.0 + float((level - 1) * 50)
+
 	if has_node("HealthComponent"):
 		health_component = $HealthComponent
 	else:
@@ -185,11 +347,19 @@ func _setup_health_system() -> void:
 	health_component.health_changed.connect(_on_health_changed)
 	health_component.died.connect(_on_player_died)
 
-	# Tạo HUD thanh máu ở góc trên bên trái màn hình
+	# Kết nối sự kiện lên cấp & nhận kinh nghiệm từ SceneManager
+	if SceneManager:
+		if not SceneManager.exp_changed.is_connected(_on_scene_manager_exp_changed):
+			SceneManager.exp_changed.connect(_on_scene_manager_exp_changed)
+		if not SceneManager.level_up.is_connected(_on_scene_manager_level_up):
+			SceneManager.level_up.connect(_on_scene_manager_level_up)
+
+	# Tạo HUD ở góc trên bên trái màn hình
 	var hud := CanvasLayer.new()
 	hud.name = "PlayerHUD"
 	add_child(hud)
 
+	# 1. Thanh Máu (HP)
 	var bg := ColorRect.new()
 	bg.color = Color(0.12, 0.12, 0.15, 0.85)
 	bg.position = Vector2(16, 16)
@@ -207,25 +377,81 @@ func _setup_health_system() -> void:
 	hp_label.add_theme_font_size_override("font_size", 12)
 	hud.add_child(hp_label)
 
-	# Thanh hiển thị hồi chiêu Chém Đặc Biệt (Chuột Phải) ngay dưới thanh máu
+	# 2. Thanh Năng Lượng (Mana) màu xanh lam dưới thanh máu
+	var mana_bg := ColorRect.new()
+	mana_bg.color = Color(0.12, 0.12, 0.15, 0.85)
+	mana_bg.position = Vector2(16, 38)
+	mana_bg.size = Vector2(144, 16)
+	hud.add_child(mana_bg)
+
+	mana_bar_fill = ColorRect.new()
+	mana_bar_fill.color = Color(0.2, 0.55, 0.95, 1.0)
+	mana_bar_fill.position = Vector2(18, 40)
+	mana_bar_fill.size = Vector2(140, 12)
+	hud.add_child(mana_bar_fill)
+
+	mana_label = Label.new()
+	mana_label.position = Vector2(22, 38)
+	mana_label.add_theme_font_size_override("font_size", 11)
+	hud.add_child(mana_label)
+
+	# Khởi tạo giá trị Mana
+	if SceneManager and SceneManager.saved_player_mana >= 0.0:
+		current_mana = minf(SceneManager.saved_player_mana, max_mana)
+	else:
+		current_mana = max_mana
+	_update_mana_ui()
+
+	# 3. Thanh Kinh Nghiệm (EXP) màu tím / xanh lá dưới thanh mana (Tối đa 18 cấp)
+	var exp_bg := ColorRect.new()
+	exp_bg.color = Color(0.12, 0.12, 0.15, 0.85)
+	exp_bg.position = Vector2(16, 58)
+	exp_bg.size = Vector2(144, 16)
+	hud.add_child(exp_bg)
+
+	exp_bar_fill = ColorRect.new()
+	exp_bar_fill.color = Color(0.55, 0.28, 0.95, 1.0) # Màu tím sáng
+	exp_bar_fill.position = Vector2(18, 60)
+	exp_bar_fill.size = Vector2(140, 12)
+	hud.add_child(exp_bar_fill)
+
+	exp_label = Label.new()
+	exp_label.position = Vector2(22, 58)
+	exp_label.add_theme_font_size_override("font_size", 10)
+	hud.add_child(exp_label)
+
+	# 4. Thanh hồi chiêu Chém Đặc Biệt (Chuột Phải) dưới thanh EXP
 	var cd_bg := ColorRect.new()
 	cd_bg.color = Color(0.12, 0.12, 0.15, 0.85)
-	cd_bg.position = Vector2(16, 38)
+	cd_bg.position = Vector2(16, 78)
 	cd_bg.size = Vector2(144, 14)
 	hud.add_child(cd_bg)
 
 	special_cd_bar_fill = ColorRect.new()
 	special_cd_bar_fill.color = Color(0.95, 0.72, 0.18, 1.0)
-	special_cd_bar_fill.position = Vector2(18, 40)
+	special_cd_bar_fill.position = Vector2(18, 80)
 	special_cd_bar_fill.size = Vector2(140, 10)
 	hud.add_child(special_cd_bar_fill)
 
 	special_cd_label = Label.new()
-	special_cd_label.position = Vector2(22, 36)
+	special_cd_label.position = Vector2(22, 76)
 	special_cd_label.add_theme_font_size_override("font_size", 10)
 	hud.add_child(special_cd_label)
 
+	# 5. Nhãn thông báo Level Up trên HUD
+	level_up_hud_label = Label.new()
+	level_up_hud_label.name = "LevelUpHUDLabel"
+	level_up_hud_label.position = Vector2(16, 96)
+	level_up_hud_label.size = Vector2(240, 24)
+	level_up_hud_label.add_theme_font_size_override("font_size", 13)
+	level_up_hud_label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.2, 1.0))
+	level_up_hud_label.add_theme_color_override("font_outline_color", Color(0.12, 0.06, 0.0, 1.0))
+	level_up_hud_label.add_theme_constant_override("outline_size", 4)
+	level_up_hud_label.visible = false
+	hud.add_child(level_up_hud_label)
+
 	_on_health_changed(health_component.current_health, health_component.max_health)
+	_update_exp_ui()
 	_update_special_cooldown_ui()
 
 func _is_mouse_over_placed_furniture() -> bool:
@@ -273,6 +499,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				_flash_cooldown_warning()
 
 func _physics_process(delta: float) -> void:
+	# Tự động hồi phục Mana theo thời gian
+	if current_mana < max_mana:
+		current_mana = minf(max_mana, current_mana + mana_regen_rate * delta)
+		if SceneManager:
+			SceneManager.saved_player_mana = current_mana
+		_update_mana_ui()
+
 	if special_cooldown_timer > 0.0:
 		special_cooldown_timer = maxf(0.0, special_cooldown_timer - delta)
 		_update_special_cooldown_ui()
@@ -340,8 +573,11 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("roll") or Input.is_action_just_pressed("ui_accept"):
-		start_roll(direction)
-		return
+		if current_mana >= roll_mana_cost:
+			start_roll(direction)
+			return
+		else:
+			_flash_mana_warning()
 
 	if direction != Vector2.ZERO:
 		velocity = direction * speed
@@ -432,11 +668,14 @@ func start_weapon_swing(is_special: bool = false) -> void:
 		if default_weapon_texture == null:
 			default_weapon_texture = weapon_sprite.texture
 		if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
-			var tools_tex := load("res://Content T1/Tilesheet/Tools1_tilet.png") as Texture2D
-			if tools_tex:
+			var t_cfg: Dictionary = TOOL_CONFIG[active_swing_tool_id]
+			var is_weapon_sheet := ("type" in t_cfg)
+			var sheet_path := "res://Content T1/Tilesheet/Weapon1_tilet.png" if is_weapon_sheet else "res://Content T1/Tilesheet/Tools1_tilet.png"
+			var loaded_tex := load(sheet_path) as Texture2D
+			if loaded_tex:
 				var tool_atlas := AtlasTexture.new()
-				tool_atlas.atlas = tools_tex
-				tool_atlas.region = TOOL_CONFIG[active_swing_tool_id]["icon_region"]
+				tool_atlas.atlas = loaded_tex
+				tool_atlas.region = t_cfg["icon_region"]
 				weapon_sprite.texture = tool_atlas
 		elif default_weapon_texture != null:
 			weapon_sprite.texture = default_weapon_texture
@@ -468,6 +707,22 @@ func start_weapon_swing(is_special: bool = false) -> void:
 			anim.flip_h = false
 			last_direction = "up"
 
+	var weapon_type: String = "sword"
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		weapon_type = str(TOOL_CONFIG[active_swing_tool_id].get("type", "tool"))
+
+	# Tách luồng hoạt ảnh riêng cho từng loại vũ khí:
+	if weapon_type == "bow":
+		_execute_bow_attack(is_special, mouse_dir, mouse_angle, weapon_sprite)
+		return
+	elif weapon_type == "staff":
+		_execute_staff_attack(is_special, mouse_dir, mouse_angle, weapon_sprite)
+		return
+	elif weapon_type == "spear":
+		_execute_spear_attack(is_special, mouse_dir, mouse_angle, weapon_sprite)
+		return
+
+	# Hoạt ảnh chém hình vòng cung cho Kiếm Quắm (Scythe) và Công Cụ / Kiếm Mặc Định
 	# Tính toán góc lấy đà, góc bắt đầu và góc kết thúc đối xứng quanh con trỏ chuột
 	var half_arc := deg_to_rad(125.0 if is_special else 68.0)
 	var windup_start := mouse_angle - (half_arc - deg_to_rad(22.0)) * swing_dir
@@ -494,9 +749,12 @@ func start_weapon_swing(is_special: bool = false) -> void:
 			weapon_sprite.modulate = Color(1.25, 1.25, 1.35, 1.0)
 
 	# 3. Giai đoạn 1: Lấy đà nhanh (Wind-up) + Nén nhẹ người
-	var windup_time := 0.055 if is_special else 0.04
-	var slash_time := 0.19 if is_special else 0.135
-	var follow_time := 0.075 if is_special else 0.055
+	var speed_mult := 1.0
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		speed_mult = float(TOOL_CONFIG[active_swing_tool_id].get("swing_speed_mult", 1.0))
+	var windup_time := (0.055 if is_special else 0.04) / speed_mult
+	var slash_time := (0.19 if is_special else 0.135) / speed_mult
+	var follow_time := (0.075 if is_special else 0.055) / speed_mult
 
 	swing_tween = create_tween()
 	swing_tween.set_parallel(true)
@@ -576,6 +834,240 @@ func start_weapon_swing(is_special: bool = false) -> void:
 		weapon_pivot.scale = Vector2.ONE
 		weapon_pivot.hide()
 
+func _execute_spear_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: float, weapon_sprite: Sprite2D) -> void:
+	var speed_mult: float = 1.0
+	var t_cfg: Dictionary = {}
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		t_cfg = TOOL_CONFIG[active_swing_tool_id]
+		speed_mult = float(t_cfg.get("swing_speed_mult", 1.0))
+
+	var thrust_reach: float = 20.0 if not is_special else 30.0
+	var thrust_time: float = (0.10 if not is_special else 0.14) / speed_mult
+	var recover_time: float = (0.09 if not is_special else 0.11) / speed_mult
+
+	# Đặt tâm vũ khí sát tay nhân vật
+	weapon_pivot.rotation = mouse_angle
+	weapon_pivot.position = mouse_dir * 4.0
+	weapon_pivot.scale = Vector2.ONE * (special_attack_scale if is_special else 1.0)
+	if weapon_sprite:
+		weapon_sprite.position = Vector2(4, 0)
+		weapon_sprite.rotation = PI * 0.25 # Hướng mũi giáo dọc theo góc đâm
+		weapon_sprite.modulate = Color(2.0, 1.5, 0.4, 1.0) if is_special else t_cfg.get("core_col", Color.WHITE)
+
+	if is_special:
+		velocity = mouse_dir * special_lunge_speed * 1.1
+	else:
+		velocity = velocity * 0.4 + mouse_dir * 45.0
+
+	# 1. Rút giáo nhẹ về sau chuẩn bị đâm
+	swing_tween = create_tween()
+	swing_tween.tween_property(weapon_pivot, "position", -mouse_dir * 3.0, 0.035 / speed_mult).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 2. Đâm thẳng ra phía trước + bật hitbox
+	if hitbox:
+		hitbox.show()
+		hitbox.position = Vector2(thrust_reach * 0.8, 0)
+		for child in hitbox.get_children():
+			if child is CollisionShape2D:
+				child.disabled = false
+
+	swing_tween = create_tween()
+	swing_tween.tween_property(weapon_pivot, "position", mouse_dir * thrust_reach, thrust_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if anim:
+		var body_tween := create_tween()
+		body_tween.tween_property(anim, "scale", Vector2(1.12, 0.92), thrust_time * 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		body_tween.tween_property(anim, "scale", Vector2.ONE, thrust_time * 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 3. Thu giáo về & kết thúc đòn
+	if hitbox:
+		hitbox.hide()
+		hitbox.position = Vector2(18, 0)
+		for child in hitbox.get_children():
+			if child is CollisionShape2D:
+				child.disabled = true
+
+	is_special_attacking = false
+	is_attacking = false
+
+	swing_tween = create_tween().set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "position", Vector2.ZERO, recover_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	swing_tween.tween_property(weapon_pivot, "modulate:a", 0.0, recover_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	if not is_attacking:
+		if weapon_sprite:
+			weapon_sprite.position = Vector2(17, 3)
+			weapon_sprite.modulate = Color.WHITE
+			weapon_sprite.rotation = deg_to_rad(45.0)
+		weapon_pivot.modulate.a = 1.0
+		weapon_pivot.scale = Vector2.ONE
+		weapon_pivot.position = Vector2.ZERO
+		weapon_pivot.hide()
+
+func _execute_bow_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: float, weapon_sprite: Sprite2D) -> void:
+	var speed_mult: float = 1.0
+	var t_cfg: Dictionary = {}
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		t_cfg = TOOL_CONFIG[active_swing_tool_id]
+		speed_mult = float(t_cfg.get("swing_speed_mult", 1.0))
+
+	var draw_time: float = (0.13 if not is_special else 0.18) / speed_mult
+	var release_time: float = 0.07 / speed_mult
+
+	# Giữ cung ở cự ly gần cơ thể (chỉ cách 4-6px)
+	weapon_pivot.rotation = mouse_angle
+	weapon_pivot.position = mouse_dir * 4.0
+	weapon_pivot.scale = Vector2.ONE * (special_attack_scale if is_special else 1.0)
+	if weapon_sprite:
+		weapon_sprite.position = Vector2(2, 0)
+		weapon_sprite.rotation = 0.0
+		weapon_sprite.modulate = t_cfg.get("core_col", Color.WHITE)
+
+	# Giật lùi nhẹ người tạo cảm giác kéo cung
+	velocity = -mouse_dir * 18.0
+
+	# 1. Kéo căng dây cung (Scale hơi dẹt lại)
+	swing_tween = create_tween().set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2(0.88, 1.2) * (special_attack_scale if is_special else 1.0), draw_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	swing_tween.tween_property(weapon_pivot, "position", mouse_dir * 2.0, draw_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 2. Bắn mũi tên ra từ ngay đầu cung
+	_spawn_arrow_projectile(mouse_dir, is_special, t_cfg)
+
+	# Bật nảy dây cung khi bắn
+	swing_tween = create_tween().set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2(1.15, 0.85) * (special_attack_scale if is_special else 1.0), release_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	swing_tween.tween_property(weapon_pivot, "position", mouse_dir * 6.0, release_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	is_special_attacking = false
+	is_attacking = false
+
+	# 3. Thu cung mờ dần
+	swing_tween = create_tween()
+	swing_tween.tween_property(weapon_pivot, "modulate:a", 0.0, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	if not is_attacking:
+		if weapon_sprite:
+			weapon_sprite.position = Vector2(17, 3)
+			weapon_sprite.modulate = Color.WHITE
+			weapon_sprite.rotation = deg_to_rad(45.0)
+		weapon_pivot.modulate.a = 1.0
+		weapon_pivot.scale = Vector2.ONE
+		weapon_pivot.position = Vector2.ZERO
+		weapon_pivot.hide()
+
+func _spawn_arrow_projectile(dir: Vector2, is_special: bool, t_cfg: Dictionary) -> void:
+	var arrow_scene := load("res://scenes/objects/arrow_projectile.tscn") as PackedScene
+	if not arrow_scene:
+		return
+	var count := 1 if not is_special else 3
+	var dmg: int = current_attack_damage
+	var tint: Color = t_cfg.get("core_col", Color.WHITE)
+
+	for i in range(count):
+		var arrow = arrow_scene.instantiate()
+		var fire_dir := dir
+		if count > 1:
+			var spread_angle := deg_to_rad((i - 1) * 16.0)
+			fire_dir = dir.rotated(spread_angle)
+		arrow.global_position = global_position + dir * 6.0
+		get_parent().add_child(arrow)
+		if arrow.has_method("setup"):
+			arrow.setup(fire_dir, 550.0 if not is_special else 650.0, dmg, tint, self)
+
+func _execute_staff_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: float, weapon_sprite: Sprite2D) -> void:
+	var speed_mult: float = 1.0
+	var t_cfg: Dictionary = {}
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		t_cfg = TOOL_CONFIG[active_swing_tool_id]
+		speed_mult = float(t_cfg.get("swing_speed_mult", 1.0))
+
+	var cast_time: float = (0.14 if not is_special else 0.20) / speed_mult
+	var recover_time: float = 0.09 / speed_mult
+
+	# Cầm trượng gọn gần cơ thể
+	weapon_pivot.rotation = mouse_angle - deg_to_rad(25.0)
+	weapon_pivot.position = mouse_dir * 4.0
+	weapon_pivot.scale = Vector2.ONE * (special_attack_scale if is_special else 1.0)
+	if weapon_sprite:
+		weapon_sprite.position = Vector2(4, 0)
+		weapon_sprite.rotation = deg_to_rad(35.0)
+		weapon_sprite.modulate = t_cfg.get("glow_col", Color.CYAN)
+
+	# 1. Giơ trượng lên tích năng lượng
+	swing_tween = create_tween().set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "rotation", mouse_angle, cast_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2.ONE * (special_attack_scale * 1.18 if is_special else 1.1), cast_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if anim:
+		var body_tw := create_tween()
+		body_tw.tween_property(anim, "scale", Vector2(0.94, 1.08), cast_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		body_tw.tween_property(anim, "scale", Vector2.ONE, recover_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	# 2. Bắn quả cầu ma pháp (Magic Orb) từ đầu trượng
+	_spawn_magic_orb_projectile(mouse_dir, is_special, t_cfg)
+
+	# 3. Thu trượng
+	is_special_attacking = false
+	is_attacking = false
+
+	swing_tween = create_tween().set_parallel(true)
+	swing_tween.tween_property(weapon_pivot, "scale", Vector2.ONE, recover_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	swing_tween.tween_property(weapon_pivot, "modulate:a", 0.0, recover_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await swing_tween.finished
+	if not is_instance_valid(self):
+		return
+
+	if not is_attacking:
+		if weapon_sprite:
+			weapon_sprite.position = Vector2(17, 3)
+			weapon_sprite.modulate = Color.WHITE
+			weapon_sprite.rotation = deg_to_rad(45.0)
+		weapon_pivot.modulate.a = 1.0
+		weapon_pivot.scale = Vector2.ONE
+		weapon_pivot.position = Vector2.ZERO
+		weapon_pivot.hide()
+
+func _spawn_magic_orb_projectile(dir: Vector2, is_special: bool, t_cfg: Dictionary) -> void:
+	var orb_scene := load("res://scenes/objects/magic_orb_projectile.tscn") as PackedScene
+	if not orb_scene:
+		return
+	var count := 1 if not is_special else 3
+	var dmg: int = current_attack_damage
+	var tint: Color = t_cfg.get("glow_col", Color(0.85, 0.4, 1.0, 1.0))
+
+	for i in range(count):
+		var orb = orb_scene.instantiate()
+		var fire_dir := dir
+		if count > 1:
+			var spread_angle := deg_to_rad((i - 1) * 20.0)
+			fire_dir = dir.rotated(spread_angle)
+		orb.global_position = global_position + dir * 8.0
+		get_parent().add_child(orb)
+		if orb.has_method("setup"):
+			orb.setup(fire_dir, 230.0 if not is_special else 290.0, dmg, tint, self)
+
 func _on_weapon_hitbox_body_entered(body: Node) -> void:
 	_apply_weapon_hit(body)
 
@@ -594,10 +1086,20 @@ func _apply_weapon_hit(target: Node) -> void:
 		return
 	if target.has_method("take_damage"):
 		hit_targets.append(target)
-		target.take_damage(current_attack_damage, global_position, current_attack_knockback)
+		var damage_dealt: int = current_attack_damage
+		if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+			var is_harvest_tool: bool = ("axe" in active_swing_tool_id or "pickaxe" in active_swing_tool_id)
+			if is_harvest_tool:
+				damage_dealt = 1
+		target.take_damage(damage_dealt, global_position, current_attack_knockback)
 
 func start_roll(dir: Vector2) -> void:
 	is_rolling = true
+	current_mana = maxf(0.0, current_mana - roll_mana_cost)
+	if SceneManager:
+		SceneManager.saved_player_mana = current_mana
+	_update_mana_ui()
+
 	var roll_dir := dir
 
 	if roll_dir == Vector2.ZERO:
@@ -628,6 +1130,15 @@ func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_forc
 	if fishing_state != FishingState.NONE:
 		_cancel_fishing()
 
+	var final_damage: int = amount
+	if SceneManager and SceneManager.get("saved_equipment_data"):
+		var total_def: int = 0
+		for slot_k in SceneManager.saved_equipment_data.keys():
+			var eq = SceneManager.saved_equipment_data[slot_k]
+			if typeof(eq) == TYPE_DICTIONARY and eq != null:
+				total_def += int(eq.get("defense", 0))
+		final_damage = maxi(1, amount - total_def)
+
 	if source_pos != Vector2.ZERO:
 		var dir := (global_position - source_pos).normalized()
 		if dir == Vector2.ZERO:
@@ -639,7 +1150,7 @@ func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_forc
 		var tween := create_tween()
 		tween.tween_property(anim, "modulate", Color.WHITE, 0.25)
 
-	health_component.take_damage(amount)
+	health_component.take_damage(final_damage)
 
 func _on_health_changed(current: int, maximum: int) -> void:
 	if SceneManager:
@@ -653,11 +1164,92 @@ func _on_health_changed(current: int, maximum: int) -> void:
 func _on_player_died() -> void:
 	# Khi hết máu, hồi phục lại đầy máu và đưa về điểm xuất phát của map hiện tại
 	health_component.reset_health()
+	current_mana = max_mana
+	if SceneManager:
+		SceneManager.saved_player_mana = current_mana
+	_update_mana_ui()
 	global_position = initial_spawn_position
 	knockback_velocity = Vector2.ZERO
 	velocity = Vector2.ZERO
 	special_cooldown_timer = 0.0
 	_update_special_cooldown_ui()
+
+func _update_mana_ui() -> void:
+	if mana_bar_fill and max_mana > 0.0:
+		var ratio := clampf(current_mana / max_mana, 0.0, 1.0)
+		mana_bar_fill.size.x = 140.0 * ratio
+	if mana_label:
+		mana_label.text = "Mana: %d / %d" % [int(current_mana), int(max_mana)]
+
+func _update_exp_ui() -> void:
+	if exp_bar_fill:
+		if level >= 18:
+			exp_bar_fill.size.x = 140.0
+		elif max_exp > 0:
+			var ratio := clampf(float(current_exp) / float(max_exp), 0.0, 1.0)
+			exp_bar_fill.size.x = 140.0 * ratio
+		else:
+			exp_bar_fill.size.x = 0.0
+
+	if exp_label:
+		if level >= 18:
+			exp_label.text = "Lv.18 (MAX LEVEL)"
+		else:
+			exp_label.text = "Lv.%d: %d / %d EXP" % [level, current_exp, max_exp]
+
+func _on_scene_manager_exp_changed(new_exp: int, req_exp: int, new_level: int) -> void:
+	current_exp = new_exp
+	max_exp = req_exp
+	level = new_level
+	_update_exp_ui()
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if inv and inv.has_method("update_stats_display"):
+		inv.update_stats_display()
+
+func _on_scene_manager_level_up(new_level: int) -> void:
+	level = new_level
+	# Mỗi lần lên cấp tăng 50 HP tối đa và 50 Mana tối đa
+	max_health = 100 + (level - 1) * 50
+	max_mana = 100.0 + float((level - 1) * 50)
+	if health_component:
+		health_component.max_health = max_health
+		health_component.current_health = max_health # Hồi đầy máu khi lên cấp
+		_on_health_changed(health_component.current_health, health_component.max_health)
+	current_mana = max_mana
+	if SceneManager:
+		SceneManager.saved_player_mana = current_mana
+		SceneManager.saved_player_health = max_health
+	_update_mana_ui()
+	_update_exp_ui()
+
+	# Hiển thị thông báo bay lên đầu chúc mừng lên cấp
+	_show_floating_level_up_text("LEVEL UP! Lv.%d (+50 HP & Mana)" % level)
+
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if inv and inv.has_method("update_stats_display"):
+		inv.update_stats_display()
+
+func _show_floating_level_up_text(text_msg: String) -> void:
+	if not level_up_hud_label:
+		return
+	level_up_hud_label.text = text_msg
+	level_up_hud_label.visible = true
+	level_up_hud_label.modulate.a = 1.0
+	level_up_hud_label.position = Vector2(16, 96)
+
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(level_up_hud_label, "position:y", 90.0, 1.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(level_up_hud_label, "modulate:a", 0.0, 1.8).set_ease(Tween.EASE_IN)
+	await tween.finished
+	if is_instance_valid(level_up_hud_label):
+		level_up_hud_label.visible = false
+
+func _flash_mana_warning() -> void:
+	if not mana_label:
+		return
+	mana_label.modulate = Color(1.0, 0.3, 0.3, 1.0)
+	var tween := create_tween()
+	tween.tween_property(mana_label, "modulate", Color.WHITE, 0.25)
 
 func _update_special_cooldown_ui() -> void:
 	if not special_cd_bar_fill or not special_cd_label:
@@ -842,6 +1434,21 @@ func _try_harvest_resources_with_tool(tool_id: String, swing_dir_vec: Vector2) -
 					tree.hit_by_tool(tool_id, global_position)
 					break
 
+	# Kiểm tra đập đá tảng (mineable_rock) trong tầm vung cuốc/công cụ
+	for rock in get_tree().get_nodes_in_group("mineable_rock"):
+		if not is_instance_valid(rock) or rock in hit_targets:
+			continue
+		if rock.get("is_mined") == true:
+			continue
+		var rock_pos := (rock as Node2D).global_position
+		if rock_pos.distance_to(strike_pos) <= 34.0 or rock_pos.distance_to(global_position) <= 38.0:
+			var to_rock := (rock_pos - global_position).normalized()
+			if swing_dir_vec.dot(to_rock) >= -0.25 or rock_pos.distance_to(global_position) <= 24.0:
+				if rock.has_method("hit_by_tool"):
+					hit_targets.append(rock)
+					rock.hit_by_tool(tool_id, global_position)
+					break
+
 	var inv = get_tree().get_first_node_in_group("inventory")
 	if not inv or not inv.has_method("add_item"):
 		return
@@ -850,16 +1457,31 @@ func _try_harvest_resources_with_tool(tool_id: String, swing_dir_vec: Vector2) -
 		if not is_instance_valid(node) or node.is_queued_for_deletion():
 			continue
 		var n_id: String = str(node.get("item_id")) if "item_id" in node else ""
-		if not (n_id in ["branch", "stone"]):
+		if not (n_id in ["branch", "stone", "copper_ore", "iron_ore", "gold_ore", "amethyst_gem"]):
 			continue
 		var dist := (node as Node2D).global_position.distance_to(strike_pos)
 		if dist > 32.0 and (node as Node2D).global_position.distance_to(global_position) > 36.0:
 			continue
 
-		if (n_id == "branch" and (is_axe or is_pickaxe)) or (n_id == "stone" and (is_pickaxe or is_axe)):
+		var can_harvest := false
+		if n_id == "branch" and (is_axe or is_pickaxe):
+			can_harvest = true
+		elif n_id in ["stone", "copper_ore", "iron_ore", "gold_ore", "amethyst_gem"] and (is_pickaxe or is_axe):
+			can_harvest = true
+
+		if can_harvest:
 			var icon_tex: Texture2D = node.get("item_icon")
+			if not icon_tex and node.has_node("Sprite2D"):
+				var spr: Sprite2D = node.get_node("Sprite2D")
+				if spr and spr.region_enabled:
+					var atl := AtlasTexture.new()
+					atl.atlas = spr.texture
+					atl.region = spr.region_rect
+					icon_tex = atl
+				elif spr:
+					icon_tex = spr.texture
 			var scene_ref: PackedScene = load(node.scene_file_path) as PackedScene if node.scene_file_path != "" else null
-			var disp_name: String = str(node.get("item_name")) if "item_name" in node else ("Wood Branch" if n_id == "branch" else "Stone")
+			var disp_name: String = str(node.get("item_name")) if "item_name" in node else n_id
 			if inv.add_item(icon_tex, scene_ref, n_id, disp_name):
 				_show_fishing_message("+1 %s!" % disp_name, Color(0.65, 1.0, 0.55, 1.0), 0.9)
 				node.queue_free()

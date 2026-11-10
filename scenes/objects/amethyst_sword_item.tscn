@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://sword01"]
+
+[ext_resource type="Script" path="res://scripts/objects/item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://cje48xyy6gglj" path="res://Content T1/Tilesheet/Weapon1_tilet.png" id="2_weapon"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w"]
+size = Vector2(16, 16)
+
+[node name="Amethyst SwordItem" type="Area2D"]
+z_index = 1
+y_sort_enabled = true
+script = ExtResource("1_item")
+item_id = "amethyst_sword"
+item_name = "Amethyst Sword"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_weapon")
+region_enabled = true
+region_rect = Rect2(112, 112, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_w")

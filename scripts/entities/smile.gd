@@ -121,6 +121,8 @@ func _on_health_changed(_current: int, _max: int) -> void:
 	queue_redraw()
 
 func _on_died() -> void:
+	if SceneManager and SceneManager.has_method("add_player_exp"):
+		SceneManager.add_player_exp(8)
 	set_physics_process(false)
 	var parent_node := get_parent()
 	if parent_node and parent_node != get_tree().current_scene and parent_node is Node2D and parent_node.get_child_count() == 1:

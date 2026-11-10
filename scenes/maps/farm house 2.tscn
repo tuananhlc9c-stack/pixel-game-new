@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cq1ii3htdd11f" path="res://Content T1/Mapss/titleset/Tress2_tilet.png" id="9_ci06t"]
 [ext_resource type="Texture2D" uid="uid://qnqiasyio6yg" path="res://Content T1/Mapss/titleset/Wall3_tilset.png" id="10_8uhvw"]
 [ext_resource type="Texture2D" uid="uid://bdpuwnhqahvvq" path="res://Content T1/Mapss/titleset/Water fall green_tilset.png" id="11_7k2x6"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="12_5avvb"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="12_5avvb"]
 [ext_resource type="Texture2D" uid="uid://b7cw180dm4abu" path="res://Content T1/New/House7.png" id="12_w0t0s"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="13_6ul32"]
 [ext_resource type="Texture2D" uid="uid://bx1p0u4ca5kq6" path="res://Content T1/New/House6.png" id="13_sr803"]
@@ -25,10 +25,11 @@
 [ext_resource type="Texture2D" uid="uid://bgjhnm4aj1scg" path="res://Content T1/Tilesheet/Objects_2.png" id="21_ip17t"]
 [ext_resource type="Texture2D" uid="uid://4bx178hepn57" path="res://Content T1/Tilesheet/Craftables.png" id="22_w0t0s"]
 [ext_resource type="Texture2D" uid="uid://catlp7w5w4dma" path="res://Content T1/Tilesheet/bobbers.png" id="23_w0t0s"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="24_sr803"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="27_ci06t"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="28_8uhvw"]
-[ext_resource type="PackedScene" path="res://scenes/entities/frog.tscn" id="29_8uhvw"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="24_sr803"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="27_ci06t"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="28_8uhvw"]
+[ext_resource type="PackedScene" uid="uid://dwwbrjkql7ip0" path="res://scenes/entities/frog.tscn" id="29_8uhvw"]
+[ext_resource type="PackedScene" uid="uid://ca7ixrp10mkyo" path="res://scenes/entities/blacksmith_npc.tscn" id="30_blacksmith"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vgaqx"]
 texture = ExtResource("1_5a710")
@@ -11044,3 +11045,6 @@ position = Vector2(-280, 278)
 
 [node name="Frog2" parent="." unique_id=268831058 instance=ExtResource("29_8uhvw")]
 position = Vector2(116, 16)
+
+[node name="BlacksmithNPC" parent="." unique_id=1988220101 instance=ExtResource("30_blacksmith")]
+position = Vector2(39, 303)

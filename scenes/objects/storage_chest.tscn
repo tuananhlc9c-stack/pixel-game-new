@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bspma65r1xj57"]
+
+[ext_resource type="Script" path="res://scripts/objects/storage_chest.gd" id="1_chest"]
+[ext_resource type="Texture2D" uid="uid://dfk6luh8ffn61" path="res://Content T1/Loose/Cursors 2.png" id="2_cursors2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
+size = Vector2(20, 12)
+
+[node name="StorageChest" type="StaticBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_chest")
+
+[node name="ChestSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_cursors2")
+offset = Vector2(0, -10)
+region_enabled = true
+region_rect = Rect2(256, 75, 32, 30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_chest")

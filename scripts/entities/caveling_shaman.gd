@@ -175,6 +175,8 @@ func _on_health_changed(_current: int, _max: int) -> void:
 	queue_redraw()
 
 func _on_died() -> void:
+	if SceneManager and SceneManager.has_method("add_player_exp"):
+		SceneManager.add_player_exp(24)
 	queue_free()
 
 func _draw() -> void:

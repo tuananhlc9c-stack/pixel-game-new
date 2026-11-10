@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c6y1n3m8cav2k" path="res://scenes/entities/larva_bug.tscn" id="7_larva"]
 [ext_resource type="PackedScene" path="res://scenes/entities/stone_caveling.tscn" id="8_stone"]
 [ext_resource type="PackedScene" path="res://scenes/entities/caveling_shaman.tscn" id="9_shaman"]
+[ext_resource type="PackedScene" uid="uid://corerock1goc5" path="res://scenes/objects/ore_rock.tscn" id="10_orerock"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x22jy"]
 texture = ExtResource("1_011eo")
@@ -3902,3 +3903,27 @@ position = Vector2(488, 353)
 
 [node name="CavelingShaman1" parent="." unique_id=663155328 instance=ExtResource("9_shaman")]
 position = Vector2(570, 389)
+
+[node name="CopperOre1" parent="." unique_id=1910001001 instance=ExtResource("10_orerock")]
+position = Vector2(610, 240)
+ore_type = "copper"
+
+[node name="CopperOre2" parent="." unique_id=1910001002 instance=ExtResource("10_orerock")]
+position = Vector2(510, 280)
+ore_type = "copper"
+
+[node name="CopperOre3" parent="." unique_id=1910001003 instance=ExtResource("10_orerock")]
+position = Vector2(760, 360)
+ore_type = "copper"
+
+[node name="IronOre1" parent="." unique_id=1910001004 instance=ExtResource("10_orerock")]
+position = Vector2(660, 280)
+ore_type = "iron"
+
+[node name="IronOre2" parent="." unique_id=1910001005 instance=ExtResource("10_orerock")]
+position = Vector2(460, 380)
+ore_type = "iron"
+
+[node name="IronOre3" parent="." unique_id=1910001006 instance=ExtResource("10_orerock")]
+position = Vector2(710, 420)
+ore_type = "iron"

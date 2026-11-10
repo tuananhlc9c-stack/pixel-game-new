@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/entities/caveling_shaman.tscn" id="5_shaman"]
 [ext_resource type="PackedScene" path="res://scenes/entities/stone_caveling.tscn" id="6_stone"]
 [ext_resource type="PackedScene" path="res://scenes/entities/larva_bug.tscn" id="7_larva"]
+[ext_resource type="PackedScene" uid="uid://corerock1goc5" path="res://scenes/objects/ore_rock.tscn" id="8_orerock"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pxrm3"]
 texture = ExtResource("1_fmj2e")
@@ -1901,3 +1902,27 @@ position = Vector2(550, 420)
 
 [node name="LarvaBug2" parent="." instance=ExtResource("7_larva")]
 position = Vector2(680, 840)
+
+[node name="GoldOre1" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(560, 390)
+ore_type = "gold"
+
+[node name="GoldOre2" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(700, 520)
+ore_type = "gold"
+
+[node name="GoldOre3" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(610, 720)
+ore_type = "gold"
+
+[node name="AmethystOre1" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(650, 430)
+ore_type = "amethyst"
+
+[node name="AmethystOre2" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(580, 620)
+ore_type = "amethyst"
+
+[node name="AmethystOre3" parent="." instance=ExtResource("8_orerock")]
+position = Vector2(740, 800)
+ore_type = "amethyst"

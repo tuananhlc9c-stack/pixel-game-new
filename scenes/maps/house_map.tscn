@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://vm00x1mwwmx8" path="res://demo/Ladder_tilset.png" id="3_n62ff"]
 [ext_resource type="Texture2D" uid="uid://dfk6luh8ffn61" path="res://Content T1/Loose/Cursors 2.png" id="4_ve1dg"]
 [ext_resource type="PackedScene" uid="uid://cq4x87qarh3tw" path="res://scenes/objects/Tham.tscn" id="5_ivrbd"]
+[ext_resource type="PackedScene" uid="uid://bspma65r1xj57" path="res://scenes/objects/storage_chest.tscn" id="6_chest"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8omx4"]
 texture = ExtResource("1_6o6o2")
@@ -4596,3 +4597,6 @@ scale = Vector2(1.0022744, 1)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1444330897]
 position = Vector2(118, 370)
+
+[node name="StorageChest" parent="." unique_id=1950000002 instance=ExtResource("6_chest")]
+position = Vector2(145, 535)

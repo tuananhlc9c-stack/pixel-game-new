@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="14_branch"]
 [ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="15_stone"]
 [ext_resource type="PackedScene" uid="uid://cpinetree1goc" path="res://scenes/objects/pine_tree.tscn" id="16_pinetree"]
+[ext_resource type="PackedScene" uid="uid://cminerock1goc" path="res://scenes/objects/mineable_rock.tscn" id="17_minerock"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jw0yc"]
 texture = ExtResource("1_xn70g")
@@ -6035,3 +6036,18 @@ position = Vector2(539, 124)
 
 [node name="PineTree8" parent="." unique_id=1890006017 instance=ExtResource("16_pinetree")]
 position = Vector2(526, 198)
+
+[node name="MineableRock1" parent="." unique_id=1890006020 instance=ExtResource("17_minerock")]
+position = Vector2(807, 129)
+
+[node name="MineableRock2" parent="." unique_id=1890006021 instance=ExtResource("17_minerock")]
+position = Vector2(686, 168)
+
+[node name="MineableRock3" parent="." unique_id=1890006022 instance=ExtResource("17_minerock")]
+position = Vector2(298, 523)
+
+[node name="MineableRock4" parent="." unique_id=1890006023 instance=ExtResource("17_minerock")]
+position = Vector2(792, 532)
+
+[node name="MineableRock5" parent="." unique_id=1890006024 instance=ExtResource("17_minerock")]
+position = Vector2(608, 507)
