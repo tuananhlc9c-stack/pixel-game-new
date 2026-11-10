@@ -37,12 +37,12 @@
 [ext_resource type="PackedScene" uid="uid://dwwbrjkql7ip0" path="res://scenes/entities/frog.tscn" id="35_ualt0"]
 [ext_resource type="PackedScene" uid="uid://dv8a4are5amhj" path="res://scenes/entities/khao.tscn" id="36_mug5y"]
 [ext_resource type="PackedScene" uid="uid://cm3rchantnpc5" path="res://scenes/entities/merchant_npc.tscn" id="37_eggmilknpc"]
-[ext_resource type="PackedScene" uid="uid://dtownnpcevelyn" path="res://scenes/entities/town_npc_evelyn.tscn" id="38_tnevelyn"]
+[ext_resource type="PackedScene" uid="uid://bvaodxtld4hhx" path="res://scenes/entities/town_npc_evelyn.tscn" id="38_tnevelyn"]
 [ext_resource type="PackedScene" uid="uid://dtownnpclewis" path="res://scenes/entities/town_npc_lewis.tscn" id="39_tnlewis"]
 [ext_resource type="PackedScene" uid="uid://dtownnpcmalle" path="res://scenes/entities/town_npc_malle.tscn" id="40_tnmalle"]
 [ext_resource type="PackedScene" uid="uid://dtownnpccair" path="res://scenes/entities/town_npc_cair.tscn" id="41_tncair"]
 [ext_resource type="PackedScene" uid="uid://dtownnpcgeo" path="res://scenes/entities/town_npc_geo.tscn" id="42_tngeo"]
-[ext_resource type="PackedScene" uid="uid://dfurnmerchantnpc" path="res://scenes/entities/furniture_merchant_npc.tscn" id="43_furnnpc"]
+[ext_resource type="PackedScene" uid="uid://f5xknrx2ta41" path="res://scenes/entities/furniture_merchant_npc.tscn" id="43_furnnpc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jtbkh"]
 texture = ExtResource("1_i0ehx")
@@ -14675,7 +14675,7 @@ position = Vector2(650, 334)
 patrol_offsets = PackedVector2Array(-80, 0, 80, 0)
 
 [node name="TownNPCCair" parent="." unique_id=1898179284 instance=ExtResource("41_tncair")]
-position = Vector2(740, 835)
+position = Vector2(831, 798)
 patrol_offsets = PackedVector2Array(-90, 0, 110, 0)
 
 [node name="TownNPCGeo" parent="." unique_id=1898179285 instance=ExtResource("42_tngeo")]
@@ -14683,4 +14683,4 @@ position = Vector2(585, 690)
 patrol_offsets = PackedVector2Array(0, -100, 0, 110)
 
 [node name="FurnitureMerchantNPC" parent="." unique_id=1898179290 instance=ExtResource("43_furnnpc")]
-position = Vector2(736, 528)
+position = Vector2(432, 803)

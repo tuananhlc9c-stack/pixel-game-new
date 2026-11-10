@@ -38,6 +38,7 @@ const FURNITURE_REGION_MAP: Array[Dictionary] = [
 
 func _ready() -> void:
 	input_pickable = true
+	add_to_group("world_pickup_item")
 	if not input_event.is_connected(_on_input_event):
 		input_event.connect(_on_input_event)
 

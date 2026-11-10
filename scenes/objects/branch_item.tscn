@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cbranch1gocgs"]
+
+[ext_resource type="Script" path="res://scripts/objects/item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://scu7ha4r0ttp" path="res://Content T1/Tilesheet/debris.png" id="2_debris"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_branch"]
+size = Vector2(16, 16)
+
+[node name="BranchItem" type="Area2D"]
+z_index = 1
+y_sort_enabled = true
+script = ExtResource("1_item")
+item_id = "branch"
+item_name = "Wood Branch"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_debris")
+region_enabled = true
+region_rect = Rect2(16, 272, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_branch")

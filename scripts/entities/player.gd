@@ -57,6 +57,51 @@ var rod_tip_local: Vector2 = Vector2.ZERO
 var held_rod_sprite: Sprite2D = null
 var fishing_status_label: Label = null
 var caught_fish_sprite: Sprite2D = null
+var default_weapon_texture: Texture2D = null
+var active_swing_tool_id: String = ""
+
+const TOOL_CONFIG: Dictionary = {
+	"wood_pickaxe": {
+		"name": "Wooden Pickaxe",
+		"icon_region": Rect2(80, 16, 16, 16),
+		"damage": 22,
+		"special_damage": 50,
+		"glow_col": Color(0.95, 0.62, 0.22, 1.0),
+		"core_col": Color(1.0, 0.92, 0.65, 1.0)
+	},
+	"wood_axe": {
+		"name": "Wooden Axe",
+		"icon_region": Rect2(80, 80, 16, 16),
+		"damage": 26,
+		"special_damage": 56,
+		"glow_col": Color(0.92, 0.52, 0.18, 1.0),
+		"core_col": Color(1.0, 0.88, 0.55, 1.0)
+	},
+	"stone_pickaxe": {
+		"name": "Stone Pickaxe",
+		"icon_region": Rect2(80, 48, 16, 16),
+		"damage": 32,
+		"special_damage": 68,
+		"glow_col": Color(0.75, 0.72, 0.62, 1.0),
+		"core_col": Color(0.96, 0.94, 0.88, 1.0)
+	},
+	"stone_axe": {
+		"name": "Stone Axe",
+		"icon_region": Rect2(80, 112, 16, 16),
+		"damage": 36,
+		"special_damage": 75,
+		"glow_col": Color(0.72, 0.68, 0.58, 1.0),
+		"core_col": Color(0.95, 0.92, 0.84, 1.0)
+	},
+	"iron_pickaxe": {
+		"name": "Iron Pickaxe",
+		"icon_region": Rect2(192, 16, 16, 16),
+		"damage": 45,
+		"special_damage": 92,
+		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
+		"core_col": Color(0.92, 0.98, 1.0, 1.0)
+	}
+}
 
 const FISH_POOL: Array[Dictionary] = [
 	{"id": "fish_carp", "name": "Carp", "region": Rect2(0, 48, 16, 16)},
@@ -177,7 +222,7 @@ func _setup_health_system() -> void:
 
 func _is_mouse_over_placed_furniture() -> bool:
 	var world_mouse := get_global_mouse_position()
-	for node in get_tree().get_nodes_in_group("furniture_item"):
+	for node in get_tree().get_nodes_in_group("world_pickup_item"):
 		if is_instance_valid(node):
 			if node.get("is_dragging") == true:
 				return true
@@ -339,6 +384,7 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	is_attacking = true
 	is_special_attacking = is_special
 	hit_targets.clear()
+	active_swing_tool_id = _get_equipped_tool_id()
 
 	var swing_dir: float = float(swing_combo_dir)
 	if not is_special:
@@ -347,8 +393,18 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	else:
 		swing_dir = 1.0
 
-	# Thiết lập sát thương, lực đẩy lùi và hồi chiêu
-	if is_special:
+	# Thiết lập sát thương, lực đẩy lùi và hồi chiêu (tùy theo Kiếm hoặc Cuốc/Rìu đang cầm)
+	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+		var t_cfg: Dictionary = TOOL_CONFIG[active_swing_tool_id]
+		if is_special:
+			current_attack_damage = int(t_cfg["special_damage"])
+			current_attack_knockback = special_attack_knockback
+			special_cooldown_timer = special_attack_cooldown
+			_update_special_cooldown_ui()
+		else:
+			current_attack_damage = int(t_cfg["damage"])
+			current_attack_knockback = attack_knockback
+	elif is_special:
 		current_attack_damage = special_attack_damage
 		current_attack_knockback = special_attack_knockback
 		special_cooldown_timer = special_attack_cooldown
@@ -357,7 +413,7 @@ func start_weapon_swing(is_special: bool = false) -> void:
 		current_attack_damage = attack_damage
 		current_attack_knockback = attack_knockback
 
-	# 1. Hiển thị kiếm (ẩn tấm ảnh vệt chém tĩnh 1-frame để dùng vệt kiếm bán nguyệt động 60fps mượt hơn)
+	# 1. Hiển thị vũ khí / công cụ
 	weapon_pivot.show()
 	weapon_pivot.modulate.a = 1.0
 	if slash_effect:
@@ -365,6 +421,17 @@ func start_weapon_swing(is_special: bool = false) -> void:
 
 	var weapon_sprite: Sprite2D = $WeaponPivot/WeaponSprite if has_node("WeaponPivot/WeaponSprite") else null
 	if weapon_sprite:
+		if default_weapon_texture == null:
+			default_weapon_texture = weapon_sprite.texture
+		if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+			var tools_tex := load("res://Content T1/Tilesheet/Tools1_tilet.png") as Texture2D
+			if tools_tex:
+				var tool_atlas := AtlasTexture.new()
+				tool_atlas.atlas = tools_tex
+				tool_atlas.region = TOOL_CONFIG[active_swing_tool_id]["icon_region"]
+				weapon_sprite.texture = tool_atlas
+		elif default_weapon_texture != null:
+			weapon_sprite.texture = default_weapon_texture
 		weapon_sprite.show()
 		weapon_sprite.scale = Vector2(1.014, 0.97)
 
@@ -419,8 +486,8 @@ func start_weapon_swing(is_special: bool = false) -> void:
 			weapon_sprite.modulate = Color(1.25, 1.25, 1.35, 1.0)
 
 	# 3. Giai đoạn 1: Lấy đà nhanh (Wind-up) + Nén nhẹ người
-	var windup_time := 0.055 if is_special else 0.035
-	var slash_time := 0.19 if is_special else 0.13
+	var windup_time := 0.055 if is_special else 0.04
+	var slash_time := 0.19 if is_special else 0.135
 	var follow_time := 0.075 if is_special else 0.055
 
 	swing_tween = create_tween()
@@ -435,7 +502,10 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	if not is_instance_valid(self):
 		return
 
-	# 4. Giai đoạn 2: Vung kiếm tốc độ cao (Main Slash) + Bật Hitbox + Bật Vệt Kiếm Động
+	# 4. Giai đoạn 2: Vung kiếm/công cụ tốc độ cao (Main Slash) + Bật Hitbox + Bật Vệt Chém Động
+	if active_swing_tool_id != "":
+		_try_harvest_resources_with_tool(active_swing_tool_id, mouse_dir)
+
 	slash_trail.clear()
 	is_recording_trail = true
 	trail_is_special = is_special
@@ -670,6 +740,12 @@ func _draw() -> void:
 			var alpha := (life0 + life1) * 0.5 * t1
 			var glow_col := Color(1.0, 0.42, 0.12, alpha * 0.65) if trail_is_special else Color(0.55, 0.88, 1.0, alpha * 0.48)
 			var core_col := Color(1.0, 0.94, 0.45, alpha * 0.95) if trail_is_special else Color(1.0, 1.0, 1.0, alpha * 0.9)
+			if not trail_is_special and active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
+				var t_cfg: Dictionary = TOOL_CONFIG[active_swing_tool_id]
+				var base_glow: Color = t_cfg["glow_col"]
+				var base_core: Color = t_cfg["core_col"]
+				glow_col = Color(base_glow.r, base_glow.g, base_glow.b, alpha * 0.62)
+				core_col = Color(base_core.r, base_core.g, base_core.b, alpha * 0.92)
 
 			# Lớp hào quang bên ngoài
 			draw_colored_polygon(PackedVector2Array([out0, out1, in1, in0]), glow_col)
@@ -727,6 +803,40 @@ func _setup_fishing_visuals() -> void:
 	fishing_status_label.add_theme_constant_override("outline_size", 3)
 	fishing_status_label.visible = false
 	add_child(fishing_status_label)
+
+func _get_equipped_tool_id() -> String:
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if inv and inv.has_method("get_selected_tool_id"):
+		return inv.get_selected_tool_id()
+	return ""
+
+func _try_harvest_resources_with_tool(tool_id: String, swing_dir_vec: Vector2) -> void:
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if not inv or not inv.has_method("add_item"):
+		return
+
+	var strike_pos := global_position + swing_dir_vec * 20.0
+	var is_axe := "axe" in tool_id and not ("pickaxe" in tool_id)
+	var is_pickaxe := "pickaxe" in tool_id
+
+	for node in get_tree().get_nodes_in_group("world_pickup_item"):
+		if not is_instance_valid(node) or node.is_queued_for_deletion():
+			continue
+		var n_id: String = str(node.get("item_id")) if "item_id" in node else ""
+		if not (n_id in ["branch", "stone"]):
+			continue
+		var dist := (node as Node2D).global_position.distance_to(strike_pos)
+		if dist > 32.0 and (node as Node2D).global_position.distance_to(global_position) > 36.0:
+			continue
+
+		if (n_id == "branch" and (is_axe or is_pickaxe)) or (n_id == "stone" and (is_pickaxe or is_axe)):
+			var icon_tex: Texture2D = node.get("item_icon")
+			var scene_ref: PackedScene = load(node.scene_file_path) as PackedScene if node.scene_file_path != "" else null
+			var disp_name: String = str(node.get("item_name")) if "item_name" in node else ("Wood Branch" if n_id == "branch" else "Stone")
+			if inv.add_item(icon_tex, scene_ref, n_id, disp_name):
+				_show_fishing_message("+1 %s!" % disp_name, Color(0.65, 1.0, 0.55, 1.0), 0.9)
+				node.queue_free()
+				break
 
 func _is_holding_fishing_rod() -> bool:
 	var inv = get_tree().get_first_node_in_group("inventory")

@@ -31,6 +31,13 @@
 [ext_resource type="PackedScene" uid="uid://cchk1gocgs5aa" path="res://animall/chicken.tscn" id="30_chicken"]
 [ext_resource type="PackedScene" uid="uid://ccowanocgs5aa" path="res://animall/cow.tscn" id="31_cow"]
 [ext_resource type="PackedScene" uid="uid://cpiganocgs5aa" path="res://animall/pig.tscn" id="32_pig"]
+[ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="33_branch"]
+[ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="34_stone"]
+[ext_resource type="PackedScene" uid="uid://cwoodpickaxe1" path="res://scenes/objects/wood_pickaxe_item.tscn" id="35_wpick"]
+[ext_resource type="PackedScene" uid="uid://cwoodaxe1gocg" path="res://scenes/objects/wood_axe_item.tscn" id="36_waxe"]
+[ext_resource type="PackedScene" uid="uid://cstonepickaxe" path="res://scenes/objects/stone_pickaxe_item.tscn" id="37_spick"]
+[ext_resource type="PackedScene" uid="uid://cstoneaxe1goc" path="res://scenes/objects/stone_axe_item.tscn" id="38_saxe"]
+[ext_resource type="PackedScene" uid="uid://cironpickaxe1" path="res://scenes/objects/iron_pickaxe_item.tscn" id="39_ipick"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nr825"]
 texture = ExtResource("1_gjp8d")
@@ -3257,3 +3264,36 @@ position = Vector2(440, 330)
 
 [node name="PorkItem" parent="." unique_id=1890001023 instance=ExtResource("29_pork")]
 position = Vector2(416, 420)
+
+[node name="BranchItem1" parent="." unique_id=1890001031 instance=ExtResource("33_branch")]
+position = Vector2(312, 376)
+
+[node name="BranchItem2" parent="." unique_id=1890001032 instance=ExtResource("33_branch")]
+position = Vector2(584, 344)
+
+[node name="BranchItem3" parent="." unique_id=1890001033 instance=ExtResource("33_branch")]
+position = Vector2(872, 232)
+
+[node name="StoneItem1" parent="." unique_id=1890001034 instance=ExtResource("34_stone")]
+position = Vector2(504, 424)
+
+[node name="StoneItem2" parent="." unique_id=1890001035 instance=ExtResource("34_stone")]
+position = Vector2(648, 264)
+
+[node name="StoneItem3" parent="." unique_id=1890001036 instance=ExtResource("34_stone")]
+position = Vector2(920, 424)
+
+[node name="WoodPickaxeItem" parent="." unique_id=1890001041 instance=ExtResource("35_wpick")]
+position = Vector2(616, 184)
+
+[node name="WoodAxeItem" parent="." unique_id=1890001042 instance=ExtResource("36_waxe")]
+position = Vector2(632, 184)
+
+[node name="StonePickaxeItem" parent="." unique_id=1890001043 instance=ExtResource("37_spick")]
+position = Vector2(648, 184)
+
+[node name="StoneAxeItem" parent="." unique_id=1890001044 instance=ExtResource("38_saxe")]
+position = Vector2(664, 184)
+
+[node name="IronPickaxeItem" parent="." unique_id=1890001045 instance=ExtResource("39_ipick")]
+position = Vector2(680, 184)

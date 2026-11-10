@@ -21,8 +21,10 @@ var dropped_inside_slot: bool = false
 var gold_panel: Panel = null
 var gold_label: Label = null
 
-# Bảng giá vàng cho từng loại nông sản, thịt, cá và đồ nội thất
+# Bảng giá vàng cho từng loại nông sản, thịt, cá, nguyên liệu và đồ nội thất
 const ITEM_PRICES: Dictionary = {
+	"branch": 10,
+	"stone": 12,
 	"egg": 15,
 	"cow_milk": 30,
 	"goat_milk": 40,
@@ -166,11 +168,12 @@ func _ready() -> void:
 	if SceneManager and not SceneManager.gold_changed.is_connected(_on_gold_changed):
 		SceneManager.gold_changed.connect(_on_gold_changed)
 
-	# Khôi phục dữ liệu balo nếu đã lưu hoặc cấp sẵn Cần Câu Cá lúc mới vào game
+	# Khôi phục dữ liệu balo nếu đã lưu hoặc cấp sẵn Cần Câu Cá & Bộ Công Cụ lúc mới vào game
 	if SceneManager and SceneManager.saved_inventory_data.size() == all_slots.size():
 		inventory_data = SceneManager.saved_inventory_data.duplicate(true)
 		for i in range(all_slots.size()):
 			update_slot_display(i)
+		_give_starter_tools()
 		select_slot_by_index(clampi(SceneManager.saved_selected_slot, 0, all_slots.size() - 1))
 	else:
 		if all_slots.size() > 0:
@@ -179,6 +182,10 @@ func _ready() -> void:
 			if SceneManager:
 				SceneManager.has_received_starter_items = true
 			_give_starter_fishing_rod()
+		if not SceneManager or not SceneManager.has_received_starter_tools:
+			if SceneManager:
+				SceneManager.has_received_starter_tools = true
+			_give_starter_tools()
 		_sync_to_scene_manager()
 
 func _give_starter_fishing_rod() -> void:
@@ -189,6 +196,55 @@ func _give_starter_fishing_rod() -> void:
 		rod_icon.atlas = tools_tex
 		rod_icon.region = Rect2(0, 144, 16, 16)
 		add_item(rod_icon, rod_scene, "fishing_rod", "Fishing Rod")
+
+func _give_starter_tools() -> void:
+	var tools_tex := load("res://Content T1/Tilesheet/Tools1_tilet.png") as Texture2D
+	if not tools_tex:
+		return
+	var starter_tools: Array[Dictionary] = [
+		{
+			"id": "wood_pickaxe",
+			"name": "Wooden Pickaxe",
+			"region": Rect2(80, 16, 16, 16),
+			"scene": "res://scenes/objects/wood_pickaxe_item.tscn"
+		},
+		{
+			"id": "wood_axe",
+			"name": "Wooden Axe",
+			"region": Rect2(80, 80, 16, 16),
+			"scene": "res://scenes/objects/wood_axe_item.tscn"
+		},
+		{
+			"id": "stone_pickaxe",
+			"name": "Stone Pickaxe",
+			"region": Rect2(80, 48, 16, 16),
+			"scene": "res://scenes/objects/stone_pickaxe_item.tscn"
+		},
+		{
+			"id": "stone_axe",
+			"name": "Stone Axe",
+			"region": Rect2(80, 112, 16, 16),
+			"scene": "res://scenes/objects/stone_axe_item.tscn"
+		},
+		{
+			"id": "iron_pickaxe",
+			"name": "Iron Pickaxe",
+			"region": Rect2(192, 16, 16, 16),
+			"scene": "res://scenes/objects/iron_pickaxe_item.tscn"
+		}
+	]
+	for t in starter_tools:
+		var already_has := false
+		for slot_item in inventory_data:
+			if typeof(slot_item) == TYPE_DICTIONARY and slot_item != null and slot_item.get("id", "") == t["id"]:
+				already_has = true
+				break
+		if not already_has:
+			var icon := AtlasTexture.new()
+			icon.atlas = tools_tex
+			icon.region = t["region"]
+			var sc := load(str(t["scene"])) as PackedScene
+			add_item(icon, sc, str(t["id"]), str(t["name"]))
 
 func _sync_to_scene_manager() -> void:
 	if SceneManager:
@@ -204,6 +260,18 @@ func get_selected_item_data() -> Variant:
 func is_holding_fishing_rod() -> bool:
 	var data = get_selected_item_data()
 	return data != null and data.get("id", "") == "fishing_rod"
+
+func get_selected_tool_id() -> String:
+	var data = get_selected_item_data()
+	if typeof(data) != TYPE_DICTIONARY or data == null:
+		return ""
+	var id_str: String = str(data.get("id", ""))
+	if id_str in ["wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe"]:
+		return id_str
+	return ""
+
+func is_holding_tool() -> bool:
+	return get_selected_tool_id() != ""
 
 func is_furniture_item(data: Variant) -> bool:
 	if typeof(data) != TYPE_DICTIONARY or data == null:
@@ -699,7 +767,7 @@ func get_item_price(data: Variant) -> int:
 	if typeof(data) != TYPE_DICTIONARY or data == null:
 		return 0
 	var item_id: String = str(data.get("id", ""))
-	if item_id == "fishing_rod":
+	if item_id in ["fishing_rod", "wood_pickaxe", "wood_axe", "stone_pickaxe", "stone_axe", "iron_pickaxe"]:
 		return 0
 	if ITEM_PRICES.has(item_id):
 		return int(ITEM_PRICES[item_id])

@@ -30,6 +30,8 @@
 [ext_resource type="PackedScene" uid="uid://cxt6jk8ml6yko" path="res://scenes/entities/smile1.tscn" id="28_377j4"]
 [ext_resource type="PackedScene" uid="uid://bjvbt65gogf7p" path="res://scenes/entities/khao1.tscn" id="29_377j4"]
 [ext_resource type="PackedScene" uid="uid://dxgs027sbmv7d" path="res://scenes/entities/fish_merchant_npc.tscn" id="30_fishnpc"]
+[ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="31_branch"]
+[ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="32_stone"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_glwgy"]
 texture = ExtResource("1_u5uvw")
@@ -17328,3 +17330,21 @@ position = Vector2(526, 365)
 
 [node name="FishMerchantNPC" parent="." unique_id=1898179271 instance=ExtResource("30_fishnpc")]
 position = Vector2(360, 148)
+
+[node name="BranchItem1" parent="." unique_id=1890004001 instance=ExtResource("31_branch")]
+position = Vector2(248, 120)
+
+[node name="BranchItem2" parent="." unique_id=1890004002 instance=ExtResource("31_branch")]
+position = Vector2(456, 200)
+
+[node name="BranchItem3" parent="." unique_id=1890004003 instance=ExtResource("31_branch")]
+position = Vector2(744, 152)
+
+[node name="StoneItem1" parent="." unique_id=1890004004 instance=ExtResource("32_stone")]
+position = Vector2(312, 184)
+
+[node name="StoneItem2" parent="." unique_id=1890004005 instance=ExtResource("32_stone")]
+position = Vector2(600, 216)
+
+[node name="StoneItem3" parent="." unique_id=1890004006 instance=ExtResource("32_stone")]
+position = Vector2(888, 168)

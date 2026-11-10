@@ -12,6 +12,7 @@ var saved_player_health: int = -1
 var saved_inventory_data: Array = []
 var saved_selected_slot: int = 0
 var has_received_starter_items: bool = false
+var has_received_starter_tools: bool = false
 
 # Lưu số Vàng (Gold) hiện tại của người chơi xuyên suốt các map
 var saved_gold: int = 0

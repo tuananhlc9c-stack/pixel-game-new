@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://bqq4lmqgmwfdr" path="res://Content T1/Mapss/titleset/Tilset tree.png" id="9_qp0o3"]
 [ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="12_7ghix"]
 [ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="13_3solb"]
+[ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="14_branch"]
+[ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="15_stone"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jw0yc"]
 texture = ExtResource("1_xn70g")
@@ -5990,3 +5992,21 @@ target_spawn_position = Vector2(586, 1017)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("13_3solb")]
 position = Vector2(730, 52)
+
+[node name="BranchItem1" parent="." unique_id=1890006001 instance=ExtResource("14_branch")]
+position = Vector2(568, 216)
+
+[node name="BranchItem2" parent="." unique_id=1890006002 instance=ExtResource("14_branch")]
+position = Vector2(680, 296)
+
+[node name="BranchItem3" parent="." unique_id=1890006003 instance=ExtResource("14_branch")]
+position = Vector2(488, 360)
+
+[node name="StoneItem1" parent="." unique_id=1890006004 instance=ExtResource("15_stone")]
+position = Vector2(632, 184)
+
+[node name="StoneItem2" parent="." unique_id=1890006005 instance=ExtResource("15_stone")]
+position = Vector2(536, 312)
+
+[node name="StoneItem3" parent="." unique_id=1890006006 instance=ExtResource("15_stone")]
+position = Vector2(616, 408)

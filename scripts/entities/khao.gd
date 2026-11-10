@@ -933,6 +933,8 @@ func _get_english_item_name(item_data: Dictionary) -> String:
 	var id_str: String = str(item_data.get("id", ""))
 	var raw_name: String = str(item_data.get("name", "Item"))
 	match id_str:
+		"branch": return "Wood Branch"
+		"stone": return "Stone"
 		"egg": return "Egg"
 		"cow_milk": return "Cow Milk"
 		"goat_milk": return "Goat Milk"

@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cstonepickaxe"]
+
+[ext_resource type="Script" path="res://scripts/objects/item.gd" id="1_item"]
+[ext_resource type="Texture2D" uid="uid://ckmoer4ta5e28" path="res://Content T1/Tilesheet/Tools1_tilet.png" id="2_tools"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tool"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_tools")
+region = Rect2(80, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f2"]
+atlas = ExtResource("2_tools")
+region = Rect2(32, 32, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tool"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_icon")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_icon")
+}],
+"loop": true,
+"name": &"swing",
+"speed": 10.0
+}]
+
+[node name="StonePickaxeItem" type="Area2D"]
+z_index = 1
+y_sort_enabled = true
+script = ExtResource("1_item")
+item_id = "stone_pickaxe"
+item_name = "Stone Pickaxe"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_tools")
+region_enabled = true
+region_rect = Rect2(80, 48, 16, 16)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+visible = false
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_tool")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tool")
