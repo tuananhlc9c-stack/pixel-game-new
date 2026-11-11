@@ -295,10 +295,12 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D" unique_id=2035780365 groups=["player"]]
+texture_filter = 1
 y_sort_enabled = true
 script = ExtResource("1_onrkg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2103328876]
+texture_filter = 1
 y_sort_enabled = true
 sprite_frames = SubResource("SpriteFrames_mrg7q")
 animation = &"stand"

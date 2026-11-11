@@ -2,12 +2,13 @@
 
 [ext_resource type="Texture2D" uid="uid://druqpp35e5rs4" path="res://Content T1/New/Dunger3.png" id="1_fmj2e"]
 [ext_resource type="Texture2D" uid="uid://cybnblv0jb0fu" path="res://Content T1/New/house8.png" id="2_7pijw"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="3_pxrm3"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="4_l4emt"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="3_pxrm3"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="4_l4emt"]
 [ext_resource type="PackedScene" path="res://scenes/entities/caveling_shaman.tscn" id="5_shaman"]
 [ext_resource type="PackedScene" path="res://scenes/entities/stone_caveling.tscn" id="6_stone"]
-[ext_resource type="PackedScene" path="res://scenes/entities/larva_bug.tscn" id="7_larva"]
+[ext_resource type="PackedScene" uid="uid://c6y1n3m8cav2k" path="res://scenes/entities/larva_bug.tscn" id="7_larva"]
 [ext_resource type="PackedScene" uid="uid://corerock1goc5" path="res://scenes/objects/ore_rock.tscn" id="8_orerock"]
+[ext_resource type="PackedScene" path="res://scenes/entities/boss_glurch.tscn" id="9_yofr6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pxrm3"]
 texture = ExtResource("1_fmj2e")
@@ -1882,47 +1883,50 @@ position = Vector2(768, 961)
 next_scene_path = "res://scenes/dungeons/danger3.tscn"
 target_spawn_position = Vector2(236, 248)
 
-[node name="CavelingShaman1" parent="." instance=ExtResource("5_shaman")]
+[node name="CavelingShaman1" parent="." unique_id=509531142 instance=ExtResource("5_shaman")]
 position = Vector2(580, 360)
 
-[node name="CavelingShaman2" parent="." instance=ExtResource("5_shaman")]
+[node name="CavelingShaman2" parent="." unique_id=1618142687 instance=ExtResource("5_shaman")]
 position = Vector2(660, 560)
 
-[node name="CavelingShaman3" parent="." instance=ExtResource("5_shaman")]
+[node name="CavelingShaman3" parent="." unique_id=60138544 instance=ExtResource("5_shaman")]
 position = Vector2(720, 780)
 
-[node name="StoneCaveling1" parent="." instance=ExtResource("6_stone")]
+[node name="StoneCaveling1" parent="." unique_id=144797484 instance=ExtResource("6_stone")]
 position = Vector2(620, 460)
 
-[node name="StoneCaveling2" parent="." instance=ExtResource("6_stone")]
+[node name="StoneCaveling2" parent="." unique_id=73325512 instance=ExtResource("6_stone")]
 position = Vector2(710, 680)
 
-[node name="LarvaBug1" parent="." instance=ExtResource("7_larva")]
+[node name="LarvaBug1" parent="." unique_id=984549812 instance=ExtResource("7_larva")]
 position = Vector2(550, 420)
 
-[node name="LarvaBug2" parent="." instance=ExtResource("7_larva")]
+[node name="LarvaBug2" parent="." unique_id=478341230 instance=ExtResource("7_larva")]
 position = Vector2(680, 840)
 
-[node name="GoldOre1" parent="." instance=ExtResource("8_orerock")]
+[node name="GoldOre1" parent="." unique_id=2099982247 instance=ExtResource("8_orerock")]
 position = Vector2(560, 390)
 ore_type = "gold"
 
-[node name="GoldOre2" parent="." instance=ExtResource("8_orerock")]
+[node name="GoldOre2" parent="." unique_id=1031524592 instance=ExtResource("8_orerock")]
 position = Vector2(700, 520)
 ore_type = "gold"
 
-[node name="GoldOre3" parent="." instance=ExtResource("8_orerock")]
+[node name="GoldOre3" parent="." unique_id=1119035754 instance=ExtResource("8_orerock")]
 position = Vector2(610, 720)
 ore_type = "gold"
 
-[node name="AmethystOre1" parent="." instance=ExtResource("8_orerock")]
+[node name="AmethystOre1" parent="." unique_id=52916539 instance=ExtResource("8_orerock")]
 position = Vector2(650, 430)
 ore_type = "amethyst"
 
-[node name="AmethystOre2" parent="." instance=ExtResource("8_orerock")]
+[node name="AmethystOre2" parent="." unique_id=1140192001 instance=ExtResource("8_orerock")]
 position = Vector2(580, 620)
 ore_type = "amethyst"
 
-[node name="AmethystOre3" parent="." instance=ExtResource("8_orerock")]
+[node name="AmethystOre3" parent="." unique_id=1135563694 instance=ExtResource("8_orerock")]
 position = Vector2(740, 800)
 ore_type = "amethyst"
+
+[node name="BossGlurch" parent="." unique_id=1691264265 instance=ExtResource("9_yofr6")]
+position = Vector2(361, 816)

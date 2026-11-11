@@ -8,7 +8,7 @@ extends CharacterBody2D
 @export var lightning_damage: int = 28
 @export var lightning_radius: float = 42.0
 @export var knockback_force: float = 230.0
-@export var projectile_scene: PackedScene = preload("res://scenes/entities/fireball_projectile.tscn")
+@export var projectile_scene: PackedScene = preload("res://scenes/entities/sylph_lightning_orb.tscn")
 @export var boss_sheet_tex: Texture2D = preload("res://Content T1/Character/Monter/Boss/Boss2.png")
 
 enum State { IDLE, FLOAT_CHASE, CAST_LIGHTNING, CAST_ORB_BARRAGE, CAST_HOMING_ORB, TEMPEST_DASH }
@@ -60,12 +60,13 @@ func _build_orb_sprite_frames() -> void:
 	orb_sprite_frames.add_animation("orb")
 	orb_sprite_frames.set_animation_loop("orb", true)
 	orb_sprite_frames.set_animation_speed("orb", 10.0)
+	# Khung hình chính xác của 5 quả cầu ma pháp sét ngọc bích từ ảnh mẫu:
 	var rects := [
-		Rect2(18, 322, 28, 28),
-		Rect2(50, 322, 28, 28),
-		Rect2(82, 322, 28, 28),
-		Rect2(113, 320, 28, 28),
-		Rect2(146, 322, 28, 28)
+		Rect2(20, 324, 24, 24),
+		Rect2(52, 324, 24, 24),
+		Rect2(84, 324, 24, 24),
+		Rect2(115, 323, 24, 24),
+		Rect2(148, 324, 24, 24)
 	]
 	for r: Rect2 in rects:
 		var at := AtlasTexture.new()

@@ -30,6 +30,10 @@
 [ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="28_8uhvw"]
 [ext_resource type="PackedScene" uid="uid://dwwbrjkql7ip0" path="res://scenes/entities/frog.tscn" id="29_8uhvw"]
 [ext_resource type="PackedScene" uid="uid://ca7ixrp10mkyo" path="res://scenes/entities/blacksmith_npc.tscn" id="30_blacksmith"]
+[ext_resource type="PackedScene" uid="uid://bvaodxtld4hhx" path="res://scenes/entities/town_npc_evelyn.tscn" id="31_evelyn"]
+[ext_resource type="PackedScene" uid="uid://dtownnpclewis" path="res://scenes/entities/town_npc_lewis.tscn" id="32_lewis"]
+[ext_resource type="PackedScene" uid="uid://dtownnpcmalle" path="res://scenes/entities/town_npc_malle.tscn" id="33_malle"]
+[ext_resource type="PackedScene" uid="uid://dtownnpcgeo" path="res://scenes/entities/town_npc_geo.tscn" id="35_geo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vgaqx"]
 texture = ExtResource("1_5a710")
@@ -11048,3 +11052,23 @@ position = Vector2(116, 16)
 
 [node name="BlacksmithNPC" parent="." unique_id=1988220101 instance=ExtResource("30_blacksmith")]
 position = Vector2(39, 303)
+
+[node name="TownNPCLewis" parent="." unique_id=1898179282 instance=ExtResource("32_lewis")]
+position = Vector2(389, 190)
+speed = 28.0
+patrol_offsets = PackedVector2Array(-80, 0, 80, 0)
+
+[node name="TownNPCEvelyn" parent="." unique_id=1898179281 instance=ExtResource("31_evelyn")]
+position = Vector2(100, 240)
+speed = 26.0
+patrol_offsets = PackedVector2Array(-60, 0, 70, 0)
+
+[node name="TownNPCMalle" parent="." unique_id=1898179283 instance=ExtResource("33_malle")]
+position = Vector2(-120, 220)
+speed = 25.0
+patrol_offsets = PackedVector2Array(0, -50, 0, 50)
+
+[node name="TownNPCGeo" parent="." unique_id=1898179285 instance=ExtResource("35_geo")]
+position = Vector2(340, 260)
+speed = 30.0
+patrol_offsets = PackedVector2Array(-70, 0, 70, 0)

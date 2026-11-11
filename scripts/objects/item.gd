@@ -12,12 +12,69 @@ extends Area2D
 @export_enum("Flip Left/Right", "Rotate 90 Degrees") var rotation_mode: int = 0
 
 var is_dragging: bool = false
+var is_mouse_hovered: bool = false
 var drag_offset: Vector2 = Vector2.ZERO
 var previous_valid_position: Vector2 = Vector2.ZERO
 
 @onready var tilemap: Node2D = _find_tilemap_node()
 @onready var sprite: Sprite2D = $Sprite2D if has_node("Sprite2D") else null
 @onready var col_shape: CollisionShape2D = $CollisionShape2D if has_node("CollisionShape2D") else null
+
+# Bảng hướng xoay thực tế trong Furniture_tilet.png:
+# Mỗi hướng là 1 Dictionary: {"region": Rect2, "flip_h": bool}
+# Thứ tự 4 hướng: 0 = Nhìn Xuống (Down), 1 = Nhìn Phải (Right), 2 = Nhìn Lên (Up), 3 = Nhìn Trái (Left - lật từ Right)
+const FURNITURE_4_DIRECTIONS: Dictionary = {
+	"furn_oak_chair": [
+		{"region": Rect2(0, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(16, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(32, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(16, 0, 16, 32), "flip_h": true}
+	],
+	"furn_birch_chair": [
+		{"region": Rect2(64, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(80, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(96, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(80, 0, 16, 32), "flip_h": true}
+	],
+	"furn_emerald_chair": [
+		{"region": Rect2(128, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(144, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(160, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(144, 0, 16, 32), "flip_h": true}
+	],
+	"furn_modern_chair": [
+		{"region": Rect2(192, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(208, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(224, 0, 16, 32), "flip_h": false},
+		{"region": Rect2(208, 0, 16, 32), "flip_h": true}
+	],
+	"furn_oak_bench": [
+		{"region": Rect2(0, 48, 32, 32), "flip_h": false},
+		{"region": Rect2(32, 48, 32, 32), "flip_h": false},
+		{"region": Rect2(0, 48, 32, 32), "flip_h": true},
+		{"region": Rect2(32, 48, 32, 32), "flip_h": true}
+	],
+	"furn_tea_table": [
+		{"region": Rect2(144, 112, 32, 32), "flip_h": false},
+		{"region": Rect2(176, 112, 32, 32), "flip_h": false},
+		{"region": Rect2(144, 112, 32, 32), "flip_h": true},
+		{"region": Rect2(176, 112, 32, 32), "flip_h": true}
+	],
+	"furn_royal_bed": [
+		{"region": Rect2(128, 224, 32, 64), "flip_h": false},
+		{"region": Rect2(160, 224, 32, 64), "flip_h": false},
+		{"region": Rect2(128, 224, 32, 64), "flip_h": true},
+		{"region": Rect2(160, 224, 32, 64), "flip_h": true}
+	],
+	"furn_blue_bed": [
+		{"region": Rect2(0, 224, 48, 64), "flip_h": false},
+		{"region": Rect2(48, 224, 48, 64), "flip_h": false},
+		{"region": Rect2(0, 224, 48, 64), "flip_h": true},
+		{"region": Rect2(48, 224, 48, 64), "flip_h": true}
+	]
+}
+
+var current_furniture_dir_idx: int = 0
 
 const FURNITURE_REGION_MAP: Array[Dictionary] = [
 	{"id": "furn_oak_chair", "name": "Oak Chair", "region": Rect2(0, 0, 16, 32)},
@@ -41,6 +98,10 @@ func _ready() -> void:
 	add_to_group("world_pickup_item")
 	if not input_event.is_connected(_on_input_event):
 		input_event.connect(_on_input_event)
+	if not mouse_entered.is_connected(_on_mouse_entered):
+		mouse_entered.connect(_on_mouse_entered)
+	if not mouse_exited.is_connected(_on_mouse_exited):
+		mouse_exited.connect(_on_mouse_exited)
 
 	# Chuẩn hóa vị trí Sprite2D & CollisionShape2D nếu bị lệch tâm trong scene cũ
 	if sprite and sprite.position != Vector2.ZERO:
@@ -170,14 +231,32 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		z_index = 10
 		get_viewport().set_input_as_handled()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not is_dragging:
-		return
+func _on_mouse_entered() -> void:
+	is_mouse_hovered = true
 
+func _on_mouse_exited() -> void:
+	is_mouse_hovered = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Cho phép bấm phím R để xoay hướng đồ đạc khi:
+	# 1. Đang kéo giữ đồ (is_dragging) HOẶC
+	# 2. Đang rê chuột lên trên món đồ (is_mouse_hovered hoặc con trỏ chuột nằm trong phạm vi món đồ)
 	if event is InputEventKey and event.pressed and not event.is_echo() and event.keycode == KEY_R:
-		handle_rotation()
-		_notify_house_furniture_changed()
-		get_viewport().set_input_as_handled()
+		var can_rotate := false
+		if is_dragging:
+			can_rotate = true
+		elif is_mouse_hovered:
+			can_rotate = true
+		elif is_point_over_item(get_global_mouse_position()):
+			can_rotate = true
+
+		if can_rotate:
+			handle_rotation()
+			_notify_house_furniture_changed()
+			get_viewport().set_input_as_handled()
+			return
+
+	if not is_dragging:
 		return
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
@@ -193,6 +272,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func handle_rotation() -> void:
+	# Kiểm tra nếu đồ nội thất có hỗ trợ bảng 4 hướng (ghế, bàn, ghế dài, giường...)
+	if FURNITURE_4_DIRECTIONS.has(item_id):
+		var dir_list: Array = FURNITURE_4_DIRECTIONS[item_id]
+		current_furniture_dir_idx = (current_furniture_dir_idx + 1) % dir_list.size()
+		var d_info: Dictionary = dir_list[current_furniture_dir_idx]
+		if sprite:
+			sprite.region_enabled = true
+			sprite.region_rect = d_info["region"]
+			sprite.flip_h = bool(d_info["flip_h"])
+		rotation_degrees = 0.0
+		update_collision_from_sprite()
+		return
+
+	# Fallback cho các đồ vật khác
 	if rotation_mode == 0:
 		if sprite:
 			sprite.flip_h = not sprite.flip_h

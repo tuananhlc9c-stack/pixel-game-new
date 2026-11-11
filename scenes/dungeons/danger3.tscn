@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="3_sf521"]
 [ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="4_uarc6"]
 [ext_resource type="PackedScene" path="res://scenes/entities/boss_malugaz.tscn" id="5_malugaz"]
-[ext_resource type="PackedScene" path="res://scenes/entities/caveling_shaman.tscn" id="6_shaman"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sf521"]
 texture = ExtResource("1_pdluw")
@@ -1934,10 +1933,4 @@ next_scene_path = "uid://cdepwknworn1s"
 target_spawn_position = Vector2(780, 700)
 
 [node name="BossMalugaz" parent="." unique_id=551468094 instance=ExtResource("5_malugaz")]
-position = Vector2(470, 408)
-
-[node name="CavelingShaman1" parent="." unique_id=1164086007 instance=ExtResource("6_shaman")]
-position = Vector2(320, 500)
-
-[node name="CavelingShaman2" parent="." unique_id=206080318 instance=ExtResource("6_shaman")]
-position = Vector2(602, 504)
+position = Vector2(221, 388)

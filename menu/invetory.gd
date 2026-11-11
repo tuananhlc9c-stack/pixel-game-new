@@ -35,8 +35,121 @@ var equipment_data: Dictionary = {
 }
 var stats_labels: Dictionary = {}
 
+# Hệ thống Nấu Ăn (Cooking System)
+var cooking_panel: Panel = null
+var cooking_tab_btn: Button = null
+var inventory_tab_btn: Button = null
+var guide_side_btn: Button = null
+var guide_modal: Panel = null
+var cooking_recipes_vbox: VBoxContainer = null
+var cooking_status_lbl: Label = null
+var current_cooking_job: Dictionary = {} # {"recipe": Dictionary, "remaining": float, "total": float, "pbar": ProgressBar, "btn": Button}
+var is_cooking_view: bool = false
+
+# Danh mục các công thức nấu ăn (Nguyên liệu, thời gian nấu 30s, lượng máu hồi phục, icon)
+const COOKING_RECIPES: Array[Dictionary] = [
+	{
+		"id": "cooked_egg",
+		"name": "Fried Egg",
+		"heal_amount": 20,
+		"cook_time": 30.0,
+		"ingredients": {"egg": 1},
+		"desc": "Delicious sunny-side-up fried egg. Restores +20 HP.",
+		"region": Rect2(0, 32, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 35
+	},
+	{
+		"id": "grilled_fish",
+		"name": "Herb Grilled Fish",
+		"heal_amount": 22,
+		"cook_time": 30.0,
+		"ingredients": {"fish": 1},
+		"desc": "Whole grilled fish with seasoned herbs. Restores +22 HP.",
+		"region": Rect2(32, 32, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 55
+	},
+	{
+		"id": "cooked_pork",
+		"name": "Grilled Steak",
+		"heal_amount": 25,
+		"cook_time": 30.0,
+		"ingredients": {"pork": 1},
+		"desc": "Juicy and tender grilled meat steak. Restores +25 HP.",
+		"region": Rect2(0, 0, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 85
+	},
+	{
+		"id": "noodle_soup",
+		"name": "Hot Noodle Soup",
+		"heal_amount": 25,
+		"cook_time": 30.0,
+		"ingredients": {"egg": 1, "pork": 1},
+		"desc": "Steaming bowl of ramen with meat and egg toppings. Restores +25 HP.",
+		"region": Rect2(0, 16, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 100
+	},
+	{
+		"id": "omelette",
+		"name": "Cheese Omelette",
+		"heal_amount": 25,
+		"cook_time": 30.0,
+		"ingredients": {"egg": 1, "cow_milk": 1},
+		"desc": "Fluffy egg omelette with rich creamy milk. Restores +25 HP.",
+		"region": Rect2(32, 16, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 110
+	},
+	{
+		"id": "pumpkin_soup",
+		"name": "Golden Stew",
+		"heal_amount": 25,
+		"cook_time": 30.0,
+		"ingredients": {"cow_milk": 1, "egg": 1},
+		"desc": "Creamy golden stew made with fresh milk and egg. Restores +25 HP.",
+		"region": Rect2(48, 32, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 125
+	},
+	{
+		"id": "roast_meat",
+		"name": "Roast Feast",
+		"heal_amount": 28,
+		"cook_time": 30.0,
+		"ingredients": {"pork": 2},
+		"desc": "Generous platter of crisp roasted meat. Restores +28 HP.",
+		"region": Rect2(48, 16, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 140
+	},
+	{
+		"id": "seafood_salad",
+		"name": "Garden Salad",
+		"heal_amount": 24,
+		"cook_time": 30.0,
+		"ingredients": {"fish": 1, "egg": 1},
+		"desc": "Fresh garden salad tossed with fish and egg slices. Restores +24 HP.",
+		"region": Rect2(16, 32, 16, 16),
+		"atlas_path": "res://Content T1/Tilesheet/iteamdoan.png",
+		"price": 115
+	}
+]
+
 # Bảng giá vàng cho từng loại nông sản, thịt, cá, nguyên liệu và đồ nội thất
 const ITEM_PRICES: Dictionary = {
+	"cooked_egg": 35,
+	"grilled_fish": 55,
+	"cooked_pork": 85,
+	"noodle_soup": 100,
+	"omelette": 110,
+	"pumpkin_soup": 125,
+	"roast_meat": 140,
+	"seafood_salad": 115,
+	"salmon_steak": 120,
+	"seafood_feast": 160,
 	"branch": 10,
 	"stone": 12,
 	"egg": 15,
@@ -78,6 +191,57 @@ const ITEM_PRICES: Dictionary = {
 	"crop_tomato": 65,
 	"crop_blueberry": 80
 }
+
+# Bảng thông số Sát Thương (Damage) & Sát Thương Kỹ Năng (Special Damage) của vũ khí và công cụ
+const WEAPON_DAMAGE_CONFIG: Dictionary = {
+	# Công cụ khai khoáng & chặt cây
+	"wood_pickaxe": {"damage": 22, "special_damage": 50, "type": "Pickaxe"},
+	"wood_axe": {"damage": 26, "special_damage": 56, "type": "Axe"},
+	"stone_pickaxe": {"damage": 32, "special_damage": 68, "type": "Pickaxe"},
+	"stone_axe": {"damage": 36, "special_damage": 75, "type": "Axe"},
+	"iron_pickaxe": {"damage": 45, "special_damage": 92, "type": "Pickaxe"},
+	"iron_axe": {"damage": 48, "special_damage": 96, "type": "Axe"},
+
+	# Kiếm Thường / Đại Kiếm (Sword): Gỗ < Sắt < Đồng < Vàng < Đồ Tím
+	"wood_sword": {"damage": 22, "special_damage": 48, "type": "Sword"},
+	"iron_sword": {"damage": 38, "special_damage": 80, "type": "Sword"},
+	"copper_sword": {"damage": 52, "special_damage": 110, "type": "Sword"},
+	"gold_sword": {"damage": 75, "special_damage": 155, "type": "Sword"},
+	"amethyst_sword": {"damage": 105, "special_damage": 215, "type": "Sword"},
+
+	# Kiếm Quắm (Scythe): Gỗ < Sắt < Đồng < Vàng < Đồ Tím
+	"wood_scythe": {"damage": 20, "special_damage": 44, "type": "Scythe"},
+	"iron_scythe": {"damage": 35, "special_damage": 75, "type": "Scythe"},
+	"copper_scythe": {"damage": 48, "special_damage": 100, "type": "Scythe"},
+	"gold_scythe": {"damage": 70, "special_damage": 145, "type": "Scythe"},
+	"amethyst_scythe": {"damage": 98, "special_damage": 200, "type": "Scythe"},
+
+	# Giáo (Spear): Gỗ < Sắt < Đồng < Vàng < Đồ Tím
+	"wood_spear": {"damage": 22, "special_damage": 48, "type": "Spear"},
+	"iron_spear": {"damage": 38, "special_damage": 82, "type": "Spear"},
+	"copper_spear": {"damage": 52, "special_damage": 112, "type": "Spear"},
+	"gold_spear": {"damage": 75, "special_damage": 158, "type": "Spear"},
+	"amethyst_spear": {"damage": 105, "special_damage": 220, "type": "Spear"},
+
+	# Cung Tên (Bow): Gỗ < Sắt < Đồng < Vàng < Đồ Tím
+	"wood_bow": {"damage": 18, "special_damage": 40, "type": "Bow"},
+	"iron_bow": {"damage": 32, "special_damage": 70, "type": "Bow"},
+	"copper_bow": {"damage": 45, "special_damage": 95, "type": "Bow"},
+	"gold_bow": {"damage": 65, "special_damage": 138, "type": "Bow"},
+	"amethyst_bow": {"damage": 95, "special_damage": 195, "type": "Bow"},
+
+	# Vũ Khí Hiếm (Rare Weapons): Dame to hơn đồ tím (>105)
+	"wood_staff": {"damage": 135, "special_damage": 275, "type": "Rare Sword"},
+	"iron_staff": {"damage": 145, "special_damage": 295, "type": "Rare Sword"},
+	"copper_staff": {"damage": 155, "special_damage": 315, "type": "Rare Sword"},
+	"gold_staff": {"damage": 165, "special_damage": 335, "type": "Rare Dagger"},
+	"amethyst_staff": {"damage": 185, "special_damage": 380, "type": "Rare Greatsword"}
+}
+
+func get_item_damage_info(item_id: String) -> Dictionary:
+	if WEAPON_DAMAGE_CONFIG.has(item_id):
+		return WEAPON_DAMAGE_CONFIG[item_id]
+	return {}
 
 const SLOT_NORMAL_COLOR := Color(0.92, 0.88, 0.82, 1.0)
 const SLOT_HOVER_COLOR := Color(1.05, 1.0, 0.92, 1.0)
@@ -197,6 +361,7 @@ func _ready() -> void:
 		slot.mouse_exited.connect(_on_slot_mouse_exited.bind(slot))
 
 	_setup_equipment_ui()
+	_setup_cooking_ui()
 	_setup_gold_toolbar_ui()
 	if SceneManager and not SceneManager.gold_changed.is_connected(_on_gold_changed):
 		SceneManager.gold_changed.connect(_on_gold_changed)
@@ -457,6 +622,8 @@ func toggle_bag_window(force_state: Variant = null) -> void:
 	bag_window.pivot_offset = bag_window.size * 0.5
 	if target_visible:
 		update_stats_display()
+		if is_cooking_view:
+			_render_cooking_recipes()
 		bag_window.visible = true
 		bag_window.scale = Vector2(0.92, 0.92)
 		bag_window.modulate.a = 0.0
@@ -472,6 +639,8 @@ func toggle_bag_window(force_state: Variant = null) -> void:
 			bag_window.visible = false
 			bag_window.scale = Vector2.ONE
 			bag_window.modulate.a = 1.0
+			if guide_modal and is_instance_valid(guide_modal):
+				guide_modal.visible = false
 
 func _on_slot_mouse_entered(slot: Control) -> void:
 	var idx: int = slot.get_meta("slot_idx", -1)
@@ -750,8 +919,11 @@ func _gui_input(event: InputEvent) -> void:
 						stored_in_chest = true
 						break
 			if not stored_in_chest:
+				# Nếu là thức ăn (Food), click chuột phải để ăn và hồi máu
+				if inv.has_method("try_eat_food_from_slot") and inv.try_eat_food_from_slot(idx):
+					accept_event()
 				# Nếu là trang bị (mũ, áo, quần), tự động mặc vào ô trang bị khi click chuột phải
-				if inv.has_method("try_auto_equip_from_slot"):
+				elif inv.has_method("try_auto_equip_from_slot"):
 					if inv.try_auto_equip_from_slot(idx):
 						accept_event()
 
@@ -803,7 +975,21 @@ func update_slot_display(idx: int) -> void:
 		var item_name_str: String = str(data.get("name", ""))
 		var price: int = get_item_price(data)
 		var def_val: int = int(data.get("defense", 0))
+		var heal_val: int = int(data.get("heal_amount", 0))
 		var tt_parts: Array[String] = [item_name_str if item_name_str != "" else "Item"]
+
+		# Hiển thị hồi máu nếu là thức ăn
+		if heal_val > 0:
+			tt_parts.append("🍖 Restores: +%d HP" % heal_val)
+			tt_parts.append("(Right-click to consume)")
+
+		# Hiển thị sát thương nếu là vũ khí / công cụ
+		var item_id_str: String = str(data.get("id", ""))
+		var dmg_info: Dictionary = get_item_damage_info(item_id_str)
+		if not dmg_info.is_empty():
+			tt_parts.append("⚔️ Damage: %d" % int(dmg_info["damage"]))
+			tt_parts.append("💥 Special Damage: %d" % int(dmg_info["special_damage"]))
+
 		if def_val > 0:
 			tt_parts.append("🛡️ Defense: +%d" % def_val)
 		if price > 0:
@@ -1368,6 +1554,7 @@ func equip_item_from_data(slot_type: String, item_data: Dictionary) -> Dictionar
 	update_equip_slot_display(slot_type)
 	update_stats_display()
 	_sync_to_scene_manager()
+
 	_show_inventory_notice("Equipped: %s" % str(item_data.get("name", "Equipment")), Color(0.4, 1.0, 0.5, 1.0))
 	return old_item if (typeof(old_item) == TYPE_DICTIONARY and old_item != null) else {}
 
@@ -1623,3 +1810,643 @@ func _give_starter_clothes() -> void:
 
 	update_stats_display()
 	_sync_to_scene_manager()
+
+# ----------------- HỆ THỐNG NẤU ĂN (COOKING SYSTEM) -----------------
+func _process(delta: float) -> void:
+	if not current_cooking_job.is_empty():
+		current_cooking_job["remaining"] = maxf(0.0, float(current_cooking_job["remaining"]) - delta)
+		var rem: float = current_cooking_job["remaining"]
+		var total: float = float(current_cooking_job.get("total", 30.0))
+		var progress: float = 1.0 - (rem / total)
+
+		var bar = current_cooking_job.get("pbar") as ProgressBar
+		if bar and is_instance_valid(bar):
+			bar.value = progress * 100.0
+
+		var btn = current_cooking_job.get("btn") as Button
+		if btn and is_instance_valid(btn):
+			btn.text = "🔥 %ds" % int(ceil(rem))
+
+		if rem <= 0.0:
+			_finish_cooking()
+
+func _setup_cooking_ui() -> void:
+	if not bag_window:
+		return
+
+	# Tránh tạo trùng lặp nếu UI đã được khởi tạo trước đó
+	var existing_tab_bar = bag_window.get_node_or_null("InventoryTabBar")
+	if existing_tab_bar:
+		existing_tab_bar.queue_free()
+
+	# Tạo 2 nút chuyển Tab ở góc trên của Balo: [🎒 Kho đồ] & [🍳 Nấu ăn]
+	var tab_bar := HBoxContainer.new()
+	tab_bar.name = "InventoryTabBar"
+	tab_bar.position = Vector2(160, 8)
+	tab_bar.size = Vector2(230, 26)
+	tab_bar.add_theme_constant_override("separation", 6)
+	bag_window.add_child(tab_bar)
+
+	var tab_style_active := StyleBoxFlat.new()
+	tab_style_active.bg_color = Color(0.38, 0.22, 0.12, 1.0)
+	tab_style_active.border_width_left = 2
+	tab_style_active.border_width_top = 2
+	tab_style_active.border_width_right = 2
+	tab_style_active.border_width_bottom = 2
+	tab_style_active.border_color = Color(1.0, 0.82, 0.35, 1.0)
+	tab_style_active.corner_radius_top_left = 5
+	tab_style_active.corner_radius_top_right = 5
+	tab_style_active.corner_radius_bottom_right = 5
+	tab_style_active.corner_radius_bottom_left = 5
+
+	var tab_style_normal := StyleBoxFlat.new()
+	tab_style_normal.bg_color = Color(0.18, 0.11, 0.06, 0.85)
+	tab_style_normal.border_width_left = 1
+	tab_style_normal.border_width_top = 1
+	tab_style_normal.border_width_right = 1
+	tab_style_normal.border_width_bottom = 1
+	tab_style_normal.border_color = Color(0.55, 0.38, 0.22, 0.8)
+	tab_style_normal.corner_radius_top_left = 5
+	tab_style_normal.corner_radius_top_right = 5
+	tab_style_normal.corner_radius_bottom_right = 5
+	tab_style_normal.corner_radius_bottom_left = 5
+
+	inventory_tab_btn = Button.new()
+	inventory_tab_btn.name = "InventoryTabBtn"
+	inventory_tab_btn.text = "🎒 Inventory"
+	inventory_tab_btn.custom_minimum_size = Vector2(100, 24)
+	inventory_tab_btn.add_theme_font_size_override("font_size", 11)
+	inventory_tab_btn.add_theme_stylebox_override("normal", tab_style_active)
+	if not inventory_tab_btn.pressed.is_connected(_on_inventory_tab_pressed):
+		inventory_tab_btn.pressed.connect(_on_inventory_tab_pressed)
+	tab_bar.add_child(inventory_tab_btn)
+
+	cooking_tab_btn = Button.new()
+	cooking_tab_btn.name = "CookingTabBtn"
+	cooking_tab_btn.text = "🍳 Cooking"
+	cooking_tab_btn.custom_minimum_size = Vector2(100, 24)
+	cooking_tab_btn.add_theme_font_size_override("font_size", 11)
+	cooking_tab_btn.add_theme_stylebox_override("normal", tab_style_normal)
+	if not cooking_tab_btn.pressed.is_connected(_on_cooking_tab_pressed):
+		cooking_tab_btn.pressed.connect(_on_cooking_tab_pressed)
+	tab_bar.add_child(cooking_tab_btn)
+
+	# Nút Hướng dẫn phím chơi (Controls Guide Button) nằm ở cạnh bên phải của Inventory
+	var existing_guide_btn = bag_window.get_node_or_null("GuideSideBtn")
+	if existing_guide_btn:
+		existing_guide_btn.queue_free()
+
+	guide_side_btn = Button.new()
+	guide_side_btn.name = "GuideSideBtn"
+	guide_side_btn.text = "📖 Controls"
+	guide_side_btn.custom_minimum_size = Vector2(88, 30)
+	guide_side_btn.position = Vector2(496, 40) # Nằm ngay sát mép ngoài bên phải của bag_window (rộng 496px)
+	guide_side_btn.add_theme_font_size_override("font_size", 11)
+
+	var gbtn_style := StyleBoxFlat.new()
+	gbtn_style.bg_color = Color(0.18, 0.11, 0.06, 0.94)
+	gbtn_style.border_width_left = 2
+	gbtn_style.border_width_top = 2
+	gbtn_style.border_width_right = 2
+	gbtn_style.border_width_bottom = 2
+	gbtn_style.border_color = Color(0.95, 0.78, 0.38, 1.0)
+	gbtn_style.corner_radius_top_left = 0
+	gbtn_style.corner_radius_bottom_left = 0
+	gbtn_style.corner_radius_top_right = 6
+	gbtn_style.corner_radius_bottom_right = 6
+	guide_side_btn.add_theme_stylebox_override("normal", gbtn_style)
+	guide_side_btn.add_theme_color_override("font_color", Color(1.0, 0.92, 0.6, 1.0))
+	if not guide_side_btn.pressed.is_connected(_on_guide_side_btn_pressed):
+		guide_side_btn.pressed.connect(_on_guide_side_btn_pressed)
+	bag_window.add_child(guide_side_btn)
+
+	_setup_guide_modal()
+
+	# Panel giao diện Nấu Ăn (chiếm toàn bộ vùng giữa của Balo khi bật)
+	if cooking_panel and is_instance_valid(cooking_panel):
+		return
+	cooking_panel = Panel.new()
+	cooking_panel.name = "CookingPanel"
+	cooking_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cooking_panel.offset_left = 14.0
+	cooking_panel.offset_top = 38.0
+	cooking_panel.offset_right = -14.0
+	cooking_panel.offset_bottom = -28.0
+
+	var cp_style := StyleBoxFlat.new()
+	cp_style.bg_color = Color(0.14, 0.08, 0.05, 0.96)
+	cp_style.border_width_left = 2
+	cp_style.border_width_top = 2
+	cp_style.border_width_right = 2
+	cp_style.border_width_bottom = 2
+	cp_style.border_color = Color(0.65, 0.44, 0.22, 1.0)
+	cp_style.corner_radius_top_left = 6
+	cp_style.corner_radius_top_right = 6
+	cp_style.corner_radius_bottom_right = 6
+	cp_style.corner_radius_bottom_left = 6
+	cooking_panel.add_theme_stylebox_override("panel", cp_style)
+	cooking_panel.visible = false
+	bag_window.add_child(cooking_panel)
+
+	# Tiêu đề & mô tả công thức nấu
+	var c_title := Label.new()
+	c_title.text = "🍳 KITCHEN - RECIPES & COOKING (30s)"
+	c_title.position = Vector2(16, 8)
+	c_title.add_theme_font_size_override("font_size", 11)
+	c_title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 1.0))
+	cooking_panel.add_child(c_title)
+
+	cooking_status_lbl = Label.new()
+	cooking_status_lbl.name = "CookingStatusLbl"
+	cooking_status_lbl.position = Vector2(16, 26)
+	cooking_status_lbl.size = Vector2(430, 18)
+	cooking_status_lbl.add_theme_font_size_override("font_size", 9)
+	cooking_status_lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.85, 0.9))
+	cooking_status_lbl.text = "Select a dish to cook. When finished, it will be placed in your inventory. Right-click to consume!"
+	cooking_panel.add_child(cooking_status_lbl)
+
+	# ScrollContainer chứa danh sách món ăn
+	var scroll := ScrollContainer.new()
+	scroll.position = Vector2(12, 48)
+	scroll.size = Vector2(444, 140)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	cooking_panel.add_child(scroll)
+
+	cooking_recipes_vbox = VBoxContainer.new()
+	cooking_recipes_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cooking_recipes_vbox.add_theme_constant_override("separation", 6)
+	scroll.add_child(cooking_recipes_vbox)
+
+	_render_cooking_recipes()
+
+func _on_inventory_tab_pressed() -> void:
+	is_cooking_view = false
+	if cooking_panel:
+		cooking_panel.visible = false
+	if bag_grid:
+		bag_grid.visible = true
+	if equip_panel:
+		equip_panel.visible = true
+
+	var inner_well := bag_window.get_node_or_null("InnerWell")
+	if inner_well:
+		inner_well.visible = true
+	var hint_lbl := bag_window.get_node_or_null("HintLabel")
+	if hint_lbl:
+		hint_lbl.visible = true
+
+	_update_tab_buttons_appearance()
+
+func _setup_guide_modal() -> void:
+	if guide_modal and is_instance_valid(guide_modal):
+		return
+
+	guide_modal = Panel.new()
+	guide_modal.name = "GuideModal"
+	guide_modal.custom_minimum_size = Vector2(250, 270)
+	guide_modal.size = Vector2(250, 270)
+	guide_modal.position = Vector2(502, 40) # Mở ngay bên phải ngoài balo (bên cạnh nút Controls)
+	guide_modal.visible = false
+
+	var gm_style := StyleBoxFlat.new()
+	gm_style.bg_color = Color(0.13, 0.08, 0.05, 0.96)
+	gm_style.border_width_left = 2
+	gm_style.border_width_top = 2
+	gm_style.border_width_right = 2
+	gm_style.border_width_bottom = 2
+	gm_style.border_color = Color(0.95, 0.78, 0.38, 1.0)
+	gm_style.corner_radius_top_left = 8
+	gm_style.corner_radius_bottom_left = 8
+	gm_style.corner_radius_top_right = 8
+	gm_style.corner_radius_bottom_right = 8
+	guide_modal.add_theme_stylebox_override("panel", gm_style)
+	bag_window.add_child(guide_modal)
+
+	# Tiêu đề bảng Hướng Dẫn
+	var title := Label.new()
+	title.text = "📖 GAME CONTROLS"
+	title.position = Vector2(14, 8)
+	title.add_theme_font_size_override("font_size", 12)
+	title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 1.0))
+	guide_modal.add_child(title)
+
+	# Nút đóng Hướng Dẫn (X)
+	var close_gbtn := Button.new()
+	close_gbtn.text = "✕"
+	close_gbtn.custom_minimum_size = Vector2(22, 22)
+	close_gbtn.position = Vector2(220, 6)
+	close_gbtn.add_theme_font_size_override("font_size", 11)
+	close_gbtn.pressed.connect(func(): guide_modal.visible = false)
+	guide_modal.add_child(close_gbtn)
+
+	# Nội dung các phím điều khiển
+	var content_lbl := Label.new()
+	content_lbl.position = Vector2(14, 34)
+	content_lbl.size = Vector2(222, 226)
+	content_lbl.add_theme_font_size_override("font_size", 10)
+	content_lbl.add_theme_color_override("font_color", Color(0.92, 0.92, 0.92, 1.0))
+	content_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	var lines_arr: Array[String] = [
+		"• WASD / Arrow Keys: Move",
+		"• Shift / Space: Roll / Dash",
+		"• Left Click: Attack / Use Tool",
+		"• Right Click: Special Skill",
+		"• 1 - 9 Keys: Quickbar Hotkeys",
+		"• E Key: Open / Close Bag",
+		"• F Key: Interact / Open Chest",
+		"• Right Click Item: Eat / Drink",
+		"• Drag & Drop: Move / Swap Items"
+	]
+	content_lbl.text = "\n".join(lines_arr)
+	guide_modal.add_child(content_lbl)
+
+func _on_guide_side_btn_pressed() -> void:
+	if not guide_modal:
+		_setup_guide_modal()
+	guide_modal.visible = !guide_modal.visible
+	is_cooking_view = false
+	if cooking_panel:
+		cooking_panel.visible = false
+	if bag_grid:
+		bag_grid.visible = true
+	if equip_panel:
+		equip_panel.visible = true
+
+	var inner_well := bag_window.get_node_or_null("InnerWell")
+	if inner_well:
+		inner_well.visible = true
+	var hint_lbl := bag_window.get_node_or_null("HintLabel")
+	if hint_lbl:
+		hint_lbl.visible = true
+
+	_update_tab_buttons_appearance()
+
+func _on_cooking_tab_pressed() -> void:
+	is_cooking_view = true
+	if cooking_panel:
+		cooking_panel.visible = true
+	if bag_grid:
+		bag_grid.visible = false
+	if equip_panel:
+		equip_panel.visible = false
+
+	var inner_well := bag_window.get_node_or_null("InnerWell")
+	if inner_well:
+		inner_well.visible = false
+	var hint_lbl := bag_window.get_node_or_null("HintLabel")
+	if hint_lbl:
+		hint_lbl.visible = false
+
+	_update_tab_buttons_appearance()
+	_render_cooking_recipes()
+
+func _update_tab_buttons_appearance() -> void:
+	var active_col := Color(1.0, 0.85, 0.35, 1.0)
+	var inactive_col := Color(0.75, 0.7, 0.65, 0.75)
+	if inventory_tab_btn:
+		inventory_tab_btn.add_theme_color_override("font_color", active_col if not is_cooking_view else inactive_col)
+	if cooking_tab_btn:
+		cooking_tab_btn.add_theme_color_override("font_color", active_col if is_cooking_view else inactive_col)
+
+# Hiển thị danh sách công thức nấu ăn
+func _render_cooking_recipes() -> void:
+	if not cooking_recipes_vbox:
+		return
+
+	for child in cooking_recipes_vbox.get_children():
+		child.queue_free()
+
+	for recipe in COOKING_RECIPES:
+		var row := _create_recipe_ui_row(recipe)
+		cooking_recipes_vbox.add_child(row)
+
+func _create_recipe_ui_row(recipe: Dictionary) -> Control:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(430, 42)
+
+	var p_style := StyleBoxFlat.new()
+	p_style.bg_color = Color(0.2, 0.12, 0.08, 0.9)
+	p_style.border_width_left = 1
+	p_style.border_width_top = 1
+	p_style.border_width_right = 1
+	p_style.border_width_bottom = 1
+	p_style.border_color = Color(0.45, 0.32, 0.18, 0.9)
+	p_style.corner_radius_top_left = 4
+	p_style.corner_radius_top_right = 4
+	p_style.corner_radius_bottom_right = 4
+	p_style.corner_radius_bottom_left = 4
+	panel.add_theme_stylebox_override("panel", p_style)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 8)
+	panel.add_child(hbox)
+
+	# Icon món ăn
+	var icon_box := TextureRect.new()
+	icon_box.custom_minimum_size = Vector2(32, 32)
+	icon_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon_box.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon_box.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon_box.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+	var atlas_tex := AtlasTexture.new()
+	atlas_tex.atlas = load(str(recipe.get("atlas_path", "res://Content T1/Loose/Fish-food.png"))) as Texture2D
+	atlas_tex.region = recipe.get("region", Rect2(0, 0, 16, 16))
+	icon_box.texture = atlas_tex
+	hbox.add_child(icon_box)
+
+	# Thông tin chi tiết món ăn (Tên, hồi máu, nguyên liệu cần)
+	var info_vbox := VBoxContainer.new()
+	info_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info_vbox.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	info_vbox.add_theme_constant_override("separation", 2)
+	hbox.add_child(info_vbox)
+
+	var name_lbl := Label.new()
+	name_lbl.text = "%s  [+ %d HP]" % [str(recipe["name"]), int(recipe["heal_amount"])]
+	name_lbl.add_theme_font_size_override("font_size", 10)
+	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.92, 0.6, 1.0))
+	info_vbox.add_child(name_lbl)
+
+	# Liệt kê nguyên liệu yêu cầu & số lượng người chơi đang có
+	var req_text := "Needs: "
+	var ingredients: Dictionary = recipe.get("ingredients", {})
+	var can_cook: bool = true
+	var ing_parts: Array[String] = []
+
+	for ing_id in ingredients.keys():
+		var need_count: int = int(ingredients[ing_id])
+		var current_count: int = _count_item_in_inventory(ing_id)
+		var ing_name := _get_friendly_ingredient_name(ing_id)
+		ing_parts.append("%s (%d/%d)" % [ing_name, current_count, need_count])
+		if current_count < need_count:
+			can_cook = false
+
+	req_text += " + ".join(ing_parts)
+	var ing_lbl := Label.new()
+	ing_lbl.text = req_text
+	ing_lbl.add_theme_font_size_override("font_size", 9)
+	ing_lbl.add_theme_color_override("font_color", Color(0.8, 1.0, 0.8, 1.0) if can_cook else Color(1.0, 0.5, 0.5, 1.0))
+	info_vbox.add_child(ing_lbl)
+
+	# Thanh tiến trình nấu (ProgressBar) nếu món này đang được nấu
+	var is_this_cooking: bool = (not current_cooking_job.is_empty() and current_cooking_job.get("recipe", {}).get("id") == recipe["id"])
+	var pbar := ProgressBar.new()
+	pbar.custom_minimum_size = Vector2(80, 12)
+	pbar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	pbar.show_percentage = false
+	pbar.visible = is_this_cooking
+	hbox.add_child(pbar)
+
+	# Nút hành động "Nấu"
+	var cook_btn := Button.new()
+	cook_btn.custom_minimum_size = Vector2(75, 26)
+	cook_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cook_btn.add_theme_font_size_override("font_size", 10)
+
+	if is_this_cooking:
+		cook_btn.text = "🔥 %ds" % int(ceil(float(current_cooking_job.get("remaining", 30.0))))
+		cook_btn.disabled = true
+		current_cooking_job["pbar"] = pbar
+		current_cooking_job["btn"] = cook_btn
+	elif not current_cooking_job.is_empty():
+		cook_btn.text = "Busy"
+		cook_btn.disabled = true
+	else:
+		cook_btn.text = "🍳 Cook (30s)"
+		cook_btn.disabled = not can_cook
+		cook_btn.pressed.connect(_on_start_cooking_pressed.bind(recipe, pbar, cook_btn))
+
+	hbox.add_child(cook_btn)
+	return panel
+
+func _on_start_cooking_pressed(recipe: Dictionary, pbar: ProgressBar, btn: Button) -> void:
+	if not current_cooking_job.is_empty():
+		_show_inventory_notice("The stove is currently busy!", Color(1.0, 0.6, 0.4, 1.0))
+		return
+
+	# Kiểm tra lại túi đồ còn đủ nguyên liệu không
+	var ingredients: Dictionary = recipe.get("ingredients", {})
+	for ing_id in ingredients.keys():
+		var need_count: int = int(ingredients[ing_id])
+		if _count_item_in_inventory(ing_id) < need_count:
+			_show_inventory_notice("Not enough ingredients to cook %s!" % str(recipe["name"]), Color(1.0, 0.4, 0.4, 1.0))
+			return
+
+	# Kiểm tra túi còn ô trống nhận món ăn không
+	if not _has_empty_slot():
+		_show_inventory_notice("Inventory is full! Free up a slot first.", Color(1.0, 0.4, 0.4, 1.0))
+		return
+
+	# Trừ nguyên liệu khỏi túi đồ
+	for ing_id in ingredients.keys():
+		_consume_items_from_inventory(ing_id, int(ingredients[ing_id]))
+
+	var cook_time: float = float(recipe.get("cook_time", 30.0))
+	current_cooking_job = {
+		"recipe": recipe,
+		"remaining": cook_time,
+		"total": cook_time,
+		"pbar": pbar,
+		"btn": btn
+	}
+
+	pbar.visible = true
+	pbar.value = 0.0
+	btn.disabled = true
+	btn.text = "🔥 %ds" % int(cook_time)
+
+	if cooking_status_lbl:
+		cooking_status_lbl.text = "🔥 Cooking %s... Please wait!" % str(recipe["name"])
+		cooking_status_lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.25, 1.0))
+
+	_show_inventory_notice("Started cooking %s! Takes 30 seconds." % str(recipe["name"]), Color(1.0, 0.9, 0.3, 1.0))
+	_render_cooking_recipes()
+
+func _finish_cooking() -> void:
+	if current_cooking_job.is_empty():
+		return
+	var recipe: Dictionary = current_cooking_job["recipe"]
+	current_cooking_job.clear()
+
+	var atlas_tex := AtlasTexture.new()
+	atlas_tex.atlas = load(str(recipe.get("atlas_path", "res://Content T1/Loose/Fish-food.png"))) as Texture2D
+	atlas_tex.region = recipe.get("region", Rect2(0, 0, 16, 16))
+
+	# Tạo item thức ăn thêm vào túi đồ
+	var food_id: String = str(recipe.get("id"))
+	var food_name: String = str(recipe.get("name"))
+	var heal_hp: int = int(recipe.get("heal_amount", 50))
+	var price_val: int = int(recipe.get("price", 40))
+
+	var added := false
+	for i in range(inventory_data.size()):
+		if inventory_data[i] == null:
+			inventory_data[i] = {
+				"id": food_id,
+				"name": food_name,
+				"icon": atlas_tex,
+				"scene": null,
+				"is_food": true,
+				"heal_amount": heal_hp,
+				"price": price_val
+			}
+			update_slot_display(i)
+			added = true
+			break
+
+	if not added:
+		add_item(atlas_tex, null, food_id, food_name)
+
+	_sync_to_scene_manager()
+
+	if cooking_status_lbl:
+		cooking_status_lbl.text = "✨ Finished cooking %s! Placed in your Inventory." % food_name
+		cooking_status_lbl.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5, 1.0))
+
+	_show_inventory_notice("🍳 Cooked: %s! Added to inventory." % food_name, Color(0.4, 1.0, 0.5, 1.0))
+	_render_cooking_recipes()
+
+func _has_empty_slot() -> bool:
+	for slot in inventory_data:
+		if slot == null:
+			return true
+	return false
+
+func _count_item_in_inventory(target_id: String) -> int:
+	var count: int = 0
+	for item in inventory_data:
+		if typeof(item) == TYPE_DICTIONARY and item != null:
+			var i_id: String = str(item.get("id", ""))
+			var i_name: String = str(item.get("name", "")).to_lower()
+			if i_id == target_id:
+				count += 1
+			elif target_id == "fish" and (i_id.begins_with("fish_") or "fish" in i_name or "cá" in i_name):
+				count += 1
+			elif target_id == "pork" and (i_id == "pork" or "pork" in i_name or "thịt" in i_name):
+				count += 1
+			elif target_id == "egg" and (i_id == "egg" or "egg" in i_name or "trứng" in i_name):
+				count += 1
+	return count
+
+func _consume_items_from_inventory(target_id: String, amount: int) -> void:
+	var needed: int = amount
+	for i in range(inventory_data.size()):
+		var item = inventory_data[i]
+		if typeof(item) == TYPE_DICTIONARY and item != null:
+			var i_id: String = str(item.get("id", ""))
+			var i_name: String = str(item.get("name", "")).to_lower()
+			var match_item: bool = false
+			if i_id == target_id:
+				match_item = true
+			elif target_id == "fish" and (i_id.begins_with("fish_") or "fish" in i_name or "cá" in i_name):
+				match_item = true
+			elif target_id == "pork" and (i_id == "pork" or "pork" in i_name or "thịt" in i_name):
+				match_item = true
+			elif target_id == "egg" and (i_id == "egg" or "egg" in i_name or "trứng" in i_name):
+				match_item = true
+
+			if match_item:
+				inventory_data[i] = null
+				update_slot_display(i)
+				needed -= 1
+				if needed <= 0:
+					break
+	_sync_to_scene_manager()
+
+func _get_friendly_ingredient_name(ing_id: String) -> String:
+	match ing_id:
+		"egg": return "Egg"
+		"cow_milk": return "Cow Milk"
+		"goat_milk": return "Goat Milk"
+		"pork": return "Pork"
+		"fish": return "Fresh Fish"
+		"fish_salmon": return "Salmon"
+		"fish_crab": return "Crab"
+		"fish_shrimp": return "Shrimp"
+		_: return ing_id.capitalize()
+
+# Consume food or drink milk to restore health (Right-click in inventory)
+func try_eat_food_from_slot(idx: int) -> bool:
+	if idx < 0 or idx >= inventory_data.size():
+		return false
+	var data = inventory_data[idx]
+	if typeof(data) != TYPE_DICTIONARY or data == null:
+		return false
+
+	var heal_val: int = int(data.get("heal_amount", 0))
+	var item_id_str: String = str(data.get("id", ""))
+	var item_name: String = str(data.get("name", "")).to_lower()
+	var is_drink: bool = false
+
+	# Uống trực tiếp sữa bò hoặc sữa dê
+	if item_id_str == "cow_milk" or "sữa bò" in item_name or "cow milk" in item_name or "milk" in item_name:
+		heal_val = 20
+		is_drink = true
+	elif item_id_str == "goat_milk" or "sữa dê" in item_name or "goat milk" in item_name:
+		heal_val = 25
+		is_drink = true
+
+	# Nhận diện nếu là món ăn đã nấu
+	if heal_val <= 0:
+		for r in COOKING_RECIPES:
+			if r["id"] == item_id_str:
+				heal_val = int(r["heal_amount"])
+				break
+
+	if heal_val <= 0:
+		return false
+
+	var player = get_tree().get_first_node_in_group("player")
+	if not player or not is_instance_valid(player):
+		return false
+
+	var hp_comp: HealthComponent = player.get("health_component")
+	if not hp_comp:
+		return false
+
+	if hp_comp.current_health >= hp_comp.max_health:
+		_show_inventory_notice("Health is already full, cannot %s!" % ("drink" if is_drink else "eat"), Color(1.0, 0.8, 0.4, 1.0))
+		return true
+
+	# Thực hiện hồi máu
+	hp_comp.heal(heal_val)
+
+	# Xóa 1 phần ăn / bình sữa khỏi túi đồ
+	inventory_data[idx] = null
+	update_slot_display(idx)
+	if idx == selected_slot_index:
+		current_place_scene = null
+		item_changed.emit(null)
+	_sync_to_scene_manager()
+
+	# Hiệu ứng thông báo ăn món ăn / uống sữa
+	var food_display_name: String = str(data.get("name", "Item"))
+	if is_drink:
+		_show_inventory_notice("Drank %s (+%d HP) 🥛" % [food_display_name, heal_val], Color(0.4, 0.9, 1.0, 1.0))
+	else:
+		_show_inventory_notice("Yum! Ate %s (+%d HP) ❤️" % [food_display_name, heal_val], Color(0.4, 1.0, 0.5, 1.0))
+
+	_create_eating_floating_indicator(player, heal_val)
+	update_stats_display()
+	return true
+
+func _create_eating_floating_indicator(player: Node2D, heal_amount: int) -> void:
+	if not player or not is_instance_valid(player):
+		return
+	var lbl := Label.new()
+	lbl.text = "+%d HP" % heal_amount
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.3, 1.0, 0.4, 1.0))
+	lbl.add_theme_color_override("font_outline_color", Color(0.0, 0.3, 0.0, 1.0))
+	lbl.add_theme_constant_override("outline_size", 4)
+	lbl.position = player.global_position + Vector2(-20, -32)
+	player.get_parent().add_child(lbl)
+
+	var tween := lbl.create_tween().set_parallel(true)
+	tween.tween_property(lbl, "position:y", lbl.position.y - 24.0, 1.0).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(lbl, "modulate:a", 0.0, 1.0).set_delay(0.2)
+	await tween.finished
+	if is_instance_valid(lbl):
+		lbl.queue_free()

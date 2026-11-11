@@ -20,6 +20,7 @@ extends CharacterBody2D
 @onready var col_shape: CollisionShape2D = $CollisionShape2D
 @onready var cam: Camera2D = $Camera2D if has_node("Camera2D") else null
 @onready var weapon_pivot: Marker2D = $WeaponPivot if has_node("WeaponPivot") else null
+@onready var weapon_sprite: Sprite2D = $WeaponPivot/WeaponSprite if has_node("WeaponPivot/WeaponSprite") else null
 @onready var animation_player: AnimationPlayer = $AnimationPlayer if has_node("AnimationPlayer") else null
 @onready var hitbox: Area2D = $WeaponPivot/hitbox if has_node("WeaponPivot/hitbox") else null
 @onready var slash_effect: AnimatedSprite2D = $WeaponPivot/SlashEffect if has_node("WeaponPivot/SlashEffect") else null
@@ -131,132 +132,132 @@ const TOOL_CONFIG: Dictionary = {
 	# Kiếm Thường / Đại Kiếm (Sword) - Chém mạnh & nhanh: Gỗ < Sắt < Đồng < Vàng < Tím
 	"wood_sword": {
 		"name": "Wooden Sword", "type": "sword", "icon_region": Rect2(48, 112, 16, 16),
-		"damage": 20, "special_damage": 45, "swing_speed_mult": 1.05,
+		"damage": 22, "special_damage": 48, "swing_speed_mult": 1.05,
 		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
 	},
 	"iron_sword": {
 		"name": "Iron Sword", "type": "sword", "icon_region": Rect2(64, 112, 16, 16),
-		"damage": 30, "special_damage": 65, "swing_speed_mult": 1.2,
+		"damage": 38, "special_damage": 80, "swing_speed_mult": 1.2,
 		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
 	},
 	"copper_sword": {
 		"name": "Copper Sword", "type": "sword", "icon_region": Rect2(80, 112, 16, 16),
-		"damage": 42, "special_damage": 88, "swing_speed_mult": 1.3,
+		"damage": 52, "special_damage": 110, "swing_speed_mult": 1.3,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
 	},
 	"gold_sword": {
 		"name": "Gold Sword", "type": "sword", "icon_region": Rect2(96, 112, 16, 16),
-		"damage": 60, "special_damage": 125, "swing_speed_mult": 1.4,
+		"damage": 75, "special_damage": 155, "swing_speed_mult": 1.4,
 		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
 	},
 	"amethyst_sword": {
 		"name": "Amethyst Sword", "type": "sword", "icon_region": Rect2(112, 112, 16, 16),
-		"damage": 88, "special_damage": 175, "swing_speed_mult": 1.55,
+		"damage": 105, "special_damage": 215, "swing_speed_mult": 1.55,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	},
-	# Kiếm Quắm (Scythe) - chém quét rộng, sát thương tăng dần: Gỗ < Sắt < Đồng < Vàng < Tím
+	# Kiếm Quắm (Scythe) - chém quét rộng: Gỗ < Sắt < Đồng < Vàng < Tím
 	"wood_scythe": {
 		"name": "Wooden Scythe", "type": "scythe", "icon_region": Rect2(48, 80, 16, 16),
-		"damage": 18, "special_damage": 40, "swing_speed_mult": 1.0,
+		"damage": 20, "special_damage": 44, "swing_speed_mult": 1.0,
 		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
 	},
 	"iron_scythe": {
 		"name": "Iron Scythe", "type": "scythe", "icon_region": Rect2(64, 80, 16, 16),
-		"damage": 28, "special_damage": 60, "swing_speed_mult": 1.15,
+		"damage": 35, "special_damage": 75, "swing_speed_mult": 1.15,
 		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
 	},
 	"copper_scythe": {
 		"name": "Copper Scythe", "type": "scythe", "icon_region": Rect2(80, 80, 16, 16),
-		"damage": 38, "special_damage": 82, "swing_speed_mult": 1.25,
+		"damage": 48, "special_damage": 100, "swing_speed_mult": 1.25,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
 	},
 	"gold_scythe": {
 		"name": "Gold Scythe", "type": "scythe", "icon_region": Rect2(96, 80, 16, 16),
-		"damage": 55, "special_damage": 115, "swing_speed_mult": 1.35,
+		"damage": 70, "special_damage": 145, "swing_speed_mult": 1.35,
 		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
 	},
 	"amethyst_scythe": {
 		"name": "Amethyst Scythe", "type": "scythe", "icon_region": Rect2(112, 80, 16, 16),
-		"damage": 80, "special_damage": 165, "swing_speed_mult": 1.5,
+		"damage": 98, "special_damage": 200, "swing_speed_mult": 1.5,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	},
-	# Giáo (Spear) - đâm thẳng xuyên mục tiêu: Gỗ < Sắt < Đồng < Vàng < Tím
+	# Giáo (Spear) - đâm thẳng: Gỗ < Sắt < Đồng < Vàng < Tím
 	"wood_spear": {
 		"name": "Wooden Spear", "type": "spear", "icon_region": Rect2(48, 32, 16, 16),
-		"damage": 20, "special_damage": 44, "swing_speed_mult": 1.0,
+		"damage": 22, "special_damage": 48, "swing_speed_mult": 1.0,
 		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
 	},
 	"iron_spear": {
 		"name": "Iron Spear", "type": "spear", "icon_region": Rect2(64, 32, 16, 16),
-		"damage": 30, "special_damage": 66, "swing_speed_mult": 1.15,
+		"damage": 38, "special_damage": 82, "swing_speed_mult": 1.15,
 		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
 	},
 	"copper_spear": {
 		"name": "Copper Spear", "type": "spear", "icon_region": Rect2(80, 32, 16, 16),
-		"damage": 42, "special_damage": 90, "swing_speed_mult": 1.25,
+		"damage": 52, "special_damage": 112, "swing_speed_mult": 1.25,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
 	},
 	"gold_spear": {
 		"name": "Gold Spear", "type": "spear", "icon_region": Rect2(96, 32, 16, 16),
-		"damage": 60, "special_damage": 128, "swing_speed_mult": 1.35,
+		"damage": 75, "special_damage": 158, "swing_speed_mult": 1.35,
 		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
 	},
 	"amethyst_spear": {
 		"name": "Amethyst Spear", "type": "spear", "icon_region": Rect2(112, 32, 16, 16),
-		"damage": 88, "special_damage": 180, "swing_speed_mult": 1.5,
+		"damage": 105, "special_damage": 220, "swing_speed_mult": 1.5,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	},
 	# Cung tên (Bow) - bắn tên tầm xa: Gỗ < Sắt < Đồng < Vàng < Tím
 	"wood_bow": {
 		"name": "Wooden Bow", "type": "bow", "icon_region": Rect2(48, 64, 16, 16),
-		"damage": 18, "special_damage": 38, "swing_speed_mult": 1.0,
+		"damage": 18, "special_damage": 40, "swing_speed_mult": 1.0,
 		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
 	},
 	"iron_bow": {
 		"name": "Iron Bow", "type": "bow", "icon_region": Rect2(64, 64, 16, 16),
-		"damage": 26, "special_damage": 58, "swing_speed_mult": 1.15,
+		"damage": 32, "special_damage": 70, "swing_speed_mult": 1.15,
 		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
 	},
 	"copper_bow": {
 		"name": "Copper Bow", "type": "bow", "icon_region": Rect2(80, 64, 16, 16),
-		"damage": 36, "special_damage": 78, "swing_speed_mult": 1.25,
+		"damage": 45, "special_damage": 95, "swing_speed_mult": 1.25,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
 	},
 	"gold_bow": {
 		"name": "Gold Bow", "type": "bow", "icon_region": Rect2(96, 64, 16, 16),
-		"damage": 52, "special_damage": 110, "swing_speed_mult": 1.35,
+		"damage": 65, "special_damage": 138, "swing_speed_mult": 1.35,
 		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
 	},
 	"amethyst_bow": {
 		"name": "Amethyst Bow", "type": "bow", "icon_region": Rect2(112, 64, 16, 16),
-		"damage": 78, "special_damage": 160, "swing_speed_mult": 1.5,
-		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
-	},
-	# Kiếm Cong / Trượng Kiếm: Đều chuyển thành dạng Kiếm Chém (type: "sword")
-	"wood_staff": {
-		"name": "Wooden Staff", "type": "sword", "icon_region": Rect2(48, 96, 16, 16),
-		"damage": 22, "special_damage": 48, "swing_speed_mult": 1.0,
-		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
-	},
-	"iron_staff": {
-		"name": "Iron Staff", "type": "sword", "icon_region": Rect2(64, 96, 16, 16),
-		"damage": 32, "special_damage": 70, "swing_speed_mult": 1.15,
-		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
-	},
-	"copper_staff": {
-		"name": "Copper Staff", "type": "sword", "icon_region": Rect2(80, 96, 16, 16),
-		"damage": 45, "special_damage": 96, "swing_speed_mult": 1.25,
-		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
-	},
-	"gold_staff": {
-		"name": "Gold Staff", "type": "sword", "icon_region": Rect2(96, 96, 16, 16),
-		"damage": 65, "special_damage": 138, "swing_speed_mult": 1.35,
-		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
-	},
-	"amethyst_staff": {
-		"name": "Amethyst Staff", "type": "sword", "icon_region": Rect2(112, 96, 16, 16),
 		"damage": 95, "special_damage": 195, "swing_speed_mult": 1.5,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+	},
+	# VŨ KHÍ HIẾM (Hàng trên trong ảnh người dùng: Trượng Kiếm / Kiếm Ma Thuật Hiếm - Dame to hơn đồ tím >105)
+	"wood_staff": {
+		"name": "Obsidian Darkblade", "type": "sword", "icon_region": Rect2(48, 96, 16, 16),
+		"damage": 135, "special_damage": 275, "swing_speed_mult": 1.4,
+		"glow_col": Color(0.35, 0.3, 0.45, 1.0), "core_col": Color(0.85, 0.8, 0.95, 1.0)
+	},
+	"iron_staff": {
+		"name": "Emerald Sunblade", "type": "sword", "icon_region": Rect2(64, 96, 16, 16),
+		"damage": 145, "special_damage": 295, "swing_speed_mult": 1.45,
+		"glow_col": Color(0.2, 0.85, 0.35, 1.0), "core_col": Color(1.0, 0.95, 0.6, 1.0)
+	},
+	"copper_staff": {
+		"name": "Frost Diamond Saber", "type": "sword", "icon_region": Rect2(80, 96, 16, 16),
+		"damage": 155, "special_damage": 315, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.35, 0.9, 1.0, 1.0), "core_col": Color(0.95, 1.0, 1.0, 1.0)
+	},
+	"gold_staff": {
+		"name": "Crimson Blood Dagger", "type": "sword", "icon_region": Rect2(96, 96, 16, 16),
+		"damage": 165, "special_damage": 335, "swing_speed_mult": 1.6,
+		"glow_col": Color(0.95, 0.2, 0.2, 1.0), "core_col": Color(1.0, 0.85, 0.85, 1.0)
+	},
+	"amethyst_staff": {
+		"name": "Void Nether Greatsword", "type": "sword", "icon_region": Rect2(112, 96, 16, 16),
+		"damage": 185, "special_damage": 380, "swing_speed_mult": 1.65,
+		"glow_col": Color(0.65, 0.15, 1.0, 1.0), "core_col": Color(0.95, 0.75, 1.0, 1.0)
 	}
 }
 
@@ -274,6 +275,13 @@ const FISH_POOL: Array[Dictionary] = [
 func _ready() -> void:
 	add_to_group("player")
 
+	# Thiết lập lọc pixel chuẩn (Nearest / Pixel Perfect) để nhân vật hiển thị sắc nét nhất
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if anim:
+		anim.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if weapon_sprite:
+		weapon_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
 	# 1. Chuẩn hóa tâm nhân vật nếu bị lệch trong scene
 	if anim and anim.position != Vector2.ZERO:
 		var visual_offset := anim.position
@@ -283,6 +291,12 @@ func _ready() -> void:
 			col_shape.position -= visual_offset
 		if cam:
 			cam.position = Vector2.ZERO
+
+	# Tinh chỉnh Camera2D để theo sát nhân vật mượt mà, triệt tiêu giật subpixel khi đi chéo
+	if cam:
+		cam.process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
+		cam.position_smoothing_enabled = true
+		cam.position_smoothing_speed = 14.0
 
 	# 2. Thiết lập trạng thái ban đầu cho vũ khí & kết nối hitbox
 	if weapon_pivot:
@@ -580,40 +594,60 @@ func _physics_process(delta: float) -> void:
 			_flash_mana_warning()
 
 	if direction != Vector2.ZERO:
-		velocity = direction * speed
+		# Tăng tốc/giảm tốc mượt mà thay vì gán đột ngột, triệt tiêu giật góc chéo
+		var target_vel := direction * speed
+		velocity = velocity.move_toward(target_vel, speed * 20.0 * delta)
 
-		if direction.x < 0:
-			anim.flip_h = true
-			last_direction = "left"
-		elif direction.x > 0:
-			anim.flip_h = false
-			last_direction = "right"
+		# Xác định hướng và animation với ngưỡng chuyển mượt mà (tránh giật qua lại khi abs(x) ≈ abs(y))
+		var current_anim_name: StringName = anim.animation if anim else &""
+		var want_anim: StringName = &""
 
-		if abs(direction.x) > abs(direction.y):
-			if anim.flip_h and anim.sprite_frames.has_animation("walk_left"):
-				anim.play("walk_left")
+		if abs(direction.x) > 0.4:
+			anim.flip_h = (direction.x < 0)
+			last_direction = "left" if direction.x < 0 else "right"
+		elif direction.y > 0:
+			last_direction = "down"
+		elif direction.y < 0:
+			last_direction = "up"
+
+		# Khi di chuyển chéo (như S + D), giữ nguyên animation theo hướng đang chạy
+		# hoặc chỉ đổi hướng khi trục kia thực sự chiếm ưu thế rõ rệt
+		if abs(direction.x) > 0.1 and abs(direction.y) > 0.1:
+			# Đang đi chéo: nếu đang chạy ngang rồi thì giữ ngang, nếu đang chạy dọc thì giữ dọc
+			if current_anim_name == &"walk_down" or current_anim_name == &"walk_up":
+				want_anim = current_anim_name
+			elif current_anim_name == &"walk_right" or current_anim_name == &"walk_left":
+				want_anim = current_anim_name
 			else:
-				anim.play("walk_right")
+				# Ưu tiên ngang nếu bắt đầu từ đứng yên
+				want_anim = &"walk_left" if anim.flip_h else &"walk_right"
+		elif abs(direction.x) > abs(direction.y):
+			if anim.flip_h and anim.sprite_frames.has_animation("walk_left"):
+				want_anim = &"walk_left"
+			else:
+				want_anim = &"walk_right"
 		else:
 			if direction.y > 0:
-				anim.play("walk_down")
-				if direction.x == 0:
-					last_direction = "down"
+				want_anim = &"walk_down"
 			else:
-				anim.play("walk_up")
-				if direction.x == 0:
-					last_direction = "up"
+				want_anim = &"walk_up"
+
+		if want_anim != &"" and anim.animation != want_anim:
+			anim.play(want_anim)
 	else:
-		velocity = Vector2.ZERO
+		velocity = velocity.move_toward(Vector2.ZERO, speed * 25.0 * delta)
 		if last_direction == "up":
 			anim.flip_h = false
-			anim.play("stand1")
+			if anim.animation != "stand1":
+				anim.play("stand1")
 		elif last_direction == "left":
 			anim.flip_h = true
-			anim.play("stand")
+			if anim.animation != "stand":
+				anim.play("stand")
 		else:
 			anim.flip_h = false
-			anim.play("stand")
+			if anim.animation != "stand":
+				anim.play("stand")
 
 	move_and_slide()
 
@@ -663,7 +697,6 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	if slash_effect:
 		slash_effect.hide()
 
-	var weapon_sprite: Sprite2D = $WeaponPivot/WeaponSprite if has_node("WeaponPivot/WeaponSprite") else null
 	if weapon_sprite:
 		if default_weapon_texture == null:
 			default_weapon_texture = weapon_sprite.texture
@@ -1258,12 +1291,12 @@ func _update_special_cooldown_ui() -> void:
 	if special_cooldown_timer <= 0.0:
 		special_cd_bar_fill.size.x = 140.0
 		special_cd_bar_fill.color = Color(0.95, 0.72, 0.18, 1.0)
-		special_cd_label.text = "Chuột Phải: SẴN SÀNG"
+		special_cd_label.text = "Right Click: READY"
 	else:
 		var ratio := 1.0 - clampf(special_cooldown_timer / maxf(special_attack_cooldown, 0.01), 0.0, 1.0)
 		special_cd_bar_fill.size.x = 140.0 * ratio
 		special_cd_bar_fill.color = Color(0.45, 0.45, 0.55, 0.9)
-		special_cd_label.text = "Hồi chiêu: %.1fs" % special_cooldown_timer
+		special_cd_label.text = "Cooldown: %.1fs" % special_cooldown_timer
 
 func _flash_cooldown_warning() -> void:
 	if not special_cd_label:
@@ -1529,7 +1562,7 @@ func _try_cast_fishing_rod() -> void:
 
 	var water_world_pos := _find_water_target(local_mouse)
 	if water_world_pos == Vector2.INF:
-		_show_fishing_message("Stand near water to fish!", Color(1.0, 0.55, 0.45, 1.0), 1.4)
+		_show_fishing_message("Can only fish in blue water!", Color(1.0, 0.55, 0.45, 1.0), 1.6)
 		return
 
 	velocity = Vector2.ZERO
@@ -1585,18 +1618,45 @@ func _is_water_at_world_pos(world_pos: Vector2) -> bool:
 	if not scene_root:
 		return false
 
-	# 1. Kiểm tra lớp nước có shader water_caustics (ví dụ: TileMapLayer/TileMapLayer trong farm house.tscn)
+	# Kiểm tra tất cả các TileMapLayer trong Scene xem vị trí có phải là ô nước màu xanh (Water green_tilet.png / thác nước xanh) không
+	# Loại trừ hoàn toàn nước hồng (Water pink_tilet.png / Water fall pink_tilset.png)
+	var tilemap_layers: Array[Node] = scene_root.find_children("*", "TileMapLayer", true, false)
+	for node in tilemap_layers:
+		var layer := node as TileMapLayer
+		if not layer or not layer.visible:
+			continue
+		var t_set := layer.tile_set
+		if not t_set:
+			continue
+
+		var cell := layer.local_to_map(layer.to_local(world_pos))
+		var source_id := layer.get_cell_source_id(cell)
+		if source_id == -1:
+			continue
+
+		var source := t_set.get_source(source_id)
+		if not (source is TileSetAtlasSource):
+			continue
+
+		var atlas_source := source as TileSetAtlasSource
+		var tex := atlas_source.texture
+		if not tex:
+			continue
+
+		var tex_path: String = tex.resource_path.to_lower()
+		# Nếu là nước hồng (Water pink) -> Tuyệt đối không cho câu
+		if "pink" in tex_path:
+			return false
+
+		# Chỉ cho phép câu ở nguồn nước màu xanh (Water green / Water fall green)
+		if "water green" in tex_path or "water fall green" in tex_path:
+			return true
+
+	# Kiểm tra thêm fallback nếu là lớp phủ nước shader caustics có màu xanh
 	var water_overlay := scene_root.get_node_or_null("TileMapLayer/TileMapLayer") as TileMapLayer
 	if water_overlay:
 		var cell := water_overlay.local_to_map(water_overlay.to_local(world_pos))
 		if water_overlay.get_cell_source_id(cell) != -1:
-			return true
-
-	# 2. Kiểm tra TileMapLayer gốc có dùng source_id == 2 (Water green_tilet.png) không
-	var base_layer := scene_root.get_node_or_null("TileMapLayer") as TileMapLayer
-	if base_layer:
-		var cell := base_layer.local_to_map(base_layer.to_local(world_pos))
-		if base_layer.get_cell_source_id(cell) == 2:
 			return true
 
 	return false
