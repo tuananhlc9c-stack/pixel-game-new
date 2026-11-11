@@ -207,30 +207,30 @@ const TOOL_CONFIG: Dictionary = {
 		"damage": 105, "special_damage": 220, "swing_speed_mult": 1.5,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	},
-	# Cung tên (Bow) - bắn tên tầm xa: Gỗ < Sắt < Đồng < Vàng < Tím
+	# Cung tên (Bow) - bắn tên tầm xa (tốc độ kéo chậm, sát thương tầm xa cân bằng)
 	"wood_bow": {
 		"name": "Wooden Bow", "type": "bow", "icon_region": Rect2(48, 64, 16, 16),
-		"damage": 18, "special_damage": 40, "swing_speed_mult": 1.0,
+		"damage": 12, "special_damage": 26, "swing_speed_mult": 0.85,
 		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
 	},
 	"iron_bow": {
 		"name": "Iron Bow", "type": "bow", "icon_region": Rect2(64, 64, 16, 16),
-		"damage": 32, "special_damage": 70, "swing_speed_mult": 1.15,
+		"damage": 22, "special_damage": 48, "swing_speed_mult": 0.9,
 		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
 	},
 	"copper_bow": {
 		"name": "Copper Bow", "type": "bow", "icon_region": Rect2(80, 64, 16, 16),
-		"damage": 45, "special_damage": 95, "swing_speed_mult": 1.25,
+		"damage": 30, "special_damage": 65, "swing_speed_mult": 0.95,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
 	},
 	"gold_bow": {
 		"name": "Gold Bow", "type": "bow", "icon_region": Rect2(96, 64, 16, 16),
-		"damage": 65, "special_damage": 138, "swing_speed_mult": 1.35,
+		"damage": 44, "special_damage": 95, "swing_speed_mult": 1.0,
 		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
 	},
 	"amethyst_bow": {
 		"name": "Amethyst Bow", "type": "bow", "icon_region": Rect2(112, 64, 16, 16),
-		"damage": 95, "special_damage": 195, "swing_speed_mult": 1.5,
+		"damage": 64, "special_damage": 135, "swing_speed_mult": 1.05,
 		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
 	},
 	# VŨ KHÍ HIẾM (Hàng trên trong ảnh người dùng: Trượng Kiếm / Kiếm Ma Thuật Hiếm - Dame to hơn đồ tím >105)
@@ -727,25 +727,26 @@ func start_weapon_swing(is_special: bool = false) -> void:
 		weapon_sprite.show()
 		weapon_sprite.scale = Vector2(1.014, 0.97)
 
-	# 2. Lấy góc hướng về phía chuột
-	var local_mouse := get_local_mouse_position()
-	if local_mouse.length() < 2.0:
-		local_mouse = Vector2.RIGHT
+	# 2. Lấy góc hướng về phía chuột theo tọa độ thế giới (chuẩn xác trên mọi bản đồ và camera)
+	var mouse_world := get_global_mouse_position()
+	var mouse_offset := mouse_world - global_position
+	if mouse_offset.length_squared() < 4.0:
+		mouse_offset = Vector2.RIGHT
 
-	var mouse_dir := local_mouse.normalized()
-	var mouse_angle := local_mouse.angle()
+	var mouse_dir := mouse_offset.normalized()
+	var mouse_angle := mouse_offset.angle()
 	weapon_pivot.position = Vector2.ZERO
 
 	# Xoay mặt nhân vật theo hướng chuột
-	if abs(local_mouse.x) > abs(local_mouse.y):
-		if local_mouse.x < 0:
+	if abs(mouse_offset.x) > abs(mouse_offset.y):
+		if mouse_offset.x < 0:
 			anim.flip_h = true
 			last_direction = "left"
 		else:
 			anim.flip_h = false
 			last_direction = "right"
 	else:
-		if local_mouse.y > 0:
+		if mouse_offset.y > 0:
 			anim.flip_h = false
 			last_direction = "down"
 		else:
@@ -965,8 +966,8 @@ func _execute_bow_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: floa
 		t_cfg = TOOL_CONFIG[active_swing_tool_id]
 		speed_mult = float(t_cfg.get("swing_speed_mult", 1.0))
 
-	var draw_time: float = (0.13 if not is_special else 0.18) / speed_mult
-	var release_time: float = 0.07 / speed_mult
+	var draw_time: float = (0.24 if not is_special else 0.32) / speed_mult
+	var release_time: float = 0.12 / speed_mult
 
 	# Giữ cung ở cự ly gần cơ thể (chỉ cách 4-6px)
 	weapon_pivot.rotation = mouse_angle
@@ -988,7 +989,13 @@ func _execute_bow_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: floa
 	if not is_instance_valid(self):
 		return
 
-	# 2. Bắn mũi tên ra từ ngay đầu cung
+	# 2. Cập nhật lại hướng chuột mới nhất ngay khi buông tay và bắn mũi tên
+	var current_offset := get_global_mouse_position() - global_position
+	if current_offset.length_squared() >= 4.0:
+		mouse_dir = current_offset.normalized()
+		mouse_angle = current_offset.angle()
+		weapon_pivot.rotation = mouse_angle
+
 	if AudioManager:
 		AudioManager.play_sfx_random_pitch("arrow", 0.0, 0.95, 1.1)
 	_spawn_arrow_projectile(mouse_dir, is_special, t_cfg)
@@ -1072,7 +1079,13 @@ func _execute_staff_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: fl
 	if not is_instance_valid(self):
 		return
 
-	# 2. Bắn quả cầu ma pháp (Magic Orb) từ đầu trượng
+	# 2. Cập nhật lại hướng chuột mới nhất ngay khi phóng ma pháp
+	var current_offset := get_global_mouse_position() - global_position
+	if current_offset.length_squared() >= 4.0:
+		mouse_dir = current_offset.normalized()
+		mouse_angle = current_offset.angle()
+		weapon_pivot.rotation = mouse_angle
+
 	if AudioManager:
 		AudioManager.play_sfx_random_pitch("projectile", 0.0, 1.0, 1.2)
 	_spawn_magic_orb_projectile(mouse_dir, is_special, t_cfg)
@@ -1560,13 +1573,14 @@ func _handle_fishing_action() -> void:
 		_cancel_fishing("Too early!")
 
 func _try_cast_fishing_rod() -> void:
-	var local_mouse := get_local_mouse_position()
-	if local_mouse.length() < 4.0:
-		local_mouse = Vector2.DOWN * 48.0
+	var mouse_world := get_global_mouse_position()
+	var mouse_offset := mouse_world - global_position
+	if mouse_offset.length() < 4.0:
+		mouse_offset = Vector2.DOWN * 48.0
 
 	# Xoay hướng nhân vật về phía quăng câu
-	if abs(local_mouse.x) > abs(local_mouse.y):
-		if local_mouse.x < 0:
+	if abs(mouse_offset.x) > abs(mouse_offset.y):
+		if mouse_offset.x < 0:
 			anim.flip_h = true
 			last_direction = "left"
 		else:
@@ -1575,14 +1589,14 @@ func _try_cast_fishing_rod() -> void:
 		anim.play("stand")
 	else:
 		anim.flip_h = false
-		if local_mouse.y > 0:
+		if mouse_offset.y > 0:
 			last_direction = "down"
 			anim.play("stand")
 		else:
 			last_direction = "up"
 			anim.play("stand1")
 
-	var water_world_pos := _find_water_target(local_mouse)
+	var water_world_pos := _find_water_target(mouse_offset)
 	if water_world_pos == Vector2.INF:
 		_show_fishing_message("Can only fish in blue water!", Color(1.0, 0.55, 0.45, 1.0), 1.6)
 		return

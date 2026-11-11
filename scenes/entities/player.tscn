@@ -311,10 +311,10 @@ shape = SubResource("CapsuleShape2D_mrg7q")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=727560565]
 zoom = Vector2(2, 2)
-limit_left = -696
-limit_top = -462
-limit_right = 1363
-limit_bottom = 1172
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
 
 [node name="WeaponPivot" type="Marker2D" parent="." unique_id=1224740532]
 

@@ -224,11 +224,11 @@ const WEAPON_DAMAGE_CONFIG: Dictionary = {
 	"amethyst_spear": {"damage": 105, "special_damage": 220, "type": "Spear"},
 
 	# Cung Tên (Bow): Gỗ < Sắt < Đồng < Vàng < Đồ Tím
-	"wood_bow": {"damage": 18, "special_damage": 40, "type": "Bow"},
-	"iron_bow": {"damage": 32, "special_damage": 70, "type": "Bow"},
-	"copper_bow": {"damage": 45, "special_damage": 95, "type": "Bow"},
-	"gold_bow": {"damage": 65, "special_damage": 138, "type": "Bow"},
-	"amethyst_bow": {"damage": 95, "special_damage": 195, "type": "Bow"},
+	"wood_bow": {"damage": 12, "special_damage": 26, "type": "Bow"},
+	"iron_bow": {"damage": 22, "special_damage": 48, "type": "Bow"},
+	"copper_bow": {"damage": 30, "special_damage": 65, "type": "Bow"},
+	"gold_bow": {"damage": 44, "special_damage": 95, "type": "Bow"},
+	"amethyst_bow": {"damage": 64, "special_damage": 135, "type": "Bow"},
 
 	# Vũ Khí Hiếm (Rare Weapons): Dame to hơn đồ tím (>105)
 	"wood_staff": {"damage": 135, "special_damage": 275, "type": "Rare Sword"},
