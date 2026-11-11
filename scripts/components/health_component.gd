@@ -23,10 +23,18 @@ func take_damage(amount: int) -> void:
 	damaged.emit(amount)
 	health_changed.emit(current_health, max_health)
 
+	var p_node = get_parent()
+	var is_player = (p_node != null and (p_node.is_in_group("player") or p_node.name == "Player"))
+
 	if current_health == 0:
+		if not is_player and AudioManager:
+			AudioManager.play_sfx_random_pitch("enemy_die", 0.0, 0.9, 1.1)
 		died.emit()
-	elif invincibility_duration > 0.0:
-		start_invincibility(invincibility_duration)
+	else:
+		if not is_player and AudioManager:
+			AudioManager.play_sfx_random_pitch("enemy_hurt", 0.0, 0.95, 1.15)
+		if invincibility_duration > 0.0:
+			start_invincibility(invincibility_duration)
 
 func heal(amount: int) -> void:
 	if current_health <= 0 or amount <= 0:

@@ -94,7 +94,7 @@ shape = SubResource("CapsuleShape2D_body")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("3_health")
-max_health = 800
+max_health = 1350
 
 [node name="Hitbox" type="Area2D" parent="."]
 position = Vector2(0, -6)

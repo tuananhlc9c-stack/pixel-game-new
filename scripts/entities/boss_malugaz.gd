@@ -1,12 +1,12 @@
 extends CharacterBody2D
 
-@export var boss_title: String = "MALUGAZ"
-@export var aggro_range: float = 290.0
-@export var contact_damage: int = 16
-@export var flame_strike_damage: int = 28
-@export var flame_strike_radius: float = 44.0
-@export var dash_speed: float = 265.0
-@export var knockback_force: float = 240.0
+@export var boss_title: String = "MALUGAZ - FLAME LORD"
+@export var aggro_range: float = 320.0
+@export var contact_damage: int = 24
+@export var flame_strike_damage: int = 38
+@export var flame_strike_radius: float = 52.0
+@export var dash_speed: float = 300.0
+@export var knockback_force: float = 260.0
 @export var projectile_scene: PackedScene = preload("res://scenes/entities/fireball_projectile.tscn")
 
 enum State { IDLE, TELEPORT_OUT, TELEPORT_IN, CAST_VOLLEY, CAST_FLAME_STRIKE, PHASE2_WINDUP, PHASE2_DASH }
@@ -198,6 +198,8 @@ func _start_cast_volley() -> void:
 func _fire_volley() -> void:
 	if not projectile_scene or not get_parent() or not player or not is_instance_valid(player):
 		return
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("projectile", 0.0, 0.95, 1.1)
 	var base_dir: Vector2 = (player.global_position - global_position).normalized()
 	_play_dir_anim(base_dir)
 	var angles := [-0.4, -0.2, 0.0, 0.2, 0.4]
@@ -265,6 +267,8 @@ func _update_flame_zones(delta: float) -> void:
 	queue_redraw()
 
 func _trigger_flame_zone_damage(zone_pos: Vector2) -> void:
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("fire", 1.0, 0.9, 1.1)
 	if player and is_instance_valid(player):
 		if player.global_position.distance_to(zone_pos) <= flame_strike_radius and player.has_method("take_damage"):
 			player.take_damage(flame_strike_damage, zone_pos, knockback_force)

@@ -160,7 +160,7 @@ shape = SubResource("CircleShape2D_body")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("3_health")
-max_health = 550
+max_health = 850
 
 [node name="Hitbox" type="Area2D" parent="."]
 

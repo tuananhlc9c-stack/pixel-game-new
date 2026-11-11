@@ -1,11 +1,11 @@
 extends CharacterBody2D
 
-@export var boss_title: String = "GLURCH - THE BIGGER"
-@export var jump_damage: int = 26
-@export var contact_damage: int = 14
-@export var slam_radius: float = 68.0
-@export var aggro_range: float = 280.0
-@export var knockback_force: float = 260.0
+@export var boss_title: String = "GLURCH - THE SLIME TYRANT"
+@export var jump_damage: int = 34
+@export var contact_damage: int = 20
+@export var slam_radius: float = 78.0
+@export var aggro_range: float = 300.0
+@export var knockback_force: float = 280.0
 @export var projectile_scene: PackedScene = preload("res://scenes/entities/fireball_projectile.tscn")
 @export var minion_scene: PackedScene = preload("res://scenes/entities/smile1.tscn")
 
@@ -191,6 +191,8 @@ func _land_slam() -> void:
 		hitbox.set_deferred("monitoring", true)
 
 	# Gây sát thương AoE nếu Player đứng trong vùng dậm đất
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("explosion", 2.0, 0.85, 1.0)
 	if player and is_instance_valid(player):
 		var d: float = global_position.distance_to(player.global_position)
 		if d <= slam_radius and player.has_method("take_damage"):
@@ -205,6 +207,8 @@ func _start_spit_barrage() -> void:
 		return
 	var count: int = 10 if is_enraged else 6
 	var base_angle: float = randf() * TAU
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("projectile", 0.0, 0.9, 1.1)
 	for i in range(count):
 		var angle: float = base_angle + (TAU / float(count)) * float(i)
 		var dir: Vector2 = Vector2.RIGHT.rotated(angle)

@@ -621,6 +621,8 @@ func toggle_bag_window(force_state: Variant = null) -> void:
 
 	bag_window.pivot_offset = bag_window.size * 0.5
 	if target_visible:
+		if AudioManager:
+			AudioManager.play_sfx("menu_open", -1.0)
 		update_stats_display()
 		if is_cooking_view:
 			_render_cooking_recipes()
@@ -631,6 +633,8 @@ func toggle_bag_window(force_state: Variant = null) -> void:
 		tween.tween_property(bag_window, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(bag_window, "modulate:a", 1.0, 0.12)
 	else:
+		if AudioManager:
+			AudioManager.play_sfx("menu_close", -1.0)
 		var tween := create_tween().set_parallel(true)
 		tween.tween_property(bag_window, "scale", Vector2(0.94, 0.94), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		tween.tween_property(bag_window, "modulate:a", 0.0, 0.1)

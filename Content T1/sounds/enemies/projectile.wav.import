@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d17vj375b2ekr"
+path="res://.godot/imported/projectile.wav-8dd006996c27f59772b816101b00cb58.sample"
+
+[deps]
+
+source_file="res://Content T1/sounds/enemies/projectile.wav"
+dest_files=["res://.godot/imported/projectile.wav-8dd006996c27f59772b816101b00cb58.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

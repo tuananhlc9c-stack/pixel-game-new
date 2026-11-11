@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cq87qc83dm486"
+path="res://.godot/imported/playerHurt.wav-17bdd20a8d1649f2cafc78499261a7ee.sample"
+
+[deps]
+
+source_file="res://Content T1/sounds/player/playerHurt.wav"
+dest_files=["res://.godot/imported/playerHurt.wav-17bdd20a8d1649f2cafc78499261a7ee.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

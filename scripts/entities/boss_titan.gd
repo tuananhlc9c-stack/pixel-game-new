@@ -6,15 +6,15 @@ extends CharacterBody2D
 # - Kỹ năng 3: Động đất làm nứt toác mặt đất, đá nát phun trào (Earthquake & Ground Shatter)
 # - Trí tuệ AI chiến đấu hoàn chỉnh, trạng thái Enrage khi dưới 50% HP
 
-@export var boss_title: String = "TITAN - CỰ THẠCH HANG SÂU"
-@export var aggro_range: float = 340.0
-@export var move_speed: float = 48.0
-@export var charge_speed: float = 260.0
-@export var contact_damage: int = 18
-@export var charge_damage: int = 32
-@export var rock_fall_damage: int = 35
-@export var earthquake_damage: int = 28
-@export var knockback_force: float = 260.0
+@export var boss_title: String = "TITAN - ANCIENT COLOSSUS"
+@export var aggro_range: float = 360.0
+@export var move_speed: float = 60.0
+@export var charge_speed: float = 310.0
+@export var contact_damage: int = 26
+@export var charge_damage: int = 46
+@export var rock_fall_damage: int = 48
+@export var earthquake_damage: int = 38
+@export var knockback_force: float = 300.0
 @export var boss_sheet_tex: Texture2D = preload("res://Content T1/Character/Monter/Boss/boss3.png")
 
 enum State {
@@ -324,6 +324,8 @@ func _trigger_earthquake_skill() -> void:
 	_trigger_earthquake_burst(global_position, 60.0)
 
 func _trigger_earthquake_burst(center_pos: Vector2, radius: float) -> void:
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("explosion", 2.0, 0.75, 0.9)
 	if player and is_instance_valid(player) and player.has_method("take_damage"):
 		if player.global_position.distance_to(center_pos) <= radius:
 			player.take_damage(earthquake_damage, center_pos, knockback_force * 1.2)

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ch1jp8rct3krc"
+path="res://.godot/imported/coin-edit.wav-3eaa167f6e139a578b2571072ea83a5f.sample"
+
+[deps]
+
+source_file="res://Content T1/sounds/items/coin-edit.wav"
+dest_files=["res://.godot/imported/coin-edit.wav-3eaa167f6e139a578b2571072ea83a5f.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

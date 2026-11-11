@@ -861,7 +861,7 @@ next_scene_path = "res://scenes/dungeons/danger.tscn"
 target_spawn_position = Vector2(772, 473)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("4_4e27l")]
-position = Vector2(694, 146)
+position = Vector2(569, 156)
 
 [node name="BossTitan" parent="." unique_id=1999888777 instance=ExtResource("5_titan")]
 position = Vector2(694, 290)

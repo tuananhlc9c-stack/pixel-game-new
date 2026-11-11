@@ -160,6 +160,8 @@ func open_chest() -> void:
 	if is_open:
 		return
 	is_open = true
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("chest", 0.0, 0.95, 1.05)
 	_animate_chest_lid(true)
 	_refresh_all_chest_slots()
 

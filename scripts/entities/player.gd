@@ -292,11 +292,12 @@ func _ready() -> void:
 		if cam:
 			cam.position = Vector2.ZERO
 
-	# Tinh chỉnh Camera2D để theo sát nhân vật mượt mà, triệt tiêu giật subpixel khi đi chéo
+	# Tinh chỉnh Camera2D theo sát nhân vật, tắt smoothing để đồng bộ 1:1 với vật lý chống giật subpixel
 	if cam:
 		cam.process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
-		cam.position_smoothing_enabled = true
-		cam.position_smoothing_speed = 14.0
+		cam.position_smoothing_enabled = false
+		cam.drag_horizontal_enabled = false
+		cam.drag_vertical_enabled = false
 
 	# 2. Thiết lập trạng thái ban đầu cho vũ khí & kết nối hitbox
 	if weapon_pivot:
@@ -594,48 +595,55 @@ func _physics_process(delta: float) -> void:
 			_flash_mana_warning()
 
 	if direction != Vector2.ZERO:
-		# Tăng tốc/giảm tốc mượt mà thay vì gán đột ngột, triệt tiêu giật góc chéo
-		var target_vel := direction * speed
-		velocity = velocity.move_toward(target_vel, speed * 20.0 * delta)
+		velocity = direction * speed
 
-		# Xác định hướng và animation với ngưỡng chuyển mượt mà (tránh giật qua lại khi abs(x) ≈ abs(y))
+		# Xác định hướng và animation với cơ chế khóa hướng (hysteresis), chống rung flip/animation khi đi chéo
 		var current_anim_name: StringName = anim.animation if anim else &""
 		var want_anim: StringName = &""
 
-		if abs(direction.x) > 0.4:
-			anim.flip_h = (direction.x < 0)
-			last_direction = "left" if direction.x < 0 else "right"
-		elif direction.y > 0:
-			last_direction = "down"
-		elif direction.y < 0:
-			last_direction = "up"
-
-		# Khi di chuyển chéo (như S + D), giữ nguyên animation theo hướng đang chạy
-		# hoặc chỉ đổi hướng khi trục kia thực sự chiếm ưu thế rõ rệt
-		if abs(direction.x) > 0.1 and abs(direction.y) > 0.1:
-			# Đang đi chéo: nếu đang chạy ngang rồi thì giữ ngang, nếu đang chạy dọc thì giữ dọc
+		# Đang đi chéo rõ rệt (ví dụ S + D, W + A...)
+		if abs(direction.x) > 0.3 and abs(direction.y) > 0.3:
+			# Giữ nguyên animation và hướng đang chạy, tuyệt đối không đổi qua lại làm rung sprite
 			if current_anim_name == &"walk_down" or current_anim_name == &"walk_up":
 				want_anim = current_anim_name
 			elif current_anim_name == &"walk_right" or current_anim_name == &"walk_left":
 				want_anim = current_anim_name
+				anim.flip_h = (direction.x < 0)
 			else:
-				# Ưu tiên ngang nếu bắt đầu từ đứng yên
-				want_anim = &"walk_left" if anim.flip_h else &"walk_right"
-		elif abs(direction.x) > abs(direction.y):
+				# Nếu vừa bắt đầu từ đứng yên, chọn hướng theo trục chiếm ưu thế hoặc mặc định xuống
+				if direction.y > 0:
+					want_anim = &"walk_down"
+					last_direction = "down"
+				else:
+					want_anim = &"walk_up"
+					last_direction = "up"
+		elif abs(direction.x) > abs(direction.y) * 1.2:
+			# Trục ngang chiếm ưu thế rõ ràng
+			anim.flip_h = (direction.x < 0)
+			last_direction = "left" if direction.x < 0 else "right"
 			if anim.flip_h and anim.sprite_frames.has_animation("walk_left"):
 				want_anim = &"walk_left"
 			else:
 				want_anim = &"walk_right"
-		else:
+		elif abs(direction.y) > abs(direction.x) * 1.2:
+			# Trục dọc chiếm ưu thế rõ ràng
 			if direction.y > 0:
 				want_anim = &"walk_down"
+				last_direction = "down"
 			else:
 				want_anim = &"walk_up"
+				last_direction = "up"
+		else:
+			# Vùng chuyển tiếp gần 45 độ: giữ nguyên animation hiện tại nếu đang đi bộ
+			if current_anim_name in [&"walk_down", &"walk_up", &"walk_right", &"walk_left"]:
+				want_anim = current_anim_name
+			else:
+				want_anim = &"walk_down" if direction.y > 0 else &"walk_up"
 
 		if want_anim != &"" and anim.animation != want_anim:
 			anim.play(want_anim)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, speed * 25.0 * delta)
+		velocity = Vector2.ZERO
 		if last_direction == "up":
 			anim.flip_h = false
 			if anim.animation != "stand1":
@@ -663,6 +671,10 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	is_special_attacking = is_special
 	hit_targets.clear()
 	active_swing_tool_id = _get_equipped_tool_id()
+
+	# Phát âm thanh vung kiếm / tấn công
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("player_swing", -2.0, 0.95, 1.1)
 
 	var swing_dir: float = float(swing_combo_dir)
 	if not is_special:
@@ -977,6 +989,8 @@ func _execute_bow_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: floa
 		return
 
 	# 2. Bắn mũi tên ra từ ngay đầu cung
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("arrow", 0.0, 0.95, 1.1)
 	_spawn_arrow_projectile(mouse_dir, is_special, t_cfg)
 
 	# Bật nảy dây cung khi bắn
@@ -1059,6 +1073,8 @@ func _execute_staff_attack(is_special: bool, mouse_dir: Vector2, mouse_angle: fl
 		return
 
 	# 2. Bắn quả cầu ma pháp (Magic Orb) từ đầu trượng
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("projectile", 0.0, 1.0, 1.2)
 	_spawn_magic_orb_projectile(mouse_dir, is_special, t_cfg)
 
 	# 3. Thu trượng
@@ -1133,6 +1149,9 @@ func start_roll(dir: Vector2) -> void:
 		SceneManager.saved_player_mana = current_mana
 	_update_mana_ui()
 
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("player_roll", 0.0, 0.95, 1.1)
+
 	var roll_dir := dir
 
 	if roll_dir == Vector2.ZERO:
@@ -1182,6 +1201,9 @@ func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_forc
 		anim.modulate = Color(2.5, 0.35, 0.35, 1.0)
 		var tween := create_tween()
 		tween.tween_property(anim, "modulate", Color.WHITE, 0.25)
+
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("player_hurt", 0.0, 0.95, 1.05)
 
 	health_component.take_damage(final_damage)
 

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://nw6otjj6dy1i"
+path="res://.godot/imported/menu-open.wav-a7e5d92486a0cbb352be119ce80c1089.sample"
+
+[deps]
+
+source_file="res://Content T1/sounds/ui/menu-open.wav"
+dest_files=["res://.godot/imported/menu-open.wav-a7e5d92486a0cbb352be119ce80c1089.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

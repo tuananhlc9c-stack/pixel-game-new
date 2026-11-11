@@ -1,13 +1,13 @@
 extends CharacterBody2D
 
-@export var boss_title: String = "SYLPH - NỮ THẦN BÃO TỐ"
-@export var aggro_range: float = 310.0
-@export var move_speed: float = 58.0
-@export var dash_speed: float = 230.0
-@export var contact_damage: int = 15
-@export var lightning_damage: int = 28
-@export var lightning_radius: float = 42.0
-@export var knockback_force: float = 230.0
+@export var boss_title: String = "SYLPH - TEMPEST GODDESS"
+@export var aggro_range: float = 340.0
+@export var move_speed: float = 72.0
+@export var dash_speed: float = 270.0
+@export var contact_damage: int = 22
+@export var lightning_damage: int = 40
+@export var lightning_radius: float = 50.0
+@export var knockback_force: float = 260.0
 @export var projectile_scene: PackedScene = preload("res://scenes/entities/sylph_lightning_orb.tscn")
 @export var boss_sheet_tex: Texture2D = preload("res://Content T1/Character/Monter/Boss/Boss2.png")
 
@@ -280,6 +280,8 @@ func _start_cast_homing_orb() -> void:
 func _spawn_homing_lightning_orb() -> void:
 	if not projectile_scene or not get_parent():
 		return
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("projectile", 0.0, 1.1, 1.25)
 
 	var init_dir := Vector2.DOWN
 	if player and is_instance_valid(player):
@@ -350,6 +352,8 @@ func _update_lightning_zones(delta: float) -> void:
 	queue_redraw()
 
 func _trigger_lightning_damage(zone_pos: Vector2) -> void:
+	if AudioManager:
+		AudioManager.play_sfx_random_pitch("explosion", 1.0, 1.1, 1.3)
 	if player and is_instance_valid(player):
 		if player.global_position.distance_to(zone_pos) <= lightning_radius and player.has_method("take_damage"):
 			player.take_damage(lightning_damage, zone_pos, knockback_force)
