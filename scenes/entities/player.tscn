@@ -342,4 +342,4 @@ libraries/ = SubResource("AnimationLibrary_sweqy")
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1322241360]
 
 [node name="Invetory" parent="CanvasLayer" unique_id=1049096046 instance=ExtResource("5_sweqy")]
-visible = false
+visible = true

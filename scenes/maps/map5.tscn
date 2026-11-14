@@ -14613,7 +14613,7 @@ position = Vector2(645, 838)
 position = Vector2(115.999985, 564.99994)
 rotation = -1.5711702
 next_scene_path = "res://scenes/maps/map3.tscn"
-target_spawn_position = Vector2(1200, 1100)
+target_spawn_position = Vector2(1187, 966)
 
 [node name="Portal3" parent="." unique_id=2115421956 instance=ExtResource("32_tw8ia")]
 position = Vector2(587, 1045)

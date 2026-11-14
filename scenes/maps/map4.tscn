@@ -17302,7 +17302,7 @@ position = Vector2(480, 40)
 [node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("26_6uo2c")]
 position = Vector2(486, 0)
 next_scene_path = "res://scenes/maps/map3.tscn"
-target_spawn_position = Vector2(591, 1100)
+target_spawn_position = Vector2(589, 992)
 
 [node name="Smile" parent="." unique_id=2125984269 instance=ExtResource("27_4p86k")]
 position = Vector2(126, 51)

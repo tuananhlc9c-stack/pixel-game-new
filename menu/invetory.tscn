@@ -50,7 +50,6 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [node name="Invetory" type="Control" unique_id=1049096046]
-visible = false
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
