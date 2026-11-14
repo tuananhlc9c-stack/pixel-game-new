@@ -1875,7 +1875,7 @@ next_scene_path = "res://scenes/maps/map8.tscn"
 target_spawn_position = Vector2(560, 351)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("4_l4emt")]
-position = Vector2(633, 228)
+position = Vector2(780, 935)
 
 [node name="Portal2" parent="." unique_id=1772642205 instance=ExtResource("3_pxrm3")]
 position = Vector2(768, 961)
@@ -1929,3 +1929,19 @@ ore_type = "amethyst"
 
 [node name="BossGlurch" parent="." unique_id=1691264265 instance=ExtResource("9_yofr6")]
 position = Vector2(361, 816)
+
+[node name="GoldOre4" parent="." unique_id=1162395257 instance=ExtResource("8_orerock")]
+position = Vector2(516, 401)
+ore_type = "gold"
+
+[node name="AmethystOre4" parent="." unique_id=399384869 instance=ExtResource("8_orerock")]
+position = Vector2(408, 570)
+ore_type = "amethyst"
+
+[node name="AmethystOre5" parent="." unique_id=2025833745 instance=ExtResource("8_orerock")]
+position = Vector2(503, 512)
+ore_type = "amethyst"
+
+[node name="GoldOre5" parent="." unique_id=1310658512 instance=ExtResource("8_orerock")]
+position = Vector2(604, 506)
+ore_type = "gold"

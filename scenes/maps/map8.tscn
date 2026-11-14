@@ -6,18 +6,18 @@
 [ext_resource type="Texture2D" uid="uid://qnqiasyio6yg" path="res://Content T1/Mapss/titleset/Wall3_tilset.png" id="4_t85sh"]
 [ext_resource type="Texture2D" uid="uid://bdpuwnhqahvvq" path="res://Content T1/Mapss/titleset/Water fall green_tilset.png" id="5_emf8f"]
 [ext_resource type="Texture2D" uid="uid://dqjuql84h3npx" path="res://Content T1/Mapss/titleset/Ladder_tilset.png" id="6_suqit"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="7_emf8f"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="7_emf8f"]
 [ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="7_m7ed0"]
 [ext_resource type="Texture2D" uid="uid://dre513hwil5p3" path="res://Content T1/New/til3.png" id="8_a1581"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="8_suqit"]
 [ext_resource type="Texture2D" uid="uid://bshrh4f6ehb4j" path="res://Content T1/New/house1.png" id="9_csbmn"]
 [ext_resource type="Texture2D" uid="uid://c2tpvdlogue28" path="res://Content T1/Mapss/hang.png" id="10_hvmpa"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="11_5p6ha"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="11_5p6ha"]
 [ext_resource type="Texture2D" uid="uid://bqq4lmqgmwfdr" path="res://Content T1/Mapss/titleset/Tilset tree.png" id="11_c74pd"]
 [ext_resource type="Texture2D" uid="uid://duvxoa0efmcfo" path="res://Content T1/New/til1.png" id="12_320p5"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="16_m7ed0"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="17_a1581"]
-[ext_resource type="PackedScene" path="res://scenes/entities/smile2.tscn" id="18_a1581"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="16_m7ed0"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="17_a1581"]
+[ext_resource type="PackedScene" uid="uid://bsr17s3evss0t" path="res://scenes/entities/smile2.tscn" id="18_a1581"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gyfud"]
 texture = ExtResource("1_uto7n")
@@ -7168,7 +7168,7 @@ target_spawn_position = Vector2(642, 996)
 [node name="Portal2" parent="." unique_id=581116593 instance=ExtResource("17_a1581")]
 position = Vector2(562, 331)
 next_scene_path = "res://scenes/dungeons/danger2.tscn"
-target_spawn_position = Vector2(633, 10)
+target_spawn_position = Vector2(633, 228)
 
 [node name="Smile2" parent="." unique_id=202656216 instance=ExtResource("18_a1581")]
 position = Vector2(638, 179)

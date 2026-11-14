@@ -10,19 +10,19 @@
 [ext_resource type="Texture2D" uid="uid://bdpuwnhqahvvq" path="res://Content T1/Mapss/titleset/Water fall green_tilset.png" id="7_eqnv4"]
 [ext_resource type="Texture2D" uid="uid://qnqiasyio6yg" path="res://Content T1/Mapss/titleset/Wall3_tilset.png" id="8_r122c"]
 [ext_resource type="Texture2D" uid="uid://wm1iqf8pns2n" path="res://Content T1/New/Fall1.png" id="9_61q2r"]
-[ext_resource type="Shader" path="res://shaders/waterfall.gdshader" id="11_dbxwu"]
+[ext_resource type="Shader" uid="uid://iw2g3a0vx4b2" path="res://shaders/waterfall.gdshader" id="11_dbxwu"]
 [ext_resource type="Texture2D" uid="uid://b184ut6qp1s6v" path="res://Content T1/Terrain/tree 1.png" id="11_vqu7w"]
 [ext_resource type="Texture2D" uid="uid://2mrurew4sj8y" path="res://Content T1/New/til2.png" id="12_dbxwu"]
-[ext_resource type="Shader" path="res://shaders/water_caustics.gdshader" id="12_snwrp"]
+[ext_resource type="Shader" uid="uid://r24mbfwbys77" path="res://shaders/water_caustics.gdshader" id="12_snwrp"]
 [ext_resource type="Texture2D" uid="uid://bm2o4642cv4r8" path="res://Content T1/Tilesheet/SuspensionBridge.png" id="13_snwrp"]
 [ext_resource type="Texture2D" uid="uid://c2tpvdlogue28" path="res://Content T1/Mapss/hang.png" id="13_wuwpa"]
 [ext_resource type="Texture2D" uid="uid://dre513hwil5p3" path="res://Content T1/New/til3.png" id="17_ebs71"]
 [ext_resource type="Texture2D" uid="uid://duvxoa0efmcfo" path="res://Content T1/New/til1.png" id="17_snwrp"]
-[ext_resource type="PackedScene" path="res://scenes/entities/player.tscn" id="20_2uqfx"]
-[ext_resource type="Shader" path="res://shaders/tree_wind.gdshader" id="20_61q2r"]
-[ext_resource type="PackedScene" path="res://scenes/objects/portal.tscn" id="21_61q2r"]
-[ext_resource type="PackedScene" path="res://scenes/entities/slime.tscn" id="22_eqnv4"]
-[ext_resource type="PackedScene" path="res://scenes/entities/smile1.tscn" id="23_r122c"]
+[ext_resource type="PackedScene" uid="uid://bvfsj3m570r2i" path="res://scenes/entities/player.tscn" id="20_2uqfx"]
+[ext_resource type="Shader" uid="uid://bseec6ugohdgr" path="res://shaders/tree_wind.gdshader" id="20_61q2r"]
+[ext_resource type="PackedScene" uid="uid://b6axadn5g2u5w" path="res://scenes/objects/portal.tscn" id="21_61q2r"]
+[ext_resource type="PackedScene" uid="uid://lgdctiop71bc" path="res://scenes/entities/slime.tscn" id="22_eqnv4"]
+[ext_resource type="PackedScene" uid="uid://cxt6jk8ml6yko" path="res://scenes/entities/smile1.tscn" id="23_r122c"]
 [ext_resource type="PackedScene" uid="uid://cbranch1gocgs" path="res://scenes/objects/branch_item.tscn" id="24_branch"]
 [ext_resource type="PackedScene" uid="uid://cstone1gocgs5" path="res://scenes/objects/stone_item.tscn" id="25_stone"]
 
@@ -7293,7 +7293,7 @@ target_spawn_position = Vector2(152, 563)
 [node name="Portal6" parent="." unique_id=629345965 instance=ExtResource("21_61q2r")]
 position = Vector2(624, 182)
 next_scene_path = "res://scenes/maps/farm house 2.tscn"
-target_spawn_position = Vector2(150, 380)
+target_spawn_position = Vector2(200, 380)
 
 [node name="Slime" parent="." unique_id=2125984269 instance=ExtResource("22_eqnv4")]
 position = Vector2(299, 243)

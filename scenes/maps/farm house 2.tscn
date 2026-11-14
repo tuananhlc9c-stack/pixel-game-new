@@ -11033,10 +11033,10 @@ tile_set = SubResource("TileSet_tuo3p")
 position = Vector2(-343, 202)
 rotation = -1.5712743
 next_scene_path = "res://scenes/maps/map3.tscn"
-target_spawn_position = Vector2(640, 350)
+target_spawn_position = Vector2(624, 210)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("28_8uhvw")]
-position = Vector2(437, 193)
+position = Vector2(-317, 202)
 
 [node name="Portal2" parent="." unique_id=743297960 instance=ExtResource("27_ci06t")]
 position = Vector2(473, 195)
