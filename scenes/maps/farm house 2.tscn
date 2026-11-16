@@ -34,6 +34,8 @@
 [ext_resource type="PackedScene" uid="uid://dtownnpclewis" path="res://scenes/entities/town_npc_lewis.tscn" id="32_lewis"]
 [ext_resource type="PackedScene" uid="uid://dtownnpcmalle" path="res://scenes/entities/town_npc_malle.tscn" id="33_malle"]
 [ext_resource type="PackedScene" uid="uid://dtownnpcgeo" path="res://scenes/entities/town_npc_geo.tscn" id="35_geo"]
+[ext_resource type="PackedScene" uid="uid://c6pmjnyan88s3" path="res://scenes/entities/village_chief_npc.tscn" id="36_village_chief"]
+[ext_resource type="PackedScene" uid="uid://bvinhfarmnpc" path="res://scenes/entities/vinh_farm_npc.tscn" id="37_vinh_farm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vgaqx"]
 texture = ExtResource("1_5a710")
@@ -11072,3 +11074,9 @@ patrol_offsets = PackedVector2Array(0, -50, 0, 50)
 position = Vector2(340, 260)
 speed = 30.0
 patrol_offsets = PackedVector2Array(-70, 0, 70, 0)
+
+[node name="VillageChiefNPC" parent="." unique_id=1682542407 instance=ExtResource("36_village_chief")]
+position = Vector2(-176, 27)
+
+[node name="VinhFarmNPC" parent="." unique_id=1396216592 instance=ExtResource("37_vinh_farm")]
+position = Vector2(325, 343)

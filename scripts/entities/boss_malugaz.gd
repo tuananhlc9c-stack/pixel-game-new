@@ -349,4 +349,15 @@ func _on_died() -> void:
 	queue_redraw()
 	var tween := create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(queue_free)
+	tween.tween_callback(func():
+		_trigger_victory_cutscene()
+		queue_free()
+	)
+
+func _trigger_victory_cutscene() -> void:
+	var cutscene_scene = load("res://menu/victory_cutscene.tscn") as PackedScene
+	if cutscene_scene:
+		var cutscene_inst = cutscene_scene.instantiate()
+		var tree_root = get_tree().root
+		if tree_root:
+			tree_root.add_child(cutscene_inst)

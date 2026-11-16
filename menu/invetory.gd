@@ -41,6 +41,8 @@ var cooking_tab_btn: Button = null
 var inventory_tab_btn: Button = null
 var guide_side_btn: Button = null
 var guide_modal: Panel = null
+var settings_side_btn: Button = null
+var settings_modal: Panel = null
 var cooking_recipes_vbox: VBoxContainer = null
 var cooking_status_lbl: Label = null
 var current_cooking_job: Dictionary = {} # {"recipe": Dictionary, "remaining": float, "total": float, "pbar": ProgressBar, "btn": Button}
@@ -492,6 +494,18 @@ func _give_starter_tools() -> void:
 			var sc := load(str(t["scene"])) as PackedScene
 			add_item(icon, sc, str(t["id"]), str(t["name"]))
 
+func clear_inventory_on_death() -> void:
+	for i in range(inventory_data.size()):
+		inventory_data[i] = null
+		update_slot_display(i)
+	for slot_k in equipment_data.keys():
+		equipment_data[slot_k] = null
+		update_equip_slot_display(slot_k)
+	selected_slot_index = -1
+	current_place_scene = null
+	_sync_to_scene_manager()
+	update_stats_display()
+
 func _sync_to_scene_manager() -> void:
 	if SceneManager:
 		SceneManager.saved_inventory_data = inventory_data.duplicate(true)
@@ -645,6 +659,8 @@ func toggle_bag_window(force_state: Variant = null) -> void:
 			bag_window.modulate.a = 1.0
 			if guide_modal and is_instance_valid(guide_modal):
 				guide_modal.visible = false
+			if settings_modal and is_instance_valid(settings_modal):
+				settings_modal.visible = false
 
 func _on_slot_mouse_entered(slot: Control) -> void:
 	var idx: int = slot.get_meta("slot_idx", -1)
@@ -1924,7 +1940,37 @@ func _setup_cooking_ui() -> void:
 		guide_side_btn.pressed.connect(_on_guide_side_btn_pressed)
 	bag_window.add_child(guide_side_btn)
 
+	# Nút Cài đặt (Settings Button) nằm ngay dưới nút Controls
+	var existing_settings_btn = bag_window.get_node_or_null("SettingsSideBtn")
+	if existing_settings_btn:
+		existing_settings_btn.queue_free()
+
+	settings_side_btn = Button.new()
+	settings_side_btn.name = "SettingsSideBtn"
+	settings_side_btn.text = "⚙️ Settings"
+	settings_side_btn.custom_minimum_size = Vector2(88, 30)
+	settings_side_btn.position = Vector2(496, 76) # Nằm ngay dưới Controls (40 + 30 + 6px)
+	settings_side_btn.add_theme_font_size_override("font_size", 11)
+
+	var sbtn_style := StyleBoxFlat.new()
+	sbtn_style.bg_color = Color(0.18, 0.11, 0.06, 0.94)
+	sbtn_style.border_width_left = 2
+	sbtn_style.border_width_top = 2
+	sbtn_style.border_width_right = 2
+	sbtn_style.border_width_bottom = 2
+	sbtn_style.border_color = Color(0.95, 0.78, 0.38, 1.0)
+	sbtn_style.corner_radius_top_left = 0
+	sbtn_style.corner_radius_bottom_left = 0
+	sbtn_style.corner_radius_top_right = 6
+	sbtn_style.corner_radius_bottom_right = 6
+	settings_side_btn.add_theme_stylebox_override("normal", sbtn_style)
+	settings_side_btn.add_theme_color_override("font_color", Color(1.0, 0.92, 0.6, 1.0))
+	if not settings_side_btn.pressed.is_connected(_on_settings_side_btn_pressed):
+		settings_side_btn.pressed.connect(_on_settings_side_btn_pressed)
+	bag_window.add_child(settings_side_btn)
+
 	_setup_guide_modal()
+	_setup_settings_modal()
 
 	# Panel giao diện Nấu Ăn (chiếm toàn bộ vùng giữa của Balo khi bật)
 	if cooking_panel and is_instance_valid(cooking_panel):
@@ -2069,6 +2115,250 @@ func _on_guide_side_btn_pressed() -> void:
 	if not guide_modal:
 		_setup_guide_modal()
 	guide_modal.visible = !guide_modal.visible
+	if guide_modal.visible and settings_modal and is_instance_valid(settings_modal):
+		settings_modal.visible = false
+	is_cooking_view = false
+	if cooking_panel:
+		cooking_panel.visible = false
+	if bag_grid:
+		bag_grid.visible = true
+	if equip_panel:
+		equip_panel.visible = true
+
+	var inner_well := bag_window.get_node_or_null("InnerWell")
+	if inner_well:
+		inner_well.visible = true
+	var hint_lbl := bag_window.get_node_or_null("HintLabel")
+	if hint_lbl:
+		hint_lbl.visible = true
+
+	_update_tab_buttons_appearance()
+
+func _setup_settings_modal() -> void:
+	if settings_modal and is_instance_valid(settings_modal):
+		return
+
+	settings_modal = Panel.new()
+	settings_modal.name = "SettingsModal"
+	settings_modal.custom_minimum_size = Vector2(250, 290)
+	settings_modal.size = Vector2(250, 290)
+	settings_modal.position = Vector2(502, 40)
+	settings_modal.visible = false
+
+	var sm_style := StyleBoxFlat.new()
+	sm_style.bg_color = Color(0.13, 0.08, 0.05, 0.96)
+	sm_style.border_width_left = 2
+	sm_style.border_width_top = 2
+	sm_style.border_width_right = 2
+	sm_style.border_width_bottom = 2
+	sm_style.border_color = Color(0.95, 0.78, 0.38, 1.0)
+	sm_style.corner_radius_top_left = 8
+	sm_style.corner_radius_bottom_left = 8
+	sm_style.corner_radius_top_right = 8
+	sm_style.corner_radius_bottom_right = 8
+	settings_modal.add_theme_stylebox_override("panel", sm_style)
+	bag_window.add_child(settings_modal)
+
+	# Tiêu đề bảng Cài Đặt
+	var title := Label.new()
+	title.text = "⚙️ GAME SETTINGS"
+	title.position = Vector2(14, 8)
+	title.add_theme_font_size_override("font_size", 12)
+	title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 1.0))
+	settings_modal.add_child(title)
+
+	# Nút đóng Cài Đặt (✕)
+	var close_btn := Button.new()
+	close_btn.text = "✕"
+	close_btn.custom_minimum_size = Vector2(22, 22)
+	close_btn.position = Vector2(220, 6)
+	close_btn.add_theme_font_size_override("font_size", 11)
+	close_btn.pressed.connect(func(): settings_modal.visible = false)
+	settings_modal.add_child(close_btn)
+
+	var cur_vol: float = 0.8
+	var cur_sen: float = 1.0
+	var cur_fs: bool = false
+	if SceneManager:
+		cur_vol = float(SceneManager.get("master_volume")) if SceneManager.get("master_volume") != null else 0.8
+		cur_sen = float(SceneManager.get("mouse_sensitivity")) if SceneManager.get("mouse_sensitivity") != null else 1.0
+		cur_fs = bool(SceneManager.get("is_fullscreen")) if SceneManager.get("is_fullscreen") != null else false
+
+	var y_offset := 34.0
+
+	# 1. Volume
+	var vol_label := Label.new()
+	vol_label.position = Vector2(14, y_offset)
+	vol_label.size = Vector2(222, 16)
+	vol_label.add_theme_font_size_override("font_size", 10)
+	vol_label.add_theme_color_override("font_color", Color(0.95, 0.92, 0.85, 1.0))
+	vol_label.text = "🔊 Master Volume: %d%%" % int(round(cur_vol * 100.0))
+	settings_modal.add_child(vol_label)
+	y_offset += 18.0
+
+	var vol_slider := HSlider.new()
+	vol_slider.position = Vector2(14, y_offset)
+	vol_slider.size = Vector2(222, 16)
+	vol_slider.min_value = 0.0
+	vol_slider.max_value = 1.0
+	vol_slider.step = 0.05
+	vol_slider.value = cur_vol
+	vol_slider.value_changed.connect(func(val: float):
+		vol_label.text = "🔊 Master Volume: %d%%" % int(round(val * 100.0))
+		if SceneManager and SceneManager.has_method("apply_audio_volume"):
+			SceneManager.apply_audio_volume(val)
+	)
+	settings_modal.add_child(vol_slider)
+	y_offset += 24.0
+
+	# 2. Mouse Sensitivity
+	var sen_label := Label.new()
+	sen_label.position = Vector2(14, y_offset)
+	sen_label.size = Vector2(222, 16)
+	sen_label.add_theme_font_size_override("font_size", 10)
+	sen_label.add_theme_color_override("font_color", Color(0.95, 0.92, 0.85, 1.0))
+	sen_label.text = "🖱️ Mouse Sensitivity: %.2fx" % cur_sen
+	settings_modal.add_child(sen_label)
+	y_offset += 18.0
+
+	var sen_slider := HSlider.new()
+	sen_slider.position = Vector2(14, y_offset)
+	sen_slider.size = Vector2(222, 16)
+	sen_slider.min_value = 0.2
+	sen_slider.max_value = 3.0
+	sen_slider.step = 0.1
+	sen_slider.value = cur_sen
+	sen_slider.value_changed.connect(func(val: float):
+		sen_label.text = "🖱️ Mouse Sensitivity: %.2fx" % val
+		if SceneManager:
+			SceneManager.set("mouse_sensitivity", val)
+	)
+	settings_modal.add_child(sen_slider)
+	y_offset += 24.0
+
+	# 3. Screen Mode
+	var scr_label := Label.new()
+	scr_label.position = Vector2(14, y_offset)
+	scr_label.size = Vector2(120, 20)
+	scr_label.add_theme_font_size_override("font_size", 10)
+	scr_label.add_theme_color_override("font_color", Color(0.95, 0.92, 0.85, 1.0))
+	scr_label.text = "🖥️ Fullscreen Mode:"
+	settings_modal.add_child(scr_label)
+
+	var scr_check := CheckButton.new()
+	scr_check.position = Vector2(140, y_offset - 4.0)
+	scr_check.size = Vector2(96, 26)
+	scr_check.button_pressed = cur_fs
+	scr_check.text = "ON" if cur_fs else "OFF"
+	scr_check.add_theme_font_size_override("font_size", 10)
+	scr_check.toggled.connect(func(pressed: bool):
+		scr_check.text = "ON" if pressed else "OFF"
+		if SceneManager and SceneManager.has_method("apply_screen_mode"):
+			SceneManager.apply_screen_mode(pressed)
+	)
+	settings_modal.add_child(scr_check)
+	y_offset += 32.0
+
+	# Status label
+	var status_lbl := Label.new()
+	status_lbl.position = Vector2(14, y_offset)
+	status_lbl.size = Vector2(222, 18)
+	status_lbl.add_theme_font_size_override("font_size", 9)
+	status_lbl.add_theme_color_override("font_color", Color(0.4, 0.9, 0.4, 1.0))
+	status_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	status_lbl.text = ""
+	settings_modal.add_child(status_lbl)
+	y_offset += 22.0
+
+	# Style chung cho 2 nút Save & Quit
+	var btn_normal := StyleBoxFlat.new()
+	btn_normal.bg_color = Color(0.24, 0.15, 0.08, 0.95)
+	btn_normal.border_width_left = 1
+	btn_normal.border_width_top = 1
+	btn_normal.border_width_right = 1
+	btn_normal.border_width_bottom = 1
+	btn_normal.border_color = Color(0.85, 0.68, 0.32, 1.0)
+	btn_normal.corner_radius_top_left = 4
+	btn_normal.corner_radius_top_right = 4
+	btn_normal.corner_radius_bottom_right = 4
+	btn_normal.corner_radius_bottom_left = 4
+
+	var quit_style := StyleBoxFlat.new()
+	quit_style.bg_color = Color(0.35, 0.1, 0.08, 0.95)
+	quit_style.border_width_left = 1
+	quit_style.border_width_top = 1
+	quit_style.border_width_right = 1
+	quit_style.border_width_bottom = 1
+	quit_style.border_color = Color(0.9, 0.3, 0.3, 1.0)
+	quit_style.corner_radius_top_left = 4
+	quit_style.corner_radius_top_right = 4
+	quit_style.corner_radius_bottom_right = 4
+	quit_style.corner_radius_bottom_left = 4
+
+	# 4. HBox chứa nút Save & Quit
+	var hbox_actions := HBoxContainer.new()
+	hbox_actions.position = Vector2(14, y_offset)
+	hbox_actions.size = Vector2(222, 28)
+	hbox_actions.add_theme_constant_override("separation", 10)
+	settings_modal.add_child(hbox_actions)
+
+	# Nút Save Game
+	var save_btn := Button.new()
+	save_btn.text = "💾 Save Game"
+	save_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	save_btn.add_theme_font_size_override("font_size", 10)
+	save_btn.add_theme_stylebox_override("normal", btn_normal)
+	save_btn.add_theme_color_override("font_color", Color(1.0, 0.95, 0.7, 1.0))
+	save_btn.pressed.connect(func():
+		_sync_to_scene_manager()
+		var player_node = get_tree().get_first_node_in_group("player")
+		if not player_node and get_tree().current_scene:
+			player_node = get_tree().current_scene.find_child("Player", true, false)
+		if SceneManager and SceneManager.has_method("save_game"):
+			var ok: bool = SceneManager.save_game(player_node)
+			if ok:
+				status_lbl.text = "✓ Game saved successfully!"
+				status_lbl.add_theme_color_override("font_color", Color(0.4, 0.9, 0.4, 1.0))
+			else:
+				status_lbl.text = "✗ Failed to save game!"
+				status_lbl.add_theme_color_override("font_color", Color(0.9, 0.3, 0.3, 1.0))
+		else:
+			status_lbl.text = "✓ Progress synchronized!"
+		if AudioManager:
+			AudioManager.play_sfx("click")
+		var t := create_tween()
+		t.tween_interval(2.5)
+		t.tween_callback(func():
+			if is_instance_valid(status_lbl):
+				status_lbl.text = ""
+		)
+	)
+	hbox_actions.add_child(save_btn)
+
+	# Nút Quit Game
+	var quit_btn := Button.new()
+	quit_btn.text = "🚪 Quit Game"
+	quit_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	quit_btn.add_theme_font_size_override("font_size", 10)
+	quit_btn.add_theme_stylebox_override("normal", quit_style)
+	quit_btn.add_theme_color_override("font_color", Color(1.0, 0.8, 0.8, 1.0))
+	quit_btn.pressed.connect(func():
+		_sync_to_scene_manager()
+		var player_node = get_tree().get_first_node_in_group("player")
+		if not player_node and get_tree().current_scene:
+			player_node = get_tree().current_scene.find_child("Player", true, false)
+		if SceneManager and SceneManager.has_method("save_game"):
+			SceneManager.save_game(player_node)
+		get_tree().quit()
+	)
+	hbox_actions.add_child(quit_btn)
+
+func _on_settings_side_btn_pressed() -> void:
+	if not settings_modal:
+		_setup_settings_modal()
+	settings_modal.visible = !settings_modal.visible
+	if settings_modal.visible and guide_modal and is_instance_valid(guide_modal):
+		guide_modal.visible = false
 	is_cooking_view = false
 	if cooking_panel:
 		cooking_panel.visible = false

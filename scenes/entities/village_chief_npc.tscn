@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://c6pmjnyan88s3"]
+
+[ext_resource type="Script" path="res://scripts/entities/village_chief_npc.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cc1qpx7c0k0t8" path="res://Content T1/Character/GoverS.png" id="2_tex"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 6.0
+height = 18.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_area"]
+radius = 42.0
+height = 84.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_down_0"]
+atlas = ExtResource("2_tex")
+region = Rect2(0, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_down_1"]
+atlas = ExtResource("2_tex")
+region = Rect2(16, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_down_2"]
+atlas = ExtResource("2_tex")
+region = Rect2(32, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_down_3"]
+atlas = ExtResource("2_tex")
+region = Rect2(48, 0, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_anim"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_down_3")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}]
+
+[node name="VillageChiefNPC" type="CharacterBody2D" groups=["npc", "village_chief"]]
+y_sort_enabled = true
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CapsuleShape2D_area")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_anim")
+animation = &"walk_down"

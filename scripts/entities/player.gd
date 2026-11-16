@@ -1230,6 +1230,18 @@ func _on_health_changed(current: int, maximum: int) -> void:
 		hp_label.text = "HP: %d / %d" % [current, maximum]
 
 func _on_player_died() -> void:
+	# Khi chết: mất toàn bộ trang bị và vật phẩm trong túi đồ (drop/clear inventory)
+	var inv = get_tree().get_first_node_in_group("inventory")
+	if inv and inv.has_method("clear_inventory_on_death"):
+		inv.clear_inventory_on_death()
+	elif SceneManager:
+		SceneManager.saved_inventory_data.clear()
+		for k in SceneManager.saved_equipment_data.keys():
+			SceneManager.saved_equipment_data[k] = null
+
+	# Thông báo mất đồ khi tử trận
+	_show_floating_level_up_text("YOU DIED! ALL ITEMS LOST")
+
 	# Khi hết máu, hồi phục lại đầy máu và đưa về điểm xuất phát của map hiện tại
 	health_component.reset_health()
 	current_mana = max_mana
