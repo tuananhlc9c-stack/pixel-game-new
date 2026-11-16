@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://8kv8uybb5dkn"]
+﻿[gd_scene format=4 uid="uid://8kv8uybb5dkn"]
 
 [ext_resource type="Texture2D" uid="uid://b2m33iesf1k3u" path="res://Content T1/Mapss/titleset/Floor_tiles.png" id="1_i0ehx"]
 [ext_resource type="Texture2D" uid="uid://dqjuql84h3npx" path="res://Content T1/Mapss/titleset/Ladder_tilset.png" id="2_smooo"]
@@ -14604,7 +14604,7 @@ tile_set = SubResource("TileSet_a8vg6")
 position = Vector2(115, 319)
 rotation = -1.5570759
 next_scene_path = "res://scenes/maps/map3.tscn"
-target_spawn_position = Vector2(1100, 570)
+target_spawn_position = Vector2(1095, 436)
 
 [node name="Player" parent="." unique_id=2035780365 instance=ExtResource("33_ni0i1")]
 position = Vector2(645, 838)

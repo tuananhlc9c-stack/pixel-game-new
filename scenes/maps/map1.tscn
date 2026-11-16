@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://ctog71q3jotnh"]
+﻿[gd_scene format=4 uid="uid://ctog71q3jotnh"]
 
 [ext_resource type="Texture2D" uid="uid://dctxwd4lapv4f" path="res://Content T1/Mapss/titleset/bridge_tilet.png" id="1_758qj"]
 [ext_resource type="Texture2D" uid="uid://b2m33iesf1k3u" path="res://Content T1/Mapss/titleset/Floor_tiles.png" id="2_muogi"]
@@ -13680,12 +13680,12 @@ polygon = PackedVector2Array(432, 509, 448, 509, 448, 527, 432, 527)
 position = Vector2(742, 383)
 rotation = -1.5655262
 next_scene_path = "res://scenes/maps/map3.tscn"
-target_spawn_position = Vector2(120, 360)
+target_spawn_position = Vector2(118, 220)
 
 [node name="Portal2" parent="." unique_id=1142273392 instance=ExtResource("22_ekku0")]
 position = Vector2(432, 11)
 next_scene_path = "res://scenes/dungeons/forbidden area.tscn"
-target_spawn_position = Vector2(570, 500)
+target_spawn_position = Vector2(548, 410)
 
 [node name="Smile1" parent="." unique_id=1647716036 instance=ExtResource("23_sruyg")]
 position = Vector2(595, 525)

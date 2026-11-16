@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://dpgpe2viw51nm"]
+﻿[gd_scene format=4 uid="uid://dpgpe2viw51nm"]
 
 [ext_resource type="Texture2D" uid="uid://dctxwd4lapv4f" path="res://Content T1/Mapss/titleset/bridge_tilet.png" id="1_jag28"]
 [ext_resource type="Texture2D" uid="uid://b2m33iesf1k3u" path="res://Content T1/Mapss/titleset/Floor_tiles.png" id="2_dbxwu"]
@@ -7293,7 +7293,7 @@ target_spawn_position = Vector2(152, 563)
 [node name="Portal6" parent="." unique_id=629345965 instance=ExtResource("21_61q2r")]
 position = Vector2(624, 182)
 next_scene_path = "res://scenes/maps/farm house 2.tscn"
-target_spawn_position = Vector2(200, 380)
+target_spawn_position = Vector2(-300, 202)
 
 [node name="Slime" parent="." unique_id=2125984269 instance=ExtResource("22_eqnv4")]
 position = Vector2(299, 243)

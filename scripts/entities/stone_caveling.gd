@@ -199,6 +199,8 @@ func _on_health_changed(_current: int, _max: int) -> void:
 func _on_died() -> void:
 	if SceneManager and SceneManager.has_method("add_player_exp"):
 		SceneManager.add_player_exp(18)
+	if SceneManager and SceneManager.has_method("spawn_monster_gold_drop"):
+		SceneManager.spawn_monster_gold_drop(global_position, get_parent())
 	set_physics_process(false)
 	queue_redraw()
 	var tween := create_tween()

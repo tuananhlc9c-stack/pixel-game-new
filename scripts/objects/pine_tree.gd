@@ -20,9 +20,9 @@ var hide_bar_timer: float = 0.0
 # - Rìu đá (stone_axe): 3 sát thương -> 4 nhát chặt (vừa)
 # - Rìu sắt (iron_axe): 6 sát thương -> 2 nhát chặt (nhanh nhất)
 const AXE_CHOP_POWER: Dictionary = {
-	"wood_axe": 2,
-	"stone_axe": 3,
-	"iron_axe": 6
+	"wood_axe": 1,
+	"stone_axe": 2,
+	"iron_axe": 3
 }
 
 func _ready() -> void:

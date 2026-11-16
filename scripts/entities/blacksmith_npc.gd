@@ -595,7 +595,7 @@ func _on_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player") or body.name == "Player":
 		player_nearby = true
 		if overhead_label:
-			overhead_label.text = "[Click or Press E] Blacksmith Forge"
+			overhead_label.text = "[Click or Press F] Blacksmith Forge"
 			overhead_label.add_theme_color_override("font_color", Color(1.0, 1.0, 0.4, 1.0))
 
 func _on_area_body_exited(body: Node2D) -> void:
@@ -612,11 +612,13 @@ func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -
 
 func _unhandled_input(event: InputEvent) -> void:
 	if player_nearby and event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_E or event.physical_keycode == KEY_E:
+		if event.keycode == KEY_F or event.physical_keycode == KEY_F:
 			# Chỉ mở khi đang không mở balo
 			var inv = get_tree().get_first_node_in_group("inventory")
 			if inv and inv.get("bag_window") and inv.bag_window.visible:
 				return
 			toggle_crafting_window(not is_ui_open)
+			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_ESCAPE and is_ui_open:
 			toggle_crafting_window(false)
+			get_viewport().set_input_as_handled()

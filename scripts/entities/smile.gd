@@ -123,6 +123,11 @@ func _on_health_changed(_current: int, _max: int) -> void:
 func _on_died() -> void:
 	if SceneManager and SceneManager.has_method("add_player_exp"):
 		SceneManager.add_player_exp(8)
+	if SceneManager and SceneManager.has_method("spawn_monster_gold_drop"):
+		var spawn_parent = get_parent()
+		if spawn_parent and spawn_parent != get_tree().current_scene and spawn_parent is Node2D and spawn_parent.get_child_count() == 1:
+			spawn_parent = spawn_parent.get_parent()
+		SceneManager.spawn_monster_gold_drop(global_position, spawn_parent)
 	set_physics_process(false)
 	var parent_node := get_parent()
 	if parent_node and parent_node != get_tree().current_scene and parent_node is Node2D and parent_node.get_child_count() == 1:

@@ -373,8 +373,6 @@ func _ready() -> void:
 		inventory_data = SceneManager.saved_inventory_data.duplicate(true)
 		for i in range(all_slots.size()):
 			update_slot_display(i)
-		_give_starter_tools()
-		_give_starter_clothes()
 		select_slot_by_index(clampi(SceneManager.saved_selected_slot, 0, all_slots.size() - 1))
 	else:
 		if all_slots.size() > 0:

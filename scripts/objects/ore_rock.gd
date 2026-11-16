@@ -66,9 +66,9 @@ const ORE_CONFIG: Dictionary = {
 }
 
 const PICKAXE_MINE_POWER: Dictionary = {
-	"wood_pickaxe": 2,
-	"stone_pickaxe": 3,
-	"iron_pickaxe": 6
+	"wood_pickaxe": 1,
+	"stone_pickaxe": 2,
+	"iron_pickaxe": 3
 }
 
 var current_mine_hp: int = 18

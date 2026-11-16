@@ -19,7 +19,7 @@ const CUTSCENE_PAGES: Array[Dictionary] = [
 	{
 		"texture": "res://Content T1/New/tool/victory.png",
 		"text": "They have won the championship.",
-		"btn": "🏆 Return to Village"
+		"btn": "🏆 Complete"
 	}
 ]
 
@@ -115,14 +115,13 @@ func _finish_victory() -> void:
 
 	fade_rect.visible = true
 	var tw := create_tween()
-	tw.tween_property(fade_rect, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.tween_property(fade_rect, "modulate:a", 1.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tw.finished
 
-	# Trở về map làng an bình Farm House 2 sau chiến thắng để tiếp tục chơi bình thường
-	if SceneManager and SceneManager.has_method("change_scene"):
-		SceneManager.change_scene("res://scenes/maps/farm house 2.tscn", Vector2(200, 240))
-	else:
-		get_tree().change_scene_to_file("res://scenes/maps/farm house 2.tscn")
+	# Sau khi kết thúc đoạn dẫn truyện/cutscene chiến thắng, người chơi vẫn ở lại map Danger 3 để loot hòm hoặc khám phá tiếp
+	var tw_out := create_tween()
+	tw_out.tween_property(fade_rect, "modulate:a", 0.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await tw_out.finished
 
 	queue_free()
 

@@ -177,6 +177,8 @@ func _on_health_changed(_current: int, _max: int) -> void:
 func _on_died() -> void:
 	if SceneManager and SceneManager.has_method("add_player_exp"):
 		SceneManager.add_player_exp(24)
+	if SceneManager and SceneManager.has_method("spawn_monster_gold_drop"):
+		SceneManager.spawn_monster_gold_drop(global_position, get_parent())
 	queue_free()
 
 func _draw() -> void:

@@ -1930,8 +1930,8 @@ position = Vector2(236, 248)
 
 [node name="Portal" parent="." unique_id=1142273392 instance=ExtResource("4_uarc6")]
 position = Vector2(234, 222)
-next_scene_path = "uid://cdepwknworn1s"
-target_spawn_position = Vector2(780, 935)
+next_scene_path = "res://scenes/dungeons/danger2.tscn"
+target_spawn_position = Vector2(768, 930)
 
 [node name="BossMalugaz" parent="." unique_id=551468094 instance=ExtResource("5_malugaz")]
 position = Vector2(221, 388)

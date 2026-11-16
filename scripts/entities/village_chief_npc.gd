@@ -129,7 +129,7 @@ func _setup_dialogue_ui() -> void:
 	dialogue_prompt_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	dialogue_prompt_lbl.add_theme_font_size_override("font_size", 9)
 	dialogue_prompt_lbl.add_theme_color_override("font_color", Color(0.85, 0.75, 0.55, 0.85))
-	dialogue_prompt_lbl.text = "[E / Space / Click] Close ▸"
+	dialogue_prompt_lbl.text = "[F / Space / Click] Close ▸"
 	dialogue_panel.add_child(dialogue_prompt_lbl)
 
 	dialogue_panel.visible = false
@@ -168,7 +168,7 @@ func _on_area_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):
 		player_nearby = true
 		if overhead_label:
-			overhead_label.text = "[Click / E] Talk 👑"
+			overhead_label.text = "[Click / F] Talk 👑"
 			overhead_label.add_theme_color_override("font_color", Color(1.0, 1.0, 0.4, 1.0))
 
 func _on_area_body_exited(body: Node) -> void:
@@ -196,12 +196,12 @@ func _on_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_dialogue_open:
 		if player_nearby and event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode == KEY_E or event.physical_keycode == KEY_E or event.keycode == KEY_F or event.physical_keycode == KEY_F:
+			if event.keycode == KEY_F or event.physical_keycode == KEY_F:
 				open_dialogue()
 				get_viewport().set_input_as_handled()
 	else:
 		if event is InputEventKey and event.pressed and not event.echo:
-			if event.keycode in [KEY_E, KEY_SPACE, KEY_ENTER, KEY_F, KEY_ESCAPE]:
+			if event.keycode in [KEY_SPACE, KEY_ENTER, KEY_F, KEY_ESCAPE]:
 				if is_typing:
 					if typing_tween and typing_tween.is_valid():
 						typing_tween.kill()

@@ -20,9 +20,9 @@ var hide_bar_timer: float = 0.0
 # - Cuốc đá (stone_pickaxe): 3 sát thương -> 4 nhát đập (trung bình)
 # - Cuốc sắt (iron_pickaxe): 6 sát thương -> 2 nhát đập (nhanh nhất)
 const PICKAXE_MINE_POWER: Dictionary = {
-	"wood_pickaxe": 2,
-	"stone_pickaxe": 3,
-	"iron_pickaxe": 6
+	"wood_pickaxe": 1,
+	"stone_pickaxe": 2,
+	"iron_pickaxe": 3
 }
 
 func _ready() -> void:

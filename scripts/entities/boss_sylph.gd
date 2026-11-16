@@ -430,6 +430,10 @@ func _on_health_changed(current: int, max_hp: int) -> void:
 func _on_died() -> void:
 	if SceneManager and SceneManager.has_method("add_player_exp"):
 		SceneManager.add_player_exp(180)
+
+	# Rơi ra hòm phần thưởng ngẫu nhiên 1 trong 10 vũ khí thần khí
+	_spawn_reward_chest()
+
 	set_physics_process(false)
 	lightning_zones.clear()
 	if boss_hud:
@@ -438,3 +442,15 @@ func _on_died() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.55)
 	tween.tween_callback(queue_free)
+
+func _spawn_reward_chest() -> void:
+	var chest_scene := load("res://scenes/objects/boss_reward_chest.tscn") as PackedScene
+	if chest_scene:
+		var chest = chest_scene.instantiate() as Node2D
+		if chest:
+			chest.global_position = global_position
+			var parent_node := get_parent()
+			if parent_node:
+				parent_node.call_deferred("add_child", chest)
+			else:
+				get_tree().root.call_deferred("add_child", chest)

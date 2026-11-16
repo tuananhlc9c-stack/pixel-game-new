@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://couwdjdsc2a3n"]
+﻿[gd_scene format=4 uid="uid://couwdjdsc2a3n"]
 
 [ext_resource type="Texture2D" uid="uid://nttr2d83vbxu" path="res://demo/titleset/Wall3_tilset.png" id="1_gjp8d"]
 [ext_resource type="Texture2D" uid="uid://b8bebvunkqxpy" path="res://demo/titleset/Floor_tiles.png" id="2_gyxgn"]
@@ -3162,7 +3162,7 @@ position = Vector2(53, 403)
 position = Vector2(11.000002, 398.00003)
 rotation = 1.5945234
 next_scene_path = "res://scenes/maps/farm house 2.tscn"
-target_spawn_position = Vector2(880, 350)
+target_spawn_position = Vector2(430, 195)
 
 [node name="Portal2" parent="." unique_id=24905364 instance=ExtResource("16_4hij6")]
 position = Vector2(680, 119)

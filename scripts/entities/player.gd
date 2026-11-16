@@ -36,12 +36,15 @@ var level_badge_label: Label
 var special_cd_bar_fill: ColorRect
 var special_cd_label: Label
 var level_up_hud_label: Label = null
+var hud: CanvasLayer = null
+var minimap_ui: Control = null
 var current_mana: float = 100.0
 var level: int = 1
 var current_exp: int = 0
 var max_exp: int = 100
 
 var last_direction: String = "down"
+var is_dead: bool = false
 var is_rolling: bool = false
 var is_attacking: bool = false
 var is_special_attacking: bool = false
@@ -80,7 +83,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 16, 16, 16),
 		"damage": 22,
 		"special_damage": 50,
-		"swing_speed_mult": 1.0,
+		"swing_speed_mult": 0.55,
 		"glow_col": Color(0.95, 0.62, 0.22, 1.0),
 		"core_col": Color(1.0, 0.92, 0.65, 1.0)
 	},
@@ -89,7 +92,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 80, 16, 16),
 		"damage": 26,
 		"special_damage": 56,
-		"swing_speed_mult": 1.0,
+		"swing_speed_mult": 0.55,
 		"glow_col": Color(0.92, 0.52, 0.18, 1.0),
 		"core_col": Color(1.0, 0.88, 0.55, 1.0)
 	},
@@ -98,7 +101,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 48, 16, 16),
 		"damage": 32,
 		"special_damage": 68,
-		"swing_speed_mult": 1.22,
+		"swing_speed_mult": 0.65,
 		"glow_col": Color(0.75, 0.72, 0.62, 1.0),
 		"core_col": Color(0.96, 0.94, 0.88, 1.0)
 	},
@@ -107,7 +110,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(80, 112, 16, 16),
 		"damage": 36,
 		"special_damage": 75,
-		"swing_speed_mult": 1.22,
+		"swing_speed_mult": 0.65,
 		"glow_col": Color(0.72, 0.68, 0.58, 1.0),
 		"core_col": Color(0.95, 0.92, 0.84, 1.0)
 	},
@@ -116,7 +119,7 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(192, 16, 16, 16),
 		"damage": 45,
 		"special_damage": 92,
-		"swing_speed_mult": 1.48,
+		"swing_speed_mult": 0.80,
 		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
 		"core_col": Color(0.92, 0.98, 1.0, 1.0)
 	},
@@ -125,35 +128,35 @@ const TOOL_CONFIG: Dictionary = {
 		"icon_region": Rect2(192, 80, 16, 16),
 		"damage": 48,
 		"special_damage": 96,
-		"swing_speed_mult": 1.48,
+		"swing_speed_mult": 0.80,
 		"glow_col": Color(0.45, 0.84, 1.0, 1.0),
 		"core_col": Color(0.92, 0.98, 1.0, 1.0)
 	},
-	# Kiếm Thường / Đại Kiếm (Sword) - Chém mạnh & nhanh: Gỗ < Sắt < Đồng < Vàng < Tím
+	# Kiếm Thường / Đại Kiếm (Sword) - Vũ khí hàng dưới trong ảnh người dùng:
 	"wood_sword": {
-		"name": "Wooden Sword", "type": "sword", "icon_region": Rect2(48, 112, 16, 16),
-		"damage": 22, "special_damage": 48, "swing_speed_mult": 1.05,
-		"glow_col": Color(0.68, 0.48, 0.25, 1.0), "core_col": Color(0.95, 0.85, 0.65, 1.0)
+		"name": "Azure Ice Shortsword", "type": "sword", "icon_region": Rect2(48, 112, 16, 16),
+		"damage": 120, "special_damage": 250, "swing_speed_mult": 1.35,
+		"glow_col": Color(0.25, 0.75, 1.0, 1.0), "core_col": Color(0.85, 0.98, 1.0, 1.0)
 	},
 	"iron_sword": {
-		"name": "Iron Sword", "type": "sword", "icon_region": Rect2(64, 112, 16, 16),
-		"damage": 38, "special_damage": 80, "swing_speed_mult": 1.2,
-		"glow_col": Color(0.55, 0.75, 0.88, 1.0), "core_col": Color(0.92, 0.96, 1.0, 1.0)
+		"name": "Pirate Cutlass", "type": "sword", "icon_region": Rect2(64, 112, 16, 16),
+		"damage": 130, "special_damage": 270, "swing_speed_mult": 1.4,
+		"glow_col": Color(0.85, 0.65, 0.35, 1.0), "core_col": Color(1.0, 0.95, 0.85, 1.0)
 	},
 	"copper_sword": {
-		"name": "Copper Sword", "type": "sword", "icon_region": Rect2(80, 112, 16, 16),
-		"damage": 52, "special_damage": 110, "swing_speed_mult": 1.3,
-		"glow_col": Color(0.92, 0.52, 0.18, 1.0), "core_col": Color(1.0, 0.85, 0.52, 1.0)
+		"name": "Knight Rapier", "type": "sword", "icon_region": Rect2(80, 112, 16, 16),
+		"damage": 140, "special_damage": 290, "swing_speed_mult": 1.45,
+		"glow_col": Color(0.4, 0.5, 0.6, 1.0), "core_col": Color(0.9, 0.95, 1.0, 1.0)
 	},
 	"gold_sword": {
-		"name": "Gold Sword", "type": "sword", "icon_region": Rect2(96, 112, 16, 16),
-		"damage": 75, "special_damage": 155, "swing_speed_mult": 1.4,
-		"glow_col": Color(1.0, 0.82, 0.15, 1.0), "core_col": Color(1.0, 0.98, 0.75, 1.0)
+		"name": "Flamberge Waveblade", "type": "sword", "icon_region": Rect2(96, 112, 16, 16),
+		"damage": 160, "special_damage": 330, "swing_speed_mult": 1.5,
+		"glow_col": Color(0.85, 0.35, 0.2, 1.0), "core_col": Color(1.0, 0.75, 0.5, 1.0)
 	},
 	"amethyst_sword": {
-		"name": "Amethyst Sword", "type": "sword", "icon_region": Rect2(112, 112, 16, 16),
-		"damage": 105, "special_damage": 215, "swing_speed_mult": 1.55,
-		"glow_col": Color(0.85, 0.25, 1.0, 1.0), "core_col": Color(0.98, 0.82, 1.0, 1.0)
+		"name": "Holy Excalibur", "type": "sword", "icon_region": Rect2(112, 112, 16, 16),
+		"damage": 190, "special_damage": 390, "swing_speed_mult": 1.6,
+		"glow_col": Color(1.0, 0.85, 0.2, 1.0), "core_col": Color(1.0, 1.0, 0.8, 1.0)
 	},
 	# Kiếm Quắm (Scythe) - chém quét rộng: Gỗ < Sắt < Đồng < Vàng < Tím
 	"wood_scythe": {
@@ -370,7 +373,7 @@ func _setup_health_system() -> void:
 			SceneManager.level_up.connect(_on_scene_manager_level_up)
 
 	# Tạo HUD ở góc trên bên trái màn hình
-	var hud := CanvasLayer.new()
+	hud = CanvasLayer.new()
 	hud.name = "PlayerHUD"
 	add_child(hud)
 
@@ -465,6 +468,14 @@ func _setup_health_system() -> void:
 	level_up_hud_label.visible = false
 	hud.add_child(level_up_hud_label)
 
+	# 6. Bản đồ thế giới (Minimap HUD) - Bật / tắt bằng phím M
+	var minimap_script = load("res://scripts/ui/minimap.gd")
+	if minimap_script:
+		minimap_ui = Control.new()
+		minimap_ui.name = "MinimapUI"
+		minimap_ui.set_script(minimap_script)
+		hud.add_child(minimap_ui)
+
 	_on_health_changed(health_component.current_health, health_component.max_health)
 	_update_exp_ui()
 	_update_special_cooldown_ui()
@@ -480,6 +491,23 @@ func _is_mouse_over_placed_furniture() -> bool:
 	return false
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_dead:
+		return
+
+	# Bật / tắt bản đồ bằng phím M
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_M or event.physical_keycode == KEY_M:
+			if minimap_ui and is_instance_valid(minimap_ui) and minimap_ui.has_method("toggle_map"):
+				minimap_ui.toggle_map()
+				get_viewport().set_input_as_handled()
+				return
+			elif hud and is_instance_valid(hud):
+				var m = hud.get_node_or_null("MinimapUI")
+				if m and m.has_method("toggle_map"):
+					m.toggle_map()
+					get_viewport().set_input_as_handled()
+					return
+
 	for shop_ui in get_tree().get_nodes_in_group("merchant_shop_ui"):
 		if shop_ui is Control and shop_ui.is_visible_in_tree():
 			return
@@ -502,18 +530,25 @@ func _unhandled_input(event: InputEvent) -> void:
 			_cancel_fishing()
 			return
 		if not is_attacking and not is_rolling:
-			start_weapon_swing(false)
+			if _get_equipped_tool_id() != "":
+				start_weapon_swing(false)
 	elif event.is_action_pressed("special_attack") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT):
 		if fishing_state != FishingState.NONE:
 			_cancel_fishing("Canceled")
 			return
 		if not is_attacking and not is_rolling:
-			if special_cooldown_timer <= 0.0:
-				start_weapon_swing(true)
-			else:
-				_flash_cooldown_warning()
+			if _get_equipped_tool_id() != "":
+				if special_cooldown_timer <= 0.0:
+					start_weapon_swing(true)
+				else:
+					_flash_cooldown_warning()
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	# Tự động hồi phục Mana theo thời gian
 	if current_mana < max_mana:
 		current_mana = minf(max_mana, current_mana + mana_regen_rate * delta)
@@ -664,13 +699,17 @@ func start_weapon_swing(is_special: bool = false) -> void:
 	if not weapon_pivot:
 		return
 
+	var tool_id := _get_equipped_tool_id()
+	if tool_id == "":
+		return
+
 	if swing_tween and swing_tween.is_valid():
 		swing_tween.kill()
 
 	is_attacking = true
 	is_special_attacking = is_special
 	hit_targets.clear()
-	active_swing_tool_id = _get_equipped_tool_id()
+	active_swing_tool_id = tool_id
 
 	# Phát âm thanh vung kiếm / tấn công
 	if AudioManager:
@@ -794,13 +833,13 @@ func start_weapon_swing(is_special: bool = false) -> void:
 		if weapon_sprite:
 			weapon_sprite.modulate = Color(1.25, 1.25, 1.35, 1.0)
 
-	# 3. Giai đoạn 1: Lấy đà nhanh (Wind-up) + Nén nhẹ người
+	# 3. Giai đoạn 1: Lấy đà (Wind-up) + Nén nhẹ người
 	var speed_mult := 1.0
 	if active_swing_tool_id != "" and TOOL_CONFIG.has(active_swing_tool_id):
 		speed_mult = float(TOOL_CONFIG[active_swing_tool_id].get("swing_speed_mult", 1.0))
-	var windup_time := (0.055 if is_special else 0.04) / speed_mult
-	var slash_time := (0.19 if is_special else 0.135) / speed_mult
-	var follow_time := (0.075 if is_special else 0.055) / speed_mult
+	var windup_time := (0.09 if is_special else 0.08) / speed_mult
+	var slash_time := (0.24 if is_special else 0.19) / speed_mult
+	var follow_time := (0.12 if is_special else 0.10) / speed_mult
 
 	swing_tween = create_tween()
 	swing_tween.set_parallel(true)
@@ -1190,7 +1229,7 @@ func start_roll(dir: Vector2) -> void:
 		velocity = Vector2.ZERO
 
 func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_force: float = 140.0) -> void:
-	if is_rolling or not health_component or health_component.is_invincible:
+	if is_dead or is_rolling or not health_component or health_component.is_invincible:
 		return
 	if fishing_state != FishingState.NONE:
 		_cancel_fishing()
@@ -1230,7 +1269,24 @@ func _on_health_changed(current: int, maximum: int) -> void:
 		hp_label.text = "HP: %d / %d" % [current, maximum]
 
 func _on_player_died() -> void:
-	# Khi chết: mất toàn bộ trang bị và vật phẩm trong túi đồ (drop/clear inventory)
+	if is_dead:
+		return
+	is_dead = true
+
+	# Ngừng toàn bộ hành động đánh, lăn, câu cá
+	is_attacking = false
+	is_special_attacking = false
+	is_rolling = false
+	if fishing_state != FishingState.NONE:
+		_cancel_fishing()
+	if held_rod_sprite:
+		held_rod_sprite.visible = false
+	if weapon_pivot:
+		weapon_pivot.hide()
+	velocity = Vector2.ZERO
+	knockback_velocity = Vector2.ZERO
+
+	# Khi chết: mất toàn bộ trang bị và vật phẩm trong túi đồ
 	var inv = get_tree().get_first_node_in_group("inventory")
 	if inv and inv.has_method("clear_inventory_on_death"):
 		inv.clear_inventory_on_death()
@@ -1242,17 +1298,30 @@ func _on_player_died() -> void:
 	# Thông báo mất đồ khi tử trận
 	_show_floating_level_up_text("YOU DIED! ALL ITEMS LOST")
 
-	# Khi hết máu, hồi phục lại đầy máu và đưa về điểm xuất phát của map hiện tại
+	# Hiệu ứng chuyển động mờ dần khi chết
+	if anim:
+		anim.modulate = Color(2.5, 0.2, 0.2, 1.0)
+		var death_tw := create_tween()
+		death_tw.tween_property(anim, "modulate:a", 0.0, 0.7)
+
+	# Chờ 0.8s để người chơi thấy thông báo và hiệu ứng gục ngã
+	await get_tree().create_timer(0.8).timeout
+
+	# Hồi phục lại đầy máu và mana
 	health_component.reset_health()
 	current_mana = max_mana
 	if SceneManager:
-		SceneManager.saved_player_mana = current_mana
+		SceneManager.saved_player_health = max_health
+		SceneManager.saved_player_mana = max_mana
 	_update_mana_ui()
-	global_position = initial_spawn_position
-	knockback_velocity = Vector2.ZERO
-	velocity = Vector2.ZERO
-	special_cooldown_timer = 0.0
-	_update_special_cooldown_ui()
+
+	# Chuyển cảnh về map farm house
+	if SceneManager and SceneManager.has_method("respawn_player_at_farm_house"):
+		SceneManager.respawn_player_at_farm_house()
+	elif SceneManager and SceneManager.has_method("change_scene"):
+		SceneManager.change_scene("res://scenes/maps/farm house.tscn", Vector2(53, 403))
+	else:
+		get_tree().change_scene_to_file("res://scenes/maps/farm house.tscn")
 
 func _update_mana_ui() -> void:
 	if mana_bar_fill and max_mana > 0.0:
