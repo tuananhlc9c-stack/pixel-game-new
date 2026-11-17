@@ -12,6 +12,9 @@ var title_label: Label = null
 var pos_label: Label = null
 var close_btn: Button = null
 
+# Nút bản đồ nhỏ (M) trên màn hình HUD
+var hud_map_button: Button = null
+
 var is_map_open: bool = false
 var pulse_time: float = 0.0
 
@@ -40,7 +43,7 @@ const MAP_NAMES: Dictionary = {
 }
 
 func _ready() -> void:
-	visible = false
+	visible = true
 	set_process_input(true)
 	set_process(true)
 	_setup_map_ui()
@@ -54,6 +57,7 @@ func _setup_map_ui() -> void:
 	# Centered map window panel
 	map_container = Panel.new()
 	map_container.name = "MapWindow"
+	map_container.visible = false
 	map_container.custom_minimum_size = Vector2(480, 350)
 	map_container.size = Vector2(500, 360)
 	map_container.anchor_left = 0.5
@@ -139,6 +143,102 @@ func _setup_map_ui() -> void:
 	pos_label.text = "Press [M] to toggle | [ESC] to close"
 	map_container.add_child(pos_label)
 
+	# Nút icon bản đồ luôn hiện cạnh thanh bar có chữ M
+	_setup_hud_map_button()
+
+func _setup_hud_map_button() -> void:
+	if has_node("HUDMapButton"):
+		hud_map_button = get_node("HUDMapButton") as Button
+		return
+
+	hud_map_button = Button.new()
+	hud_map_button.name = "HUDMapButton"
+	hud_map_button.focus_mode = Control.FOCUS_NONE
+
+	# Định vị ngay cạnh phải của thanh công cụ QuickBar (offset 235..275)
+	hud_map_button.anchor_left = 0.5
+	hud_map_button.anchor_top = 1.0
+	hud_map_button.anchor_right = 0.5
+	hud_map_button.anchor_bottom = 1.0
+	hud_map_button.offset_left = 236.0
+	hud_map_button.offset_top = -62.0
+	hud_map_button.offset_right = 276.0
+	hud_map_button.offset_bottom = -22.0
+	hud_map_button.grow_horizontal = Control.GROW_DIRECTION_END
+	hud_map_button.grow_vertical = Control.GROW_DIRECTION_BEGIN
+
+	# Style RPG cổ điển viền gỗ/vàng đồng bộ với QuickBar
+	var btn_normal := StyleBoxFlat.new()
+	btn_normal.bg_color = Color(0.2, 0.12, 0.07, 0.94)
+	btn_normal.border_width_left = 2
+	btn_normal.border_width_top = 2
+	btn_normal.border_width_right = 2
+	btn_normal.border_width_bottom = 2
+	btn_normal.border_color = Color(0.76, 0.52, 0.27, 1.0)
+	btn_normal.corner_radius_top_left = 6
+	btn_normal.corner_radius_top_right = 6
+	btn_normal.corner_radius_bottom_right = 6
+	btn_normal.corner_radius_bottom_left = 6
+	btn_normal.shadow_color = Color(0, 0, 0, 0.45)
+	btn_normal.shadow_size = 4
+
+	var btn_hover := btn_normal.duplicate() as StyleBoxFlat
+	btn_hover.bg_color = Color(0.32, 0.18, 0.10, 0.96)
+	btn_hover.border_color = Color(1.0, 0.85, 0.38, 1.0)
+
+	var btn_pressed := btn_normal.duplicate() as StyleBoxFlat
+	btn_pressed.bg_color = Color(0.14, 0.08, 0.04, 0.98)
+	btn_pressed.border_color = Color(0.95, 0.72, 0.22, 1.0)
+
+	hud_map_button.add_theme_stylebox_override("normal", btn_normal)
+	hud_map_button.add_theme_stylebox_override("hover", btn_hover)
+	hud_map_button.add_theme_stylebox_override("pressed", btn_pressed)
+
+	# Vẽ icon bản đồ dạng cuộn giấy cổ zic-zac có vệt địa hình
+	var icon_draw := Control.new()
+	icon_draw.name = "MapIconDraw"
+	icon_draw.set_anchors_preset(Control.PRESET_FULL_RECT)
+	icon_draw.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon_draw.draw.connect(func():
+		# 3 nếp gấp bản đồ cuộn giấy
+		var fold1 := Rect2(10, 7, 6, 17)
+		var fold2 := Rect2(16, 9, 8, 17)
+		var fold3 := Rect2(24, 7, 6, 17)
+		icon_draw.draw_rect(fold1, Color(0.92, 0.84, 0.65, 1.0), true)
+		icon_draw.draw_rect(fold2, Color(0.84, 0.74, 0.52, 1.0), true)
+		icon_draw.draw_rect(fold3, Color(0.92, 0.84, 0.65, 1.0), true)
+		icon_draw.draw_rect(Rect2(10, 7, 20, 19), Color(0.38, 0.25, 0.14, 1.0), false, 1.0)
+		# Nếp gấp mép giấy
+		icon_draw.draw_line(Vector2(16, 7), Vector2(16, 26), Color(0.65, 0.52, 0.35, 1.0), 1.0)
+		icon_draw.draw_line(Vector2(24, 7), Vector2(24, 26), Color(0.65, 0.52, 0.35, 1.0), 1.0)
+		# Vệt địa hình sông / núi xanh
+		icon_draw.draw_line(Vector2(12, 13), Vector2(14, 15), Color(0.45, 0.65, 0.42, 1.0), 1.5)
+		icon_draw.draw_line(Vector2(18, 16), Vector2(21, 13), Color(0.3, 0.55, 0.85, 1.0), 1.5)
+		# Dấu X đỏ vị trí kho báu
+		icon_draw.draw_line(Vector2(19, 18), Vector2(22, 22), Color(0.85, 0.2, 0.2, 1.0), 1.5)
+		icon_draw.draw_line(Vector2(22, 18), Vector2(19, 22), Color(0.85, 0.2, 0.2, 1.0), 1.5)
+	)
+	hud_map_button.add_child(icon_draw)
+
+	# Nhãn chữ [M] to, rõ ràng và có viền nổi bật ở góc dưới
+	var m_label := Label.new()
+	m_label.text = "M"
+	m_label.position = Vector2(0, 24)
+	m_label.size = Vector2(40, 14)
+	m_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	m_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	m_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	m_label.add_theme_font_size_override("font_size", 9)
+	m_label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.45, 1.0))
+	m_label.add_theme_color_override("font_outline_color", Color(0.12, 0.06, 0.02, 1.0))
+	m_label.add_theme_constant_override("outline_size", 3)
+	hud_map_button.add_child(m_label)
+
+	hud_map_button.tooltip_text = "World Map [M]"
+	hud_map_button.pressed.connect(func(): toggle_map())
+
+	add_child(hud_map_button)
+
 func _process(delta: float) -> void:
 	if is_map_open:
 		pulse_time += delta * 4.0
@@ -160,7 +260,7 @@ func toggle_map(force_state: Variant = null) -> void:
 
 	if is_map_open:
 		_calculate_map_bounds()
-		visible = true
+		map_container.visible = true
 		map_container.scale = Vector2(0.92, 0.92)
 		map_container.modulate.a = 0.0
 		var tw := create_tween().set_parallel(true)
@@ -173,8 +273,8 @@ func toggle_map(force_state: Variant = null) -> void:
 		tw.tween_property(map_container, "scale", Vector2(0.92, 0.92), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		tw.tween_property(map_container, "modulate:a", 0.0, 0.1)
 		tw.chain().tween_callback(func():
-			if not is_map_open:
-				visible = false
+			if not is_map_open and is_instance_valid(map_container):
+				map_container.visible = false
 				map_container.scale = Vector2.ONE
 				map_container.modulate.a = 1.0
 		)

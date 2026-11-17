@@ -1,8 +1,7 @@
 extends CanvasLayer
 
 # Victory Sequence Cutscene sau khi hạ gục Boss ở Danger 3
-# Bước 1: Hiện ảnh "5 intity.png" + thoại "You have rescued 5 members to continue the journey."
-# Bước 2: Hiện ảnh "victory.png" + thoại "They have won the championship."
+
 
 @onready var bg_texture: TextureRect = $Background
 @onready var text_label: RichTextLabel = $StoryPanel/MarginContainer/VBoxContainer/TextLabel
