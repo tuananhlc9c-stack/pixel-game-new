@@ -75,44 +75,15 @@ func _build_orb_sprite_frames() -> void:
 		orb_sprite_frames.add_frame("orb", at)
 
 func _create_boss_hud() -> void:
-	boss_hud = CanvasLayer.new()
-	boss_hud.visible = false
-	add_child(boss_hud)
-
-	var container := Control.new()
-	container.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	container.custom_minimum_size = Vector2(0, 42)
-	boss_hud.add_child(container)
-
-	title_label = Label.new()
-	title_label.text = boss_title
-	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_size_override("font_size", 8)
-	title_label.add_theme_color_override("font_color", Color(0.35, 1.0, 0.72))
-	title_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
-	title_label.position = Vector2(80, 4)
-	title_label.size = Vector2(320, 14)
-	container.add_child(title_label)
-
-	hp_bar = ProgressBar.new()
-	hp_bar.show_percentage = false
-	hp_bar.position = Vector2(110, 18)
-	hp_bar.size = Vector2(260, 8)
-	var bg_style := StyleBoxFlat.new()
-	bg_style.bg_color = Color(0.06, 0.16, 0.14, 0.92)
-	bg_style.border_width_left = 1
-	bg_style.border_width_top = 1
-	bg_style.border_width_right = 1
-	bg_style.border_width_bottom = 1
-	bg_style.border_color = Color(0.3, 0.95, 0.7, 1.0)
-	var fill_style := StyleBoxFlat.new()
-	fill_style.bg_color = Color(0.18, 0.9, 0.58, 1.0)
-	hp_bar.add_theme_stylebox_override("background", bg_style)
-	hp_bar.add_theme_stylebox_override("fill", fill_style)
-	if health_comp:
-		hp_bar.max_value = health_comp.max_health
-		hp_bar.value = health_comp.current_health
-	container.add_child(hp_bar)
+	var bar := BossHealthBar.new()
+	var max_hp: float = health_comp.max_health if health_comp else 100.0
+	var cur_hp: float = health_comp.current_health if health_comp else max_hp
+	bar.setup(boss_title, Color(0.18, 0.9, 0.58), max_hp, cur_hp)
+	bar.visible = false
+	add_child(bar)
+	boss_hud = bar
+	hp_bar = bar.hp_bar
+	title_label = bar.title_label
 
 func _physics_process(delta: float) -> void:
 	hover_time += delta
