@@ -1,7 +1,5 @@
 class_name BossHealthBar
 extends CanvasLayer
-## Thanh máu boss lớn, căn giữa trên cùng màn hình.
-## Giữ `hp_bar` (ProgressBar) và `title_label` để code boss cũ vẫn dùng được.
 
 const BAR_WIDTH := 0.6        # tỉ lệ theo chiều ngang màn hình
 const BAR_HEIGHT := 18.0
@@ -141,7 +139,7 @@ func _update_label() -> void:
 	if hp_label:
 		hp_label.text = "%d / %d" % [int(hp_bar.value), int(hp_bar.max_value)]
 
-## Đổi màu thanh máu (ví dụ khi boss cuồng nộ)
+## Đổi màu thanh máu
 func set_accent(color: Color) -> void:
 	_accent = color
 	if _fill_style:

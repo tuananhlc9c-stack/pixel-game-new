@@ -60,6 +60,10 @@ var trail_is_special: bool = false
 var slash_trail: Array[Dictionary] = []
 var swing_tween: Tween = null
 var knockback_velocity: Vector2 = Vector2.ZERO
+var speed_multiplier: float = 1.0
+var speed_modifier_timer: float = 0.0
+var external_pull_velocity: Vector2 = Vector2.ZERO
+var _screen_shake_tween: Tween = null
 var hit_targets: Array[Node] = []
 var initial_spawn_position: Vector2 = Vector2.ZERO
 
@@ -565,6 +569,14 @@ func _physics_process(delta: float) -> void:
 		if combo_reset_timer <= 0.0:
 			swing_combo_dir = 1
 
+	if speed_modifier_timer > 0.0:
+		speed_modifier_timer = maxf(0.0, speed_modifier_timer - delta)
+		if speed_modifier_timer <= 0.0:
+			speed_multiplier = 1.0
+	var effective_speed: float = speed * speed_multiplier
+	var pull_vel: Vector2 = external_pull_velocity
+	external_pull_velocity = Vector2.ZERO
+
 	# Cập nhật vệt kiếm động mượt mà theo từng khung hình
 	_update_slash_trail(delta)
 	_update_fishing(delta)
@@ -583,7 +595,7 @@ func _physics_process(delta: float) -> void:
 			_on_weapon_hitbox_area_entered(area)
 
 	if knockback_velocity.length() > 5.0:
-		velocity = knockback_velocity
+		velocity = knockback_velocity + pull_vel
 		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, 600.0 * delta)
 		move_and_slide()
 		return
@@ -608,16 +620,16 @@ func _physics_process(delta: float) -> void:
 			if fishing_state != FishingState.CAUGHT:
 				_cancel_fishing()
 		else:
-			velocity = Vector2.ZERO
+			velocity = pull_vel
 			move_and_slide()
 			return
 
 	# Khi đang chém: cho phép di chuyển mượt hoặc trượt theo quán tính thay vì khựng cứng
 	if is_attacking:
 		if is_special_attacking:
-			velocity = velocity.move_toward(direction * (speed * 0.45), 520.0 * delta)
+			velocity = velocity.move_toward(direction * (effective_speed * 0.45) + pull_vel, 520.0 * delta)
 		else:
-			var target_move := direction * (speed * 0.65)
+			var target_move := direction * (effective_speed * 0.65) + pull_vel
 			velocity = velocity.move_toward(target_move, 650.0 * delta)
 		move_and_slide()
 		return
@@ -630,7 +642,7 @@ func _physics_process(delta: float) -> void:
 			_flash_mana_warning()
 
 	if direction != Vector2.ZERO:
-		velocity = direction * speed
+		velocity = direction * effective_speed + pull_vel
 
 		# Xác định hướng và animation với cơ chế khóa hướng (hysteresis), chống rung flip/animation khi đi chéo
 		var current_anim_name: StringName = anim.animation if anim else &""
@@ -678,7 +690,7 @@ func _physics_process(delta: float) -> void:
 		if want_anim != &"" and anim.animation != want_anim:
 			anim.play(want_anim)
 	else:
-		velocity = Vector2.ZERO
+		velocity = pull_vel
 		if last_direction == "up":
 			anim.flip_h = false
 			if anim.animation != "stand1":
@@ -1258,6 +1270,26 @@ func take_damage(amount: int, source_pos: Vector2 = Vector2.ZERO, knockback_forc
 		AudioManager.play_sfx_random_pitch("player_hurt", 0.0, 0.95, 1.05)
 
 	health_component.take_damage(final_damage)
+
+func apply_speed_modifier(mult: float, duration: float) -> void:
+	speed_multiplier = clampf(mult, 0.25, 2.0)
+	speed_modifier_timer = maxf(speed_modifier_timer, duration)
+
+func apply_external_pull(pull_vec: Vector2) -> void:
+	external_pull_velocity += pull_vec
+
+func apply_screen_shake(intensity: float = 4.0, duration: float = 0.25) -> void:
+	if not cam or not is_instance_valid(cam):
+		return
+	if _screen_shake_tween and _screen_shake_tween.is_valid():
+		_screen_shake_tween.kill()
+	_screen_shake_tween = create_tween()
+	var steps: int = maxi(2, int(duration / 0.04))
+	for i in range(steps):
+		var decay: float = 1.0 - (float(i) / float(steps))
+		var offset := Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity)) * decay
+		_screen_shake_tween.tween_property(cam, "offset", offset, 0.04)
+	_screen_shake_tween.tween_property(cam, "offset", Vector2.ZERO, 0.04)
 
 func _on_health_changed(current: int, maximum: int) -> void:
 	if SceneManager:

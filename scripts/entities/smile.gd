@@ -17,6 +17,15 @@ var move_direction: Vector2 = Vector2.RIGHT
 var timer: float = 0.0
 var change_time: float = 2.0
 var knockback_velocity: Vector2 = Vector2.ZERO
+var can_jump_chase: bool = false
+var jump_cooldown: float = 1.4
+var jump_timer: float = 0.0
+var is_jumping: bool = false
+var jump_elapsed: float = 0.0
+var jump_duration: float = 0.42
+var jump_start_pos: Vector2 = Vector2.ZERO
+var jump_target_pos: Vector2 = Vector2.ZERO
+var base_anim_scale: Vector2 = Vector2.ONE
 
 func _ready() -> void:
 	add_to_group("enemy")
@@ -41,6 +50,7 @@ func _ready() -> void:
 		area.body_entered.connect(_on_area_body_entered)
 
 	if anim and anim.sprite_frames:
+		base_anim_scale = anim.scale
 		if anim.sprite_frames.has_animation("walk"):
 			anim.play("walk")
 		elif anim.sprite_frames.has_animation("idle"):
@@ -56,6 +66,28 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
+	if is_jumping:
+		jump_elapsed += delta
+		var t: float = clampf(jump_elapsed / jump_duration, 0.0, 1.0)
+		global_position = jump_start_pos.lerp(jump_target_pos, t)
+		if anim:
+			anim.position.y = -sin(t * PI) * 24.0
+			anim.scale = base_anim_scale * Vector2(0.9, 1.15)
+		queue_redraw()
+		if t >= 1.0:
+			is_jumping = false
+			if anim:
+				anim.position.y = 0.0
+				anim.scale = base_anim_scale
+			var p := get_tree().get_first_node_in_group("player") as Node2D
+			if p and is_instance_valid(p) and global_position.distance_to(p.global_position) <= 22.0:
+				if p.has_method("take_damage"):
+					p.take_damage(contact_damage + 4, global_position, 160.0)
+		return
+
+	if jump_timer > 0.0:
+		jump_timer -= delta
+
 	var current_speed: float = speed
 	var chasing: bool = false
 
@@ -64,10 +96,18 @@ func _physics_process(delta: float) -> void:
 		if player and is_instance_valid(player):
 			var dist_to_player := global_position.distance_to(player.global_position)
 			var dist_from_home := player.global_position.distance_to(start_position)
-			if dist_to_player <= chase_radius and dist_from_home <= max_distance * 2.2:
+			if dist_to_player <= chase_radius and (can_jump_chase or dist_from_home <= max_distance * 2.2):
 				move_direction = (player.global_position - global_position).normalized()
 				current_speed = chase_speed
 				chasing = true
+				if can_jump_chase and jump_timer <= 0.0 and dist_to_player <= 130.0 and dist_to_player >= 24.0:
+					jump_timer = jump_cooldown
+					is_jumping = true
+					jump_elapsed = 0.0
+					jump_start_pos = global_position
+					var leap_dist: float = minf(dist_to_player, 72.0)
+					jump_target_pos = global_position + move_direction * leap_dist
+					return
 
 	if not chasing:
 		timer += delta
