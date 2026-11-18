@@ -19,6 +19,8 @@ var homing_turn_speed: float = 3.5
 var ignore_walls: bool = false
 var is_lightning_style: bool = false
 var _launched: bool = true
+var on_expire_callback: Callable = Callable()
+var _trail_points: Array[Vector2] = []
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 
@@ -65,6 +67,9 @@ func setup_lightning_orb(orb_frames: SpriteFrames, dir: Vector2, spd: float, dmg
 func _physics_process(delta: float) -> void:
 	_elapsed += delta
 	if _elapsed >= lifetime:
+		if on_expire_callback.is_valid():
+			on_expire_callback.call(global_position)
+			on_expire_callback = Callable()
 		queue_free()
 		return
 
@@ -95,6 +100,10 @@ func _physics_process(delta: float) -> void:
 		if time_left <= 0.6:
 			modulate.a = clampf(time_left / 0.6, 0.0, 1.0)
 
+	_trail_points.push_front(global_position)
+	if _trail_points.size() > 5:
+		_trail_points.pop_back()
+
 	global_position += direction * speed * delta
 	queue_redraw()
 
@@ -107,6 +116,9 @@ func _on_body_entered(body: Node) -> void:
 		_spawn_hit_effect()
 		queue_free()
 	elif not ignore_walls and (body is TileMap or body is TileMapLayer or body is StaticBody2D):
+		if on_expire_callback.is_valid():
+			on_expire_callback.call(global_position)
+			on_expire_callback = Callable()
 		_spawn_hit_effect()
 		queue_free()
 
@@ -122,6 +134,13 @@ func _spawn_hit_effect() -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# Vẽ vệt đuôi đạn (Projectile Trail)
+	for i in range(_trail_points.size()):
+		var pt_local: Vector2 = to_local(_trail_points[i])
+		var ratio: float = 1.0 - (float(i + 1) / float(_trail_points.size() + 1))
+		var tr_col: Color = Color(0.2, 0.95, 0.72, ratio * 0.25) if is_lightning_style else Color(projectile_color.r, projectile_color.g, projectile_color.b, ratio * 0.28)
+		draw_circle(pt_local, 4.5 * ratio, tr_col)
+
 	if is_lightning_style:
 		var pulse := 1.0 + sin(_elapsed * 14.0) * 0.15
 		var r := (12.0 if is_homing else 8.5) * pulse

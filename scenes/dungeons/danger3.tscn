@@ -1934,4 +1934,4 @@ next_scene_path = "res://scenes/dungeons/danger2.tscn"
 target_spawn_position = Vector2(768, 930)
 
 [node name="BossMalugaz" parent="." unique_id=551468094 instance=ExtResource("5_malugaz")]
-position = Vector2(221, 388)
+position = Vector2(645, 395)

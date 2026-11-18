@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-
 enum State { PATROL, CHASE, WINDUP, LUNGE, RECOVER }
 
 @export var patrol_speed: float = 32.0

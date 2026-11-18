@@ -16,6 +16,7 @@ var is_homing: bool = false
 var homing_turn_speed: float = 3.5
 var ignore_walls: bool = false
 var _launched: bool = true
+var _trail_points: Array[Vector2] = []
 
 @onready var anim: AnimatedSprite2D = $AnimatedSprite2D if has_node("AnimatedSprite2D") else null
 
@@ -83,6 +84,10 @@ func _physics_process(delta: float) -> void:
 		if time_left <= 0.6:
 			modulate.a = clampf(time_left / 0.6, 0.0, 1.0)
 
+	_trail_points.push_front(global_position)
+	if _trail_points.size() > 5:
+		_trail_points.pop_back()
+
 	global_position += direction * speed * delta
 	queue_redraw()
 
@@ -104,6 +109,11 @@ func _on_area_entered(area: Area2D) -> void:
 		queue_free()
 
 func _draw() -> void:
+	for i in range(_trail_points.size()):
+		var pt_local: Vector2 = to_local(_trail_points[i])
+		var ratio: float = 1.0 - (float(i + 1) / float(_trail_points.size() + 1))
+		draw_circle(pt_local, (6.0 if is_homing else 4.2) * ratio, Color(0.2, 0.95, 0.72, ratio * 0.25))
+
 	var pulse := 1.0 + sin(_elapsed * 14.0) * 0.15
 	var r := (13.0 if is_homing else 9.5) * pulse
 	# Quầng sáng xanh ngọc bích quanh cầu ma pháp
