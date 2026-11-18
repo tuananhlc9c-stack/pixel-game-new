@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c8hmyyaegie5k"]
 
-[ext_resource type="Script" uid="uid://ijnoqfy1s6io" path="res://menu/invetory.gd" id="1_l1ay4"]
-[ext_resource type="Texture2D" uid="uid://d01fmst12x0fr" path="res://Content T1/New/tool/menu1.png" id="2_g5ikq"]
+[ext_resource type="Script" uid="uid://ijnoqfy1s6io" path="res://menu/inventory.gd" id="1_mhsfg"]
+[ext_resource type="Texture2D" uid="uid://d01fmst12x0fr" path="res://Content T1/New/tool/menu1.png" id="2_7hirt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quickbar_bg"]
 bg_color = Color(0.2, 0.12, 0.07, 0.94)
@@ -58,7 +58,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_l1ay4")
+script = ExtResource("1_mhsfg")
 
 [node name="QuickBarBg" type="Panel" parent="." unique_id=1900100101]
 layout_mode = 1
@@ -95,7 +95,7 @@ columns = 10
 [node name="TextureRect" type="TextureRect" parent="QuickBar" unique_id=1755153994]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -117,7 +117,7 @@ stretch_mode = 5
 [node name="TextureRect2" type="TextureRect" parent="QuickBar" unique_id=285659296]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -139,7 +139,7 @@ stretch_mode = 5
 [node name="TextureRect3" type="TextureRect" parent="QuickBar" unique_id=1123154811]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -161,7 +161,7 @@ stretch_mode = 5
 [node name="TextureRect4" type="TextureRect" parent="QuickBar" unique_id=449318963]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -183,7 +183,7 @@ stretch_mode = 5
 [node name="TextureRect5" type="TextureRect" parent="QuickBar" unique_id=1261196685]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -205,7 +205,7 @@ stretch_mode = 5
 [node name="TextureRect6" type="TextureRect" parent="QuickBar" unique_id=1384575199]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -227,7 +227,7 @@ stretch_mode = 5
 [node name="TextureRect7" type="TextureRect" parent="QuickBar" unique_id=1526966689]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -249,7 +249,7 @@ stretch_mode = 5
 [node name="TextureRect8" type="TextureRect" parent="QuickBar" unique_id=446900202]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -271,7 +271,7 @@ stretch_mode = 5
 [node name="TextureRect9" type="TextureRect" parent="QuickBar" unique_id=659402000]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -293,7 +293,7 @@ stretch_mode = 5
 [node name="TextureRect10" type="TextureRect" parent="QuickBar" unique_id=1535143008]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -412,7 +412,7 @@ columns = 10
 [node name="TextureRect" type="TextureRect" parent="bagwindow/baggrid" unique_id=2077902502]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -434,7 +434,7 @@ stretch_mode = 5
 [node name="TextureRect2" type="TextureRect" parent="bagwindow/baggrid" unique_id=727883933]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -456,7 +456,7 @@ stretch_mode = 5
 [node name="TextureRect3" type="TextureRect" parent="bagwindow/baggrid" unique_id=1612701515]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -478,7 +478,7 @@ stretch_mode = 5
 [node name="TextureRect4" type="TextureRect" parent="bagwindow/baggrid" unique_id=2116268917]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -500,7 +500,7 @@ stretch_mode = 5
 [node name="TextureRect5" type="TextureRect" parent="bagwindow/baggrid" unique_id=2017207424]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -522,7 +522,7 @@ stretch_mode = 5
 [node name="TextureRect6" type="TextureRect" parent="bagwindow/baggrid" unique_id=1713935068]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -544,7 +544,7 @@ stretch_mode = 5
 [node name="TextureRect7" type="TextureRect" parent="bagwindow/baggrid" unique_id=357948602]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -566,7 +566,7 @@ stretch_mode = 5
 [node name="TextureRect8" type="TextureRect" parent="bagwindow/baggrid" unique_id=1138047002]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -588,7 +588,7 @@ stretch_mode = 5
 [node name="TextureRect9" type="TextureRect" parent="bagwindow/baggrid" unique_id=273418476]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -610,7 +610,7 @@ stretch_mode = 5
 [node name="TextureRect10" type="TextureRect" parent="bagwindow/baggrid" unique_id=628075199]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -632,7 +632,7 @@ stretch_mode = 5
 [node name="TextureRect11" type="TextureRect" parent="bagwindow/baggrid" unique_id=967527098]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -654,7 +654,7 @@ stretch_mode = 5
 [node name="TextureRect12" type="TextureRect" parent="bagwindow/baggrid" unique_id=1508621283]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -676,7 +676,7 @@ stretch_mode = 5
 [node name="TextureRect13" type="TextureRect" parent="bagwindow/baggrid" unique_id=2025730127]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -698,7 +698,7 @@ stretch_mode = 5
 [node name="TextureRect14" type="TextureRect" parent="bagwindow/baggrid" unique_id=849346687]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -720,7 +720,7 @@ stretch_mode = 5
 [node name="TextureRect15" type="TextureRect" parent="bagwindow/baggrid" unique_id=1147045453]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -742,7 +742,7 @@ stretch_mode = 5
 [node name="TextureRect16" type="TextureRect" parent="bagwindow/baggrid" unique_id=1361391043]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -764,7 +764,7 @@ stretch_mode = 5
 [node name="TextureRect17" type="TextureRect" parent="bagwindow/baggrid" unique_id=1713790907]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -786,7 +786,7 @@ stretch_mode = 5
 [node name="TextureRect18" type="TextureRect" parent="bagwindow/baggrid" unique_id=301534766]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -808,7 +808,7 @@ stretch_mode = 5
 [node name="TextureRect19" type="TextureRect" parent="bagwindow/baggrid" unique_id=585272257]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -830,7 +830,7 @@ stretch_mode = 5
 [node name="TextureRect20" type="TextureRect" parent="bagwindow/baggrid" unique_id=1693910232]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -852,7 +852,7 @@ stretch_mode = 5
 [node name="TextureRect21" type="TextureRect" parent="bagwindow/baggrid" unique_id=1837241494]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -874,7 +874,7 @@ stretch_mode = 5
 [node name="TextureRect22" type="TextureRect" parent="bagwindow/baggrid" unique_id=667748955]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -896,7 +896,7 @@ stretch_mode = 5
 [node name="TextureRect23" type="TextureRect" parent="bagwindow/baggrid" unique_id=1548660867]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -918,7 +918,7 @@ stretch_mode = 5
 [node name="TextureRect24" type="TextureRect" parent="bagwindow/baggrid" unique_id=1892882347]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -940,7 +940,7 @@ stretch_mode = 5
 [node name="TextureRect25" type="TextureRect" parent="bagwindow/baggrid" unique_id=1416073847]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -962,7 +962,7 @@ stretch_mode = 5
 [node name="TextureRect26" type="TextureRect" parent="bagwindow/baggrid" unique_id=144235662]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -984,7 +984,7 @@ stretch_mode = 5
 [node name="TextureRect27" type="TextureRect" parent="bagwindow/baggrid" unique_id=188714270]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1006,7 +1006,7 @@ stretch_mode = 5
 [node name="TextureRect28" type="TextureRect" parent="bagwindow/baggrid" unique_id=83197862]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1028,7 +1028,7 @@ stretch_mode = 5
 [node name="TextureRect29" type="TextureRect" parent="bagwindow/baggrid" unique_id=2079701812]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1050,7 +1050,7 @@ stretch_mode = 5
 [node name="TextureRect30" type="TextureRect" parent="bagwindow/baggrid" unique_id=1947952272]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1072,7 +1072,7 @@ stretch_mode = 5
 [node name="TextureRect31" type="TextureRect" parent="bagwindow/baggrid" unique_id=1833530798]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1094,7 +1094,7 @@ stretch_mode = 5
 [node name="TextureRect32" type="TextureRect" parent="bagwindow/baggrid" unique_id=1249941976]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1116,7 +1116,7 @@ stretch_mode = 5
 [node name="TextureRect33" type="TextureRect" parent="bagwindow/baggrid" unique_id=1409691317]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1138,7 +1138,7 @@ stretch_mode = 5
 [node name="TextureRect34" type="TextureRect" parent="bagwindow/baggrid" unique_id=1778457169]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1160,7 +1160,7 @@ stretch_mode = 5
 [node name="TextureRect35" type="TextureRect" parent="bagwindow/baggrid" unique_id=755816909]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1182,7 +1182,7 @@ stretch_mode = 5
 [node name="TextureRect36" type="TextureRect" parent="bagwindow/baggrid" unique_id=299051786]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1204,7 +1204,7 @@ stretch_mode = 5
 [node name="TextureRect37" type="TextureRect" parent="bagwindow/baggrid" unique_id=763953803]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1226,7 +1226,7 @@ stretch_mode = 5
 [node name="TextureRect38" type="TextureRect" parent="bagwindow/baggrid" unique_id=1285174339]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1248,7 +1248,7 @@ stretch_mode = 5
 [node name="TextureRect39" type="TextureRect" parent="bagwindow/baggrid" unique_id=2005547209]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 
@@ -1270,7 +1270,7 @@ stretch_mode = 5
 [node name="TextureRect40" type="TextureRect" parent="bagwindow/baggrid" unique_id=1220437476]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("2_g5ikq")
+texture = ExtResource("2_7hirt")
 expand_mode = 1
 stretch_mode = 5
 

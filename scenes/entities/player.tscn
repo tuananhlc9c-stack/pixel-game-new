@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://tcd6aytibif5" path="res://Content T1/New/playerSheet.png" id="2_i3pqv"]
 [ext_resource type="Texture2D" uid="uid://cdlwvi3xcgw5n" path="res://Content T1/New/tool/woo.png" id="3_hqtel"]
 [ext_resource type="Texture2D" uid="uid://bpdaiakp73wa8" path="res://Content T1/New/slice.png" id="3_sweqy"]
-[ext_resource type="PackedScene" uid="uid://c8hmyyaegie5k" path="res://menu/invetory.tscn" id="5_sweqy"]
+[ext_resource type="PackedScene" uid="uid://c8hmyyaegie5k" path="res://menu/inventory.tscn" id="5_sweqy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_onrkg"]
 atlas = ExtResource("2_i3pqv")
@@ -342,4 +342,3 @@ libraries/ = SubResource("AnimationLibrary_sweqy")
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1322241360]
 
 [node name="Invetory" parent="CanvasLayer" unique_id=1049096046 instance=ExtResource("5_sweqy")]
-visible = true
